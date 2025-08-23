@@ -1,6 +1,6 @@
 {
   "name": "hyapi",
-  "version": "80.629.1",
+  "version": "80.629.1partial",
   "description": "A JavaScript based implementation of the Hydrus client API with documentation, tests, and type definitions.",
   "main": "main.js",
   "scripts": {
