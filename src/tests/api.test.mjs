@@ -9,7 +9,7 @@ const api = new RawAPI({
 })
 
 /**
- * The correct way to handle this would be to have multiple test,
+ * The correct way to handle this would be to have multiple tests,
  * but vitest runs multiple tests at the same time with no way to
  * decide which tests run first (as far as I can tell).
  * 
