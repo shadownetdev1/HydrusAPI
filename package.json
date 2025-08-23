@@ -8,9 +8,9 @@
     "test": "vitest --coverage",
     "badges": "vitest run --coverage --coverage.reporter=json-summary && npx make-coverage-badge --output-path badges/coverage.svg"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["hydrusnetwork", "hydrus", "hydrus-network"],
+  "author": "shadownetdev1",
+  "license": "SEE LICENSE IN license.txt",
   "type": "commonjs",
   "dependencies": {
     "fs-jetpack": "^5.1.0",
