@@ -39,11 +39,8 @@ exports.RawAPI = class RawAPI{
     /** @type {string} */
     address
     /**
-     * We highly suggest using the client or wrapping this class'
-     * methods over in functions using them directly.
-     * If the client is missing functionality that is available
-     * in the Raw API then we suggest creating an issue
-     * or making a pull request at ... // TODO: repository url
+     * We highly suggest wrapping this class' methods
+     * in functions over using them directly.
      * @param {RawAPIOptions} [options={}] Extra options
      */
     constructor(options={}) {
@@ -164,7 +161,7 @@ exports.RawAPI = class RawAPI{
     }
 
     /**
-     * Register a new external program with the client.
+     * Register a new external program with Hydrus.
      * This requires the 'add from api request' mini-dialog
      * under services->review services to be open, otherwise it will 403.
      * 
@@ -185,7 +182,7 @@ exports.RawAPI = class RawAPI{
         if (permissions === "all" || permit_everything) {
             permissions = Object.values(exports.BASIC_PERM)
         }
-        query.set('permit_everything', permit_everything ?? false)  // FIXME: report bug. As of API version 80 and client version 629 permit_everything does nothing
+        query.set('permit_everything', permit_everything ?? false)  // FIXME: report bug. As of API version 80 and Hydrus version 629 permit_everything does nothing
         query.set('basic_permissions', JSON.stringify(permissions))
         return await this.call({
             endpoint: '/request_new_permissions',
@@ -198,7 +195,7 @@ exports.RawAPI = class RawAPI{
      * Gets a session key for the client.
      * 
      * A session key expires after 24 hours of inactivity,
-     * whenever the client restarts,
+     * whenever Hydrus restarts,
      * or if the underlying access key is deleted.
      * A request on an expired session key returns 419.
      * 
@@ -280,7 +277,7 @@ exports.RawAPI = class RawAPI{
     get add_files() {
         return {
     /**
-     * Tell the client to import a file.
+     * Tell Hydrus to import a file.
      * supply a json with either bytes : *file bytes* 
      * or path: *file path*
      * 
@@ -310,7 +307,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to delete one or more files
+     * Tell Hydrus to delete one or more files
      * 
      * Endpoint: /add_files/delete_files
      * 
@@ -334,7 +331,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to undelete one or more files
+     * Tell Hydrus to undelete one or more files
      * 
      * Endpoint: /add_files/undelete_files
      * 
@@ -357,7 +354,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to clear any deletion records it has for a file
+     * Tell Hydrus to clear any deletion records it has for a file
      * 
      * Endpoint: /add_files/clear_file_deletion_record
      * 
@@ -411,7 +408,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to archive inboxed files
+     * Tell Hydrus to archive inboxed files
      * 
      * Endpoint: /add_files/archive_files
      * 
@@ -441,7 +438,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to unarchive files which moves them to the inbox
+     * Tell Hydrus to unarchive files which moves them to the inbox
      * 
      * Endpoint: /add_files/unarchive_files
      * 
@@ -510,7 +507,7 @@ exports.RawAPI = class RawAPI{
     get add_urls() {
         return {
     /**
-     * Ask the client about a URL's files.
+     * Ask Hydrus about a URL's files.
      * 
      * Endpoint: /add_urls/get_url_files
      * 
@@ -536,7 +533,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Ask the client for information about a URL.
+     * Ask Hydrus for information about a URL.
      * 
      * Endpoint: /add_urls/get_url_info
      * 
@@ -560,9 +557,9 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Tell the client to 'import' a URL.
+     * Tell Hydrus to 'import' a URL.
      * This triggers the exact same routine as drag-and-dropping
-     * a text URL onto the main client window.
+     * a text URL onto the main Hydrus window.
      * 
      * Endpoint: /add_urls/add_url
      * 
@@ -591,7 +588,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Manage which URLs the client considers to be associated with which files.
+     * Manage which URLs Hydrus considers to be associated with which files.
      * 
      * Endpoint: /add_urls/associate_url
      * 
@@ -634,7 +631,7 @@ exports.RawAPI = class RawAPI{
     get add_tags() {
         return {
     /**
-     * Ask the client about how it will see certain tags.
+     * Ask Hydrus about how it will see certain tags.
      * 
      * Endpoint: /add_tags/clean_tags
      * 
@@ -658,7 +655,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Fetch the client's favourite tags. This is the list of tags you see beneath an autocomplete input, under the 'favourites' tab. This is not the per-service 'most used' tab you see in manage tags.
+     * Fetch Hydrus' favourite tags. This is the list of tags you see beneath an autocomplete input, under the 'favourites' tab. This is not the per-service 'most used' tab you see in manage tags.
      * 
      * Endpoint: /add_tags/get_favourite_tags
      * 
@@ -677,7 +674,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Ask the client about tags' sibling and parent relationships.
+     * Ask Hydrus about a tags' sibling and parent relationships.
      * 
      * /add_tags/get_siblings_and_parents
      * 
@@ -699,7 +696,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Search the client for tags.
+     * Search Hydrus for tags.
      * 
      * Endpoint: /add_tags/search_tags
      * 
@@ -759,7 +756,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Edit the client's favourite tags.
+     * Edit Hydrus' favourite tags.
      * This is the complement to /add_tags/get_favourite_tags.
      * 
      * Endpoint: set_favourite_tags
@@ -843,7 +840,7 @@ exports.RawAPI = class RawAPI{
     get get_files() {
         return {
     /**
-     * Search for the client's files.
+     * Search Hydrus for files.
      * 
      * Endpoint: /get_files/search_files
      * 
@@ -928,16 +925,16 @@ exports.RawAPI = class RawAPI{
      * It should give you the correct image/jpeg or image/png Content-Type.
      * 
      * If hydrus keeps no thumbnail for the filetype, for instance with pdfs,
-     * then you will get the same default 'pdf' icon you see in the client.
-     * If the file does not exist in the client,
+     * then you will get the same default 'pdf' icon you see in Hydrus.
+     * If the file does not exist in Hydrus,
      * or the thumbnail was expected but is missing from storage,
      * you will get the fallback 'hydrus' icon,
-     * again just as you would in the client itself.
+     * again just as you would in Hydrus itself.
      * This request should never give a 404.
      * 
      * !!! note "Size of Normal Thumbs" Thumbnails are not guaranteed
      * to be the correct size! 
-     * If a thumbnail has not been loaded in the client in years,
+     * If a thumbnail has not been loaded in Hydrus in years,
      * it could well have been fitted for older thumbnail settings.
      * Also, even 'clean' thumbnails will not always fit inside the settings'
      * bounding box;
@@ -1091,7 +1088,7 @@ exports.RawAPI = class RawAPI{
     },
 
     /**
-     * Set some new cookies for the client
+     * Set some new cookies for Hydrus
      * This makes it easier to 'copy' a login from a web browser or similar
      * to hydrus if hydrus's login system can't handle the site yet
      *
