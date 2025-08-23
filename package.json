@@ -13,8 +13,7 @@
   "license": "SEE LICENSE IN license.txt",
   "type": "commonjs",
   "dependencies": {
-    "fs-jetpack": "^5.1.0",
-    "urllib": "^4.8.0"
+    "fs-jetpack": "^5.1.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
