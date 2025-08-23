@@ -23,6 +23,10 @@ HyAPI currently doesn't have any documentation or usage instructions. Your best 
 
 Contributions are greatly appreciated. These can come in the form of reporting issues and creating pull requests. If you have working knowledge of JavaScript, want to contribute, but don't know where to get started then looking at our currently open issues would be suggested
 
+## Versioning
+
+HyAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair
+
 ## License
 
 HyAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as [Hydrus is as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
