@@ -200,14 +200,14 @@ describe('HyAPI', () => {
         const file = await api.get_files.file({
             hash: f_hash
         })
-        await fs.writeFile('./hyapi_test_file.jpeg', file);
+        await fs.writeFile('./hyapi_test_file.jpeg', file)
         expect(jetpack.inspect(f_path, {checksum: 'sha256'}).sha256).toBe(f_hash)
 
         // test thumbnail
         const thumbnail = await api.get_files.thumbnail({
             hash: f_hash
         })
-        await fs.writeFile('./hyapi_test_thumb.jpeg', thumbnail);
+        await fs.writeFile('./hyapi_test_thumb.jpeg', thumbnail)
         // TODO: validate that test_thumb.jpeg is a thumbnail of the image (PHash?)
         // cleanup from file and thumbnail testing
         jetpack.remove('./hyapi_test_file.jpeg')
@@ -234,7 +234,6 @@ describe('HyAPI', () => {
         expect(hashes.hashes[f_hash]).toBe(jetpack.inspect(f_path, {checksum: 'md5'}).md5)
 
         // test local_file_storage_locations
-        // TODO: test
         const locs = await api.get_files.local_file_storage_locations()
         expect(locs.locations.length === 0).toBe(false)
         expect(typeof locs.locations[0].ideal_weight).toBe('number')
@@ -242,7 +241,12 @@ describe('HyAPI', () => {
         expect(locs.locations[0].prefixes.length === 0).toBe(false)
 
 
-        // TODO: render
+        // test: render
+        jetpack.remove('./hyapi_test_render.png')
+        const render = await api.get_files.render({hash: f_hash})
+        await fs.writeFile('./hyapi_test_render.png', render)
+        // TODO: validate that hyapi_test_render.png is a render of the image (PHash?)
+        jetpack.remove('./hyapi_test_render.png')
 
         // TODO: undelete_files
         // TODO: migrate_files, archive_files

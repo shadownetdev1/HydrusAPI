@@ -1062,9 +1062,26 @@ module.exports = class RawAPI{
             endpoint: '/get_files/local_file_storage_locations',
             return_as: return_as
         })
-    }
+    },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesrender--idget_files_render-
+    /**
+     * 
+     * Endpoint: /get_files/render
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesrender--idget_files_render-
+     * @param {render_options} options
+     * @param {'readable_stream'|'raw'} [return_as] Optional; returns a ReadableStream by default; How do you want the result returned?
+     * @returns {ReadableStream|Response}
+     */
+    render: async(options, return_as='readable_stream') => {
+        // region: get_files/render
+        return await this.call({
+            endpoint: '/get_files/render',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
 
         }
     }

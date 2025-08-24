@@ -815,6 +815,41 @@ interface local_file_storage_locations_response extends api_version_response {
     locations: StorageLocation[]
 }
 
+/** file_id or hash must be defined */
+interface render_options {
+    file_id?: number
+    hash?: string
+    /**
+     * defaults to false.
+     * If true, the `Content-Disposition` header will be set to `attachment`, which triggers the browser to automatically download it (or open the 'save as' dialog) instead.
+     */
+    download?: boolean
+    /**
+     * Optional; defaults to 2 for still images and 23 for Ugoiras.
+     * 
+     * Currently the accepted values for `render_format` for image files are:
+     *
+     * *   `1` for JPEG (`quality` sets JPEG quality 0 to 100, always progressive 4:2:0 encoding)
+     * *   `2` for PNG (`quality` sets the compression level from 0 to 9. A higher value means a smaller size and longer compression time)
+     * *   `33` for WEBP (`quality` sets WEBP quality 1 to 100, for values over 100 lossless compression is used)
+     *
+     * The accepted values for Ugoiras are:
+     *
+     * *   `23` for APNG (`quality` does nothing for this format)
+     * *   `83` for animated WEBP (`quality` sets WEBP quality 1 to 100, for values over 100 lossless compression is used)
+     */
+    render_format?: 1|2|33 | 23|83
+    /**
+     * Optional; defaults to 1 for PNG and 80 for JPEG and WEBP, has no effect for Ugoiras using APNG.
+     * See {@link render_options.render_format} for more details
+     */
+    render_quality?: number
+    /** Optional; if provided height must also be provided. The width to scale the image to. Doesn't apply to Ugoiras */
+    width?: number
+    /** Optional; if provided width must also be provided. The height to scale the image to. Doesn't apply to Ugoiras */
+    height?: number
+}
+
 interface get_cookies_response extends api_version_response {
     /**
      * list of all the cookies for a domain in the format of [ name, value, domain, path, expires ]
