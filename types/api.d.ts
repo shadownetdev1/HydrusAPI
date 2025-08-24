@@ -804,6 +804,17 @@ interface thumbnail_path_response extends api_version_response {
 	filetype?: string
 }
 
+interface StorageLocation {
+    path: string
+    ideal_weight: number
+    max_num_bytes: null | number
+    prefixes: string[]
+}
+
+interface local_file_storage_locations_response extends api_version_response {
+    locations: StorageLocation[]
+}
+
 interface get_cookies_response extends api_version_response {
     /**
      * list of all the cookies for a domain in the format of [ name, value, domain, path, expires ]

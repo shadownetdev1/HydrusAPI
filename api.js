@@ -1048,7 +1048,21 @@ module.exports = class RawAPI{
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_fileslocal_file_storage_locations--idget_local_file_storage_locations-
+    /**
+     * 
+     * Endpoint: /get_files/local_file_storage_locations
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_fileslocal_file_storage_locations--idget_local_file_storage_locations-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {local_file_storage_locations_response}
+     */
+    local_file_storage_locations: async(return_as) => {
+        // region: get_files/local_file_storage_locations
+        return await this.call({
+            endpoint: '/get_files/local_file_storage_locations',
+            return_as: return_as
+        })
+    }
 
     // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesrender--idget_files_render-
 

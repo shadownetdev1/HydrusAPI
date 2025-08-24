@@ -8,8 +8,8 @@ import fs from 'fs/promises';
 
 const api = new API({
     debug: false,
-    access_key: "8672a05b8fd4c3a51808331594dc0aa9de58b1e92c07d2b09240459550c619c5", // TODO: pull from environment
-    address: "http://10.0.1.148:45869", // TODO: pull from environment
+    access_key: "6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567", // TODO: pull from environment
+    address: "http://localhost:45869", // TODO: pull from environment
 })
 
 /**
@@ -233,7 +233,16 @@ describe('HyAPI', () => {
         expect(Object.keys(hashes.hashes).includes(f_hash)).toBe(true)
         expect(hashes.hashes[f_hash]).toBe(jetpack.inspect(f_path, {checksum: 'md5'}).md5)
 
-        // TODO: local_file_storage_locations, render
+        // test local_file_storage_locations
+        // TODO: test
+        const locs = await api.get_files.local_file_storage_locations()
+        expect(locs.locations.length === 0).toBe(false)
+        expect(typeof locs.locations[0].ideal_weight).toBe('number')
+        expect(typeof locs.locations[0].path).toBe('string')
+        expect(locs.locations[0].prefixes.length === 0).toBe(false)
+
+
+        // TODO: render
 
         // TODO: undelete_files
         // TODO: migrate_files, archive_files
