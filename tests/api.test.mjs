@@ -82,7 +82,7 @@ describe('HyAPI', () => {
     })
 
     test('get_files.* and add_files.*', async() => {
-        const f_path = 'src/tests/files/hummingbird-at-feeder-1754669486LJt.jpg'
+        const f_path = 'tests/files/hummingbird-at-feeder-1754669486LJt.jpg'
         // const f_path = './files/tree-1332664495LMO.jpg'
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 

@@ -13,7 +13,7 @@ As of currently all endpoints from [hydrus.js](https://www.npmjs.com/package/hyd
 
 ## Installation
 
-HyAPI currently doesn't have an npm package or release. The best way to us it at this point in time would be to git clone the repo or to download [src/api.js](src/api.js) and use it directly.
+HyAPI currently doesn't have an npm package or release. The best way to us it at this point in time would be to git clone the repo or to download [api.js](api.js) and use it directly.
 
 ## Documentation and Usage
 

@@ -2,10 +2,10 @@
   "name": "hyapi",
   "version": "80.629.1partial",
   "description": "A JavaScript based implementation of the Hydrus client API with documentation, tests, and type definitions.",
-  "main": "main.js",
+  "main": "api.js",
   "scripts": {
-    "run": "node main.js",
-    "test": "vitest --coverage",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest --coverage",
     "badges": "vitest run --coverage --coverage.reporter=json-summary && npx make-coverage-badge --output-path badges/coverage.svg"
   },
   "keywords": ["hydrusnetwork", "hydrus", "hydrus-network"],
