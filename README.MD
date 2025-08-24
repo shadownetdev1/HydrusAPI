@@ -1,7 +1,7 @@
 
 # HyAPI
 
-![Test Coverage badge](badges/coverage.svg) ![Hydrus API Version: 80 (Partial)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial)-blue) ![Hydrus version](https://img.shields.io/badge/Tested%20With%20Hydrus%20Version-629%20-blue)
+![Test Coverage badge](badges/coverage.svg) ![Hydrus API Version: 80 (Partial)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial)-blue) ![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)
 
 <p align="center">
   <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented and tested endpoints work as expected I cannot guarantee that that is the case. Also as of right now there are several API endpoints that are implemented that don't have tests and there are many endpoints that still need to be implemented." src="badges/warning.svg">
