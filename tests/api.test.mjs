@@ -224,8 +224,15 @@ describe('HyAPI', () => {
         expect(results.hashes.length).toBe(1)
         expect(results.hashes[0]).toBe(f_hash)
 
+        // test file_hashes
+        const hashes = await api.get_files.file_hashes({
+            // hash: f_hash,
+            hashes: [f_hash],
+            desired_hash_type: 'md5',
+        })
+        expect(Object.keys(hashes.hashes).includes(f_hash)).toBe(true)
+        expect(hashes.hashes[f_hash]).toBe(jetpack.inspect(f_path, {checksum: 'md5'}).md5)
 
-        // TODO: file_hashes
         // TODO: local_file_storage_locations, render
 
         // TODO: undelete_files

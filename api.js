@@ -3,6 +3,21 @@
 // cSpell: ignore normalise, favourite, favourites, pngs, pdfs, someoverbooru
 // cSpell: ignore normalised
 
+/**
+ * Takes an options object and convert it to an URLSearchParams instance
+ * making sure that all lists and objects are encoded as JSON strings first
+ * @param {{[key: string]: any}} options
+ * @returns {InstanceType<URLSearchParams>}
+ */
+const optionsToURLSearchParams = (options) => {
+    for (const [key, value] of Object.entries(options)) {
+        if (Array.isArray(value) || (typeof value === "object" && value !== null)) {
+            options[key] = JSON.stringify(value)
+        }
+    }
+    return new URLSearchParams(options)
+}
+
 module.exports = class RawAPI{
     // region: RawAPI
 
@@ -174,7 +189,7 @@ module.exports = class RawAPI{
      */
     async request_new_permissions(name, permissions, permit_everything=false, return_as) {
         // region: request_new_permissions
-        const query = new URLSearchParams({
+        const query = optionsToURLSearchParams({
             name: name
         })
         if (permissions === "all" || permit_everything) {
@@ -247,7 +262,7 @@ module.exports = class RawAPI{
         // region: get_service
         return await this.call({
             endpoint: '/get_service',
-            queries: new URLSearchParams(service),
+            queries: optionsToURLSearchParams(service),
             return_as: return_as
         })
     }
@@ -849,17 +864,33 @@ module.exports = class RawAPI{
      */
     search_files: async(options, return_as) => {
         // region: get_files/search_files
-        if (typeof options.tags !== "string") {
-            options.tags = JSON.stringify(options.tags)
-        }
         return await this.call({
             endpoint: '/get_files/search_files',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as,
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_hashes--idget_files_file_hashes-
+    /**
+     * Takes one or more hashes and asks Hydrus for alternative hash types that match.
+     * Example use case: You have a MD5 hash and want to find a SHA256 hash.
+     * Hydrus will return results for any files it has ever had imported.
+     * 
+     * Endpoint: /get_files/file_hashes
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_hashes--idget_files_file_hashes-
+     * @param {file_hashes_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {file_hashes_response}
+     */
+    file_hashes: async(options, return_as) => {
+        // region: get_files/file_hashes
+        return await this.call({
+            endpoint: '/get_files/file_hashes',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as,
+        })
+    },
 
     /**
      * Get a file's metadata
@@ -875,7 +906,7 @@ module.exports = class RawAPI{
         // region: get_files/file_metadata
         return await this.call({
             endpoint: '/get_files/file_metadata',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as,
         })
     },
@@ -904,7 +935,7 @@ module.exports = class RawAPI{
         // region: get_files/file
         return await this.call({
             endpoint: '/get_files/file',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as,
         })
     },
@@ -957,7 +988,7 @@ module.exports = class RawAPI{
         // region: get_files/thumbnail
         return await this.call({
             endpoint: '/get_files/thumbnail',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as,
         })
     },
@@ -982,7 +1013,7 @@ module.exports = class RawAPI{
         // region: get_files/file_path
         return await this.call({
             endpoint: '/get_files/file_path',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as
         })
     },
@@ -1012,7 +1043,7 @@ module.exports = class RawAPI{
         // region: get_files/thumbnail_path
         return await this.call({
             endpoint: '/get_files/thumbnail_path',
-            queries: new URLSearchParams(options),
+            queries: optionsToURLSearchParams(options),
             return_as: return_as
         })
     },

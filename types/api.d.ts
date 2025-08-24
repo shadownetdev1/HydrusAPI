@@ -508,6 +508,20 @@ interface search_files_response extends api_version_response {
     hashes?: string[]
 }
 
+/** hash or hashes must be defined */
+interface file_hashes_options {
+    hash?: string
+    hashes?: string[]
+    /** optional; defaults to sha256 */
+    source_hash_type?: "sha256"|"md5"|"sha1"|"sha512"
+    desired_hash_type: "sha256"|"md5"|"sha1"|"sha512"
+}
+
+interface file_hashes_response extends api_version_response {
+    /** Each key is a provided hash and each value is the desired hash. Entries will be missing for hashes that Hydrus has never seen before */
+    hashes: {[key: string]: string}
+}
+
 interface get_file_metadata_options extends FilesObject {
     /** optional if asking with hash(es), defaulting to false */
     create_new_file_ids?: boolean
