@@ -3,33 +3,7 @@
 // cSpell: ignore normalise, favourite, favourites, pngs, pdfs, someoverbooru
 // cSpell: ignore normalised
 
-// region: Constants
-
-exports.API_VERSION = 80
-
-/**
- * These are the permissions that the API can have
- */
-exports.BASIC_PERM = Object.freeze({
-    MODIFY_URLS: 0,
-    MODIFY_FILES: 1,
-    MODIFY_TAGS: 2,
-    SEARCH_AND_FETCH_FILES: 3,
-    MANAGE_PAGES: 4,
-    MANAGE_COOKIES_AND_HEADERS: 5,
-    MANAGE_DATABASE: 6,
-    EDIT_NOTES: 7,
-    EDIT_FILE_RELATIONSHIPS: 8,
-    EDIT_FILE_RATINGS: 9,
-    MANAGE_POPUPS: 10,
-    EDIT_FILE_TIMES: 11,
-    COMMIT_PENDING: 12,
-    SEE_LOCAL_PATHS: 13,
-})
-
-/** @typedef {EnumOf<exports.BASIC_PERM>} BASIC_PERM_ENUM */
-
-exports.RawAPI = class RawAPI{
+module.exports = class RawAPI{
     // region: RawAPI
 
     /** @type {boolean} */
@@ -38,6 +12,30 @@ exports.RawAPI = class RawAPI{
     access_key
     /** @type {string} */
     address
+
+    VERSION = 80
+
+    /**
+     * These are the permissions that the client can have
+     * @type {BASIC_PERMS}
+     */
+    BASIC_PERM = Object.freeze({
+        MODIFY_URLS: 0,
+        MODIFY_FILES: 1,
+        MODIFY_TAGS: 2,
+        SEARCH_AND_FETCH_FILES: 3,
+        MANAGE_PAGES: 4,
+        MANAGE_COOKIES_AND_HEADERS: 5,
+        MANAGE_DATABASE: 6,
+        EDIT_NOTES: 7,
+        EDIT_FILE_RELATIONSHIPS: 8,
+        EDIT_FILE_RATINGS: 9,
+        MANAGE_POPUPS: 10,
+        EDIT_FILE_TIMES: 11,
+        COMMIT_PENDING: 12,
+        SEE_LOCAL_PATHS: 13,
+    })
+
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
@@ -169,7 +167,7 @@ exports.RawAPI = class RawAPI{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-request_new_permissions--idrequest_new_permissions-
      * @param {string} name descriptive name of your client to be shown in Hydrus' GUI
-     * @param {BASIC_PERM_ENUM[]|"all"} permissions a list of permission identifiers you want to request
+     * @param {BASIC_PERMS_VALUE[]|"all"} permissions a list of permission identifiers you want to request
      * @param {boolean} [permit_everything=false] If set to true then this client will get all permissions, both now and in the future
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {request_new_permissions_response}
@@ -180,7 +178,7 @@ exports.RawAPI = class RawAPI{
             name: name
         })
         if (permissions === "all" || permit_everything) {
-            permissions = Object.values(exports.BASIC_PERM)
+            permissions = Object.values(this.BASIC_PERM)
         }
         query.set('permit_everything', permit_everything ?? false)  // FIXME: report bug. As of API version 80 and Hydrus version 629 permit_everything does nothing
         query.set('basic_permissions', JSON.stringify(permissions))

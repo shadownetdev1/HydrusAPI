@@ -1,8 +1,8 @@
 import {test, expect, describe, beforeAll} from 'vitest'
-import { RawAPI, API_VERSION } from '../api.js'
+import API from '../api.js'
 import jetpack from 'fs-jetpack'
 
-const api = new RawAPI({
+const api = new API({
     debug: false,
     access_key: "8672a05b8fd4c3a51808331594dc0aa9de58b1e92c07d2b09240459550c619c5", // TODO: pull from environment
     address: "http://10.0.1.148:45869", // TODO: pull from environment
@@ -26,8 +26,8 @@ describe('HyAPI', () => {
     beforeAll(async() => {
         const api_version = await api.api_version()
         console.log(api_version)
-        if (api_version.version !== API_VERSION) {
-            console.warn(`HyAPI is designed for API version ${API_VERSION}, but the Hydrus client we connected to is at API version ${api_version.version}`)
+        if (api_version.version !== api.VERSION) {
+            console.warn(`HyAPI is designed for API version ${api.VERSION}, but the Hydrus client we connected to is at API version ${api_version.version}`)
         }
     })
 
@@ -85,8 +85,6 @@ describe('HyAPI', () => {
         const f_path = 'src/tests/files/hummingbird-at-feeder-1754669486LJt.jpg'
         // const f_path = './files/tree-1332664495LMO.jpg'
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
-
-        console.log('here')
 
         const exists = async() => {
             try {

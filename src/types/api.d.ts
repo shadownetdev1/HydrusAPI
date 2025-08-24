@@ -4,6 +4,29 @@
 
 type EnumOf<T> = T[keyof T]
 
+type ValueOf<T> = T[keyof T]
+
+/** These are the permissions that the client can have */
+interface BASIC_PERMS {
+    // TODO: permission documentation. Including what endpoints require the given permission. Also update the endpoint methods to mention the permission they need
+    MODIFY_URLS: 0,
+    MODIFY_FILES: 1,
+    MODIFY_TAGS: 2,
+    SEARCH_AND_FETCH_FILES: 3,
+    MANAGE_PAGES: 4,
+    MANAGE_COOKIES_AND_HEADERS: 5,
+    MANAGE_DATABASE: 6,
+    EDIT_NOTES: 7,
+    EDIT_FILE_RELATIONSHIPS: 8,
+    EDIT_FILE_RATINGS: 9,
+    MANAGE_POPUPS: 10,
+    EDIT_FILE_TIMES: 11,
+    COMMIT_PENDING: 12,
+    SEE_LOCAL_PATHS: 13
+}
+
+type BASIC_PERMS_VALUE = ValueOf<BASIC_PERMS>
+
 /** Any properties set here will be passed to the fetch call (with the exception of some predefined properties) */
 interface CallOptions {
     [key: string]: any
@@ -20,24 +43,6 @@ interface CallOptions {
     /** Optional; Will default to `json` if undefined */
     return_as?: 'success'|'status'|'json'|'raw'|'readable_stream'
 }
-
-/**
- * * MODIFY_URLS: 0
- * * MODIFY_FILES: 1
- * * MODIFY_TAGS: 2
- * * SEARCH_AND_FETCH_FILES: 3
- * * MANAGE_PAGES: 4
- * * MANAGE_COOKIES_AND_HEADERS: 5
- * * MANAGE_DATABASE: 6
- * * EDIT_NOTES: 7
- * * EDIT_FILE_RELATIONSHIPS: 8
- * * EDIT_FILE_RATINGS: 9
- * * MANAGE_POPUPS: 10
- * * EDIT_FILE_TIMES: 11
- * * COMMIT_PENDING: 12
- * * SEE_LOCAL_PATHS: 13
- */
-type BASIC_PERMS = 0|1|2|3|4|5|6|7|8|9|10|11|12|13
 
 /**
  * 
