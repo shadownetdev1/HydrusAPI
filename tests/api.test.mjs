@@ -214,7 +214,18 @@ describe('HyAPI', () => {
         jetpack.remove('./hyapi_test_thumb.jpeg')
 
 
-        // TODO: search_files, file_hashes
+        // test search_files
+        const results = await api.get_files.search_files({
+            tags: [`system:hash is ${f_hash}`],
+            return_hashes: true,
+        })
+        expect(results.file_ids.length).toBe(1)
+        expect(results.file_ids[0]).toBe(meta.file_id)
+        expect(results.hashes.length).toBe(1)
+        expect(results.hashes[0]).toBe(f_hash)
+
+
+        // TODO: file_hashes
         // TODO: local_file_storage_locations, render
 
         // TODO: undelete_files

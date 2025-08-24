@@ -849,14 +849,14 @@ module.exports = class RawAPI{
      */
     search_files: async(options, return_as) => {
         // region: get_files/search_files
-        return await this.old_call(
-            'GET',
-            '/get_files/search_files',
-            {
-                queries: options,
-            },
-            return_as
-        );
+        if (typeof options.tags !== "string") {
+            options.tags = JSON.stringify(options.tags)
+        }
+        return await this.call({
+            endpoint: '/get_files/search_files',
+            queries: new URLSearchParams(options),
+            return_as: return_as,
+        })
     },
 
     // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_hashes--idget_files_file_hashes-
