@@ -897,20 +897,16 @@ module.exports = class RawAPI{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile--idget_files_file-
      * @param {file_options} options
-     * @returns {Object} the raw urllib output
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number} the raw readableStream if return_as is the default
      */
-    file: async(options) => {
+    file: async(options, return_as='readable_stream') => {
         // region: get_files/file
-        return await this.old_call(
-            'GET',
-            '/get_files/file',
-            {
-                queries: options,
-                dataType: undefined, // this lets urllib download a raw byte stream
-            },
-            true,
-            true
-        );
+        return await this.call({
+            endpoint: '/get_files/file',
+            queries: new URLSearchParams(options),
+            return_as: return_as,
+        })
     },
 
     /**
@@ -954,20 +950,16 @@ module.exports = class RawAPI{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesthumbnail--idget_files_thumbnail-
      * @param {thumbnail_options} options
-     * @returns {Object} the raw urllib output
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number} the raw readableStream if return_as is the default
      */
-    thumbnail: async(options) => {
+    thumbnail: async(options, return_as='readable_stream') => {
         // region: get_files/thumbnail
-        return await this.old_call(
-            'GET',
-            '/get_files/thumbnail',
-            {
-                queries: options,
-                dataType: undefined, // this lets urllib download a raw byte stream
-            },
-            true,
-            true
-        );
+        return await this.call({
+            endpoint: '/get_files/thumbnail',
+            queries: new URLSearchParams(options),
+            return_as: return_as,
+        })
     },
 
     /**

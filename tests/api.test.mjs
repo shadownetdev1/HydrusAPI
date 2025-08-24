@@ -1,6 +1,10 @@
+
+// cSpell: ignore hyapi, undelete
+
 import {test, expect, describe, beforeAll} from 'vitest'
 import API from '../api.js'
 import jetpack from 'fs-jetpack'
+import fs from 'fs/promises';
 
 const api = new API({
     debug: false,
@@ -188,24 +192,35 @@ describe('HyAPI', () => {
             hash: f_hash
         }))?.path).toBeTypeOf('string')
 
-        // const file = await api.get_files.file({
-        //     hash: f_hash
-        // })
-        // jetpack.write('test_file.jpeg', file.data)
+        // prep before testing file and thumbnail
+        jetpack.remove('./hyapi_test_file.jpeg')
+        jetpack.remove('./hyapi_test_thumb.jpeg')
 
-        // const thumbnail = await api.get_files.thumbnail({
-        //     hash: f_hash
-        // })
-        // jetpack.write('test_thumbnail.jpeg', thumbnail.data)
+        // test file
+        const file = await api.get_files.file({
+            hash: f_hash
+        })
+        await fs.writeFile('./hyapi_test_file.jpeg', file);
+        expect(jetpack.inspect(f_path, {checksum: 'sha256'}).sha256).toBe(f_hash)
 
-        // TODO: search_files, file_hashes, api.get_files.file
-        // TODO: api.get_files.thumbnail
+        // test thumbnail
+        const thumbnail = await api.get_files.thumbnail({
+            hash: f_hash
+        })
+        await fs.writeFile('./hyapi_test_thumb.jpeg', thumbnail);
+        // TODO: validate that test_thumb.jpeg is a thumbnail of the image (PHash?)
+        // cleanup from file and thumbnail testing
+        jetpack.remove('./hyapi_test_file.jpeg')
+        jetpack.remove('./hyapi_test_thumb.jpeg')
+
+
+        // TODO: search_files, file_hashes
         // TODO: local_file_storage_locations, render
 
         // TODO: undelete_files
         // TODO: migrate_files, archive_files
         // TODO: unarchive_files, generate_hashes
-    }, 60000)
+    }, 120000)
 
     test('add_urls.*', async() => {
         // TODO
