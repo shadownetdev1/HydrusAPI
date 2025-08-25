@@ -426,28 +426,17 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/archive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesarchive_files--idadd_files_archive_files-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be archived
-     * @param {string} [options.hash] the SHA256 hash of the file to archived
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to archived
+     * @param {FilesObject} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @returns {boolean} if true then the file was successfully archived, was already archived, or doesn't exist
      */
     archive_files: async(options, return_as) => {
         // region: add_files/archive_files
-        const res = await this.old_call(
-            'POST',
-            '/add_files/archive_files',
-            {
-                json: options
-            },
-            return_as
-        );
-        if (return_as) {
-            return res
-        } else {
-            return res?.status === 200 ? true : false
-        }
+        return await this.call({
+            endpoint: '/add_files/archive_files',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
     },
 
     /**
@@ -461,23 +450,15 @@ module.exports = class RawAPI{
      * @param {string} [options.hash] the SHA256 hash of the file to unarchived
      * @param {string[]} [options.hashes] the SHA256 hashes of the files to unarchived
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @returns {boolean} if true then the file was successfully unarchived, was already unarchived, or doesn't exist
      */
     unarchive_files: async(options, return_as) => {
         // region: add_files/unarchive_files
-        const res = await this.old_call(
-            'POST',
-            '/add_files/unarchive_files',
-            {
-                json: options
-            },
-            return_as
-        );
-        if (return_as) {
-            return res
-        } else {
-            return res?.status === 200 ? true : false
-        }
+        return await this.call({
+            endpoint: '/add_files/unarchive_files',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
     },
 
     /**

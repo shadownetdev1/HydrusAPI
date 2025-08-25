@@ -261,8 +261,21 @@ describe('HyAPI', () => {
         // TODO: validate that hyapi_test_render.png is a render of the image (PHash?)
         jetpack.remove('./hyapi_test_render.png')
 
-        // TODO: migrate_files, archive_files
-        // TODO: unarchive_files, generate_hashes
+        // test: archive_files
+        const arced = await api.add_files.archive_files({
+            hash: f_hash
+        })
+        expect(arced).toBe(true)
+
+        // test: unarchive_files
+        const unArced = await api.add_files.unarchive_files({
+            hash: f_hash
+        })
+        expect(unArced).toBe(true)
+
+
+        // TODO: migrate_files
+        // TODO: generate_hashes
     }, 120000)
 
     test('add_urls.*', async() => {
