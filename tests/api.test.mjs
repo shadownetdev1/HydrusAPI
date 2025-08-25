@@ -255,7 +255,6 @@ describe('HyAPI', () => {
         expect(typeof locs.locations[0].path).toBe('string')
         expect(locs.locations[0].prefixes.length === 0).toBe(false)
 
-
         // test: render
         jetpack.remove('./hyapi_test_render.png')
         const render = await api.get_files.render({hash: f_hash})
@@ -354,13 +353,19 @@ describe('HyAPI', () => {
     })
 
     test('add_tags.*', async() => {
+        const f_path = 'tests/files/venice-italy-travel-poster-15626778587Sq.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
 
         // test clean_tags
         const clean = await api.add_tags.clean_tags([ " bikini ", "blue    eyes", " character : samus aran ", " :)", "   ", "", "10", "11", "9", "system:wew", "-flower" ])
         expect(JSON.stringify(clean.tags)).toBe(JSON.stringify(
             ['9','10','11',')','bikini','blue eyes','character:samus aran','flower','wew']
         ))
-
 
         // test set_favourite_tags
         const fav_options = ['hi', 'happy', 'cat', 'dog']
@@ -372,13 +377,60 @@ describe('HyAPI', () => {
         const set_fav = await api.add_tags.set_favourite_tags({set: favs})
         expect(JSON.stringify(set_fav.favourite_tags)).toBe(JSON.stringify(favs))
 
+        // test get_favourite_tags
         const get_fav = await api.add_tags.get_favourite_tags()
         expect(JSON.stringify(get_fav.favourite_tags)).toBe(JSON.stringify(set_fav.favourite_tags))
-        // TODO
+
+        // get the my files service
+        const service_key = (await api.get_service({service_name: 'my files'})).service.service_key
+
+        // test: add_tags
+        // const service_keys_to_tags = {}
+        // service_keys_to_tags[service_key] = ['boat', 'bridge', 'water', 'tower']
+        // api.debug = true
+        // const add = await api.add_tags.add_tags({
+        //     hash: f_hash,
+        //     service_keys_to_tags: service_keys_to_tags
+        // }, 'raw')
+        // console.log(add)
+
+        // TODO: search_tags
+        // TODO: get_siblings_and_parents
     })
 
     test('edit_ratings.*', async() => {
-        // TODO
+        const f_path = 'tests/files/venice-italy-travel-poster-15626778587Sq.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
+
+        // get rating service
+        const service_key = (await api.get_service({service_name: 'favourites'})).service.service_key
+
+        // test set_rating (false)
+        const rating_false = await api.edit_ratings.set_rating({
+            hash: f_hash,
+            rating_service_key: service_key,
+            rating: false
+        })
+        expect(rating_false).toBe(true)
+
+        const meta = await api.get_files.file_metadata({hash: f_hash})
+        expect(meta.metadata[0].ratings[service_key]).toBe(false)
+
+        // test set_rating (true)
+        const rating_true = await api.edit_ratings.set_rating({
+            hash: f_hash,
+            rating_service_key: service_key,
+            rating: true
+        })
+        expect(rating_true).toBe(true)
+
+        const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        expect(meta2.metadata[0].ratings[service_key]).toBe(true)
     })
 
     test('edit_times.*', async() => {

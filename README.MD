@@ -49,6 +49,8 @@ Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s 
 
 [Tokyo travel image (used to test url imports)](/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage)
 
+[Venice traval image (used to test tagging and rating)](/test/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster)
+
 ## License
 
 HyAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
