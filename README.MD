@@ -12,7 +12,7 @@
 [![Branch Test Coverage Badge](badges/branches.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
 
 <p align="center">
-  <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented and tested endpoints work as expected I cannot guarantee that that is the case. Also as of right now there are several API endpoints that are implemented that don't have tests and there are many endpoints that still need to be implemented." src="badges/warning.svg">
+  <img width="100%" alt="Warning: This API implementation is in an pre-alpha state and is provided as is. While I expect that all implemented and tested endpoints work as expected I cannot guarantee that that is the case. Also as of right now there are several API endpoints that are implemented that don't have tests and there are many endpoints that still need to be implemented." src="badges/warning.svg">
 </p>
 
 HyAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a fully typed and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
