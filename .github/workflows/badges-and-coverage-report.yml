@@ -25,11 +25,12 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install dependencies
-        run: npm install vitest @vitest/coverage-v8 fs-jetpack
+      # TODO: to do this we need to have access to a running copy of hydrus...
+      # - name: Install dependencies
+      #   run: npm install vitest @vitest/coverage-v8 fs-jetpack
 
-      - name: Run Unit Tests
-        run: npx vitest --coverage
+      # - name: Run Unit Tests
+      #   run: npx vitest --coverage
 
       - name: Publish Statements Badge
         uses: wjervis7/vitest-badge-action@v1.0.0

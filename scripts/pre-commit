@@ -13,8 +13,6 @@ if [[ -n "${stash_commit}" ]]
 then git stash apply "${stash_commit}"
 fi
 
-npm run badges
-git add badges/
 git add coverage/
 
 exit $status

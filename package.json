@@ -4,8 +4,8 @@
   "description": "A JavaScript based implementation of the Hydrus client API with documentation, tests, and type definitions.",
   "main": "api.js",
   "scripts": {
-    "test": "vitest run --coverage",
-    "test:watch": "vitest --coverage"
+    "test": "cp scripts/pre-commit .git/hooks/pre-commit && vitest run --coverage",
+    "test:watch": "cp scripts/pre-commit .git/hooks/pre-commit && vitest --coverage"
   },
   "keywords": ["hydrusnetwork", "hydrus", "hydrus-network"],
   "author": "shadownetdev1",
