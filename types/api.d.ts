@@ -279,6 +279,12 @@ interface URLFileStatus {
     note: string
 }
 
+interface get_url_files_options {
+    url: string,
+    /** Optional; Defaults to false; If true Hydrus checks to make sure each file exists on the system before returning it */
+    doublecheck_file_system?: boolean
+}
+
 interface get_url_files_response extends api_version_response {
     /** The url as it has been or would be stored by Hydrus */
     normalised_url: string

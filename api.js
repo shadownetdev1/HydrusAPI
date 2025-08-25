@@ -506,24 +506,22 @@ module.exports = class RawAPI{
      * Endpoint: /add_urls/get_url_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_urlsget_url_files--idadd_urls_get_url_files-
-     * @param {string} url url you want to check
-     * @param {boolean} [doublecheck_file_system=false] Make sure the file exists on the filesystem
+     * @param {get_url_files_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {get_url_files_response}
      */
-    get_url_files: async(url, doublecheck_file_system=false, return_as) => {
+    get_url_files: async(options, return_as) => {
         // region: add_urls/get_url_files
-        return await this.old_call(
-            'GET',
-            '/add_urls/get_url_files',
-            {
-                queries: {
-                    url: url,
-                    doublecheck_file_system: doublecheck_file_system,
-                },
-            },
-            return_as
-        );
+        const q = new URLSearchParams()
+        if (options.doublecheck_file_system) {
+            q.append('doublecheck_file_system', options.doublecheck_file_system)
+        }
+        q.append('url', options.url)
+        return await this.call({
+            endpoint: '/add_urls/get_url_files',
+            queries: q,
+            return_as: return_as
+        })
     },
 
     /**
@@ -601,19 +599,11 @@ module.exports = class RawAPI{
      */
     associate_url: async(options, return_as) => {
         // region: add_urls/associate_url
-        const res = await this.old_call(
-            'POST',
-            '/add_urls/associate_url',
-            {
-                json: options,
-            },
-            return_as
-        );
-        if (return_as) {
-            return res
-        } else {
-            return res?.status === 200 ? true : false
-        }
+        return await this.call({
+            endpoint: '/add_urls/associate_url',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
     }
 
         }

@@ -12,6 +12,42 @@ const api = new API({
     address: "http://localhost:45869", // TODO: pull from environment
 })
 
+const exists = async(hash) => {
+    try {
+        const res = (await api.get_files.file_path({
+            hash: hash
+        }))
+        return !!res?.path
+    } catch (e) {
+        if (e.message.includes(`responded with status code '404' and status text 'Not Found'`)) {
+            return false
+        } else {
+            throw e
+        }
+    }
+    
+}
+
+const upload = async(path, hash) => {
+    // clear deletion record
+    await api.add_files.clear_file_deletion_record({
+        hash: hash
+    })
+    // upload
+    const res = await api.add_files.add_file({
+        bytes: jetpack.read(path, 'buffer')
+    })
+    // validate hash
+    if (res?.hash !== hash) {
+        throw new Error('File upload failed!')
+    }
+    // validate api
+    if (!await exists(hash)) {
+        throw new Error(`Uploaded file doesn't exist!`)
+    }
+    console.log(`test file '${path}' uploaded`)
+}
+
 /**
  * The correct way to handle this would be to have multiple tests,
  * but vitest runs multiple tests at the same time with no way to
@@ -87,48 +123,11 @@ describe('HyAPI', () => {
 
     test('get_files.* and add_files.*', async() => {
         const f_path = 'tests/files/hummingbird-at-feeder-1754669486LJt.jpg'
-        // const f_path = './files/tree-1332664495LMO.jpg'
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
-        const exists = async() => {
-            try {
-                const res = (await api.get_files.file_path({
-                    hash: f_hash
-                }))
-                return !!res?.path
-            } catch (e) {
-                if (e.message.includes(`responded with status code '404' and status text 'Not Found'`)) {
-                    return false
-                } else {
-                    throw e
-                }
-            }
-            
-        }
-
-        const upload = async() => {
-            // clear deletion record
-            await api.add_files.clear_file_deletion_record({
-                hash: f_hash
-            })
-            // upload
-            const res = await api.add_files.add_file({
-                bytes: jetpack.read(f_path, 'buffer')
-            })
-            // validate hash
-            if (res?.hash !== f_hash) {
-                throw new Error('File upload failed!')
-            }
-            // validate api
-            if (!await exists()) {
-                throw new Error(`Uploaded file doesn't exist!`)
-            }
-            console.log('test file uploaded')
-        }
-
         // make sure the file exists for testing
-        if (!await exists()) {
-            await upload()
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
         }
 
         // trash the file
@@ -282,10 +281,57 @@ describe('HyAPI', () => {
         // expect(gen_hashes.hash).toBe(f_hash)
 
 
-        // TODO: migrate_files (needs more than one file service)
+        // TODO: migrate_files (needs more than one file service so we will likely need to test it in the `manage_services` test section)
     }, 120000)
 
     test('add_urls.*', async() => {
+        const f_path = 'tests/files/tree-1332664495LMO.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
+
+        // test: associate_url (cleanup in case it already has the url)
+        const cleanup = await api.add_urls.associate_url({
+            hash: f_hash,
+            url_to_delete: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree'
+        })
+        expect(cleanup).toBe(true)
+
+        // test: associate_url (addition)
+        const addition = await api.add_urls.associate_url({
+            hash: f_hash,
+            urls_to_add: ['https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree']
+        })
+        expect(addition).toBe(true)
+
+        // test: get_url_files (expect 1)
+        const files = await api.add_urls.get_url_files({
+            url: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree',
+            doublecheck_file_system: true
+        })
+        expect(files.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(files.url_file_statuses.length).toBe(1)
+        expect(files.url_file_statuses[0].status).toBe(2)
+        expect(files.url_file_statuses[0].hash).toBe(f_hash)
+        expect(files.url_file_statuses[0].note.startsWith('url recognised')).toBe(true)
+
+        // test: associate_url (removal)
+        const removal = await api.add_urls.associate_url({
+            hash: f_hash,
+            urls_to_delete: ['https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree']
+        })
+        expect(removal).toBe(true)
+
+        // test: get_url_files (expect 0)
+        const files2 = await api.add_urls.get_url_files({
+            url: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree'
+        })
+        expect(files2.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(files2.url_file_statuses.length).toBe(0)
+
         // TODO
     })
 

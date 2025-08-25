@@ -4,6 +4,8 @@
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
 [![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v635)
 
+<!-- [![NPM](https://nodei.co/npm/hyapi.svg?data=d,s)](https://www.npmjs.com/package/hyapi) -->
+
 [![Line Test Coverage Badge](badges/lines.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
 [![Statement Test Coverage Badge](badges/statements.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
 [![Function Test Coverage Badge](badges/functions.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
@@ -32,6 +34,18 @@ Contributions are greatly appreciated. These can come in the form of reporting i
 ## Versioning
 
 HyAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair
+
+## Thanks
+
+<!-- NPM badge provided by [NodeICO](https://nodei.co/npm/hyapi/). -->
+
+Hydrus version badges provided by [Shields.io](https://shields.io/).
+
+Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
+
+[Hummingbird at feeder image](/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder)
+
+[Tree image](/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree)
 
 ## License
 
