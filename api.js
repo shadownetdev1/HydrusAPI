@@ -407,19 +407,11 @@ module.exports = class RawAPI{
      */
     migrate_files: async(options, return_as) => {
         // region: add_files/migrate_files
-        const res = await this.old_call(
-            'POST',
-            '/add_files/migrate_files',
-            {
-                json: options
-            },
-            return_as
-        );
-        if (return_as) {
-            return res
-        } else {
-            return res?.status === 200 ? true : false
-        }
+        return await this.call({
+            endpoint: '/add_files/migrate_files',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
     },
 
     /**
@@ -654,14 +646,11 @@ module.exports = class RawAPI{
      */
     get_siblings_and_parents: async(tags, return_as) => {
         // region add_tags/get_siblings_and_parents
-        return await this.old_call(
-            'GET',
-            '/add_tags/get_siblings_and_parents',
-            {
-                json: JSON.stringify(tags)
-            },
-            return_as
-        )
+        return await this.call({
+            endpoint: '/add_tags/get_siblings_and_parents',
+            json: tags,
+            return_as: return_as
+        })
     },
 
     /**
@@ -680,14 +669,11 @@ module.exports = class RawAPI{
      */
     search_tags: async(options, return_as) => {
         // region add_tags/search_tags
-        return await this.old_call(
-            'GET',
-            '/add_tags/search_tags',
-            {
-                json: options
-            },
-            return_as
-        )
+        return await this.call({
+            endpoint: '/add_tags/search_tags',
+            json: options,
+            return_as: return_as
+        })
     },
 
     // /**
@@ -1167,19 +1153,13 @@ module.exports = class RawAPI{
      */
     focus_page: async(page_key, return_as) => {
         // region: manage_pages/focus_page
-        const res = await this.old_call(
-            'POST',
-            `/manage_pages/focus_page`,
-            {
+        return await this.call({
+            endpoint: `/manage_pages/focus_page`,
+            json: {
                 page_key: page_key
             },
-            return_as
-        );
-        if (return_as) {
-            return res
-        } else {
-            return res?.status === 200 ? true : false
-        }
+            return_as: return_as ?? 'success'
+        })
     },
 
     // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-

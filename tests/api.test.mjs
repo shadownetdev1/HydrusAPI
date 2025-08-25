@@ -475,7 +475,17 @@ describe('HyAPI', () => {
 
     test('manage_pages.*', async() => {
         // test get_pages
-        const pages = (await api.manage_pages.get_pages()).pages
+        let pages = (await api.manage_pages.get_pages()).pages
+
+        // test focus_page
+        const focus1 = await api.manage_pages.focus_page(pages.pages[1].page_key)
+        expect(focus1).toBe(true)
+
+        const focus2 = await api.manage_pages.focus_page(pages.pages[0].page_key)
+        expect(focus2).toBe(true)
+
+        // test get_pages
+        pages = (await api.manage_pages.get_pages()).pages
         expect(pages.name).toBe('top page notebook')
         expect(pages.page_state).toBe(0)
         expect(pages.page_type).toBe(10)
