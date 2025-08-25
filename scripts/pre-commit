@@ -1,0 +1,20 @@
+#!/bin/sh
+
+echo "*****Running tests******"
+
+stash_commit="$(git stash create)"
+git reset —-hard
+
+npm test
+
+status=$?
+
+if [[ -n "${stash_commit}" ]]
+then git stash apply "${stash_commit}"
+fi
+
+npm run badges
+git add badges/
+git add coverage/
+
+exit $status
