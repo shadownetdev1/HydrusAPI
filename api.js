@@ -618,16 +618,11 @@ module.exports = class RawAPI{
      */
     clean_tags: async(tags, return_as) => {
         // region: add_tags/clean_tags
-        return await this.old_call(
-            'GET',
-            '/add_tags/clean_tags',
-            {
-                queries: {
-                    tags: JSON.stringify(tags),
-                },
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/add_tags/clean_tags',
+            queries: optionsToURLSearchParams({tags: tags}),
+            return_as: return_as
+        })
     },
 
     /**
@@ -641,12 +636,10 @@ module.exports = class RawAPI{
      */
     get_favourite_tags: async(return_as) => {
         // region add_tags/get_favourite_tags
-        return await this.old_call(
-            'GET',
-            '/add_tags/get_favourite_tags',
-            undefined,
-            return_as
-        )
+        return await this.call({
+            endpoint: '/add_tags/get_favourite_tags',
+            return_as: return_as
+        })
     },
 
     /**
@@ -744,14 +737,11 @@ module.exports = class RawAPI{
      */
     set_favourite_tags: async(options, return_as) => {
         // region: add_tags/set_favourite_tags
-        return await this.old_call(
-            'POST',
-            '/add_tags/set_favourite_tags',
-            {
-                options,
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/add_tags/set_favourite_tags',
+            json: options,
+            return_as: return_as
+        })
     },
     
         }

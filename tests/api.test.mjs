@@ -9,6 +9,9 @@ import fs from 'fs/promises';
 const api = new API({
     debug: false,
     access_key: "6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567", // TODO: pull from environment
+    // WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
+    // WARNING: Some of these tests are destructive and will cause data loss.
+    // WARNING: You have been warned and I am not responsible for any damages.
     address: "http://localhost:45869", // TODO: pull from environment
 })
 
@@ -351,6 +354,26 @@ describe('HyAPI', () => {
     })
 
     test('add_tags.*', async() => {
+
+        // test clean_tags
+        const clean = await api.add_tags.clean_tags([ " bikini ", "blue    eyes", " character : samus aran ", " :)", "   ", "", "10", "11", "9", "system:wew", "-flower" ])
+        expect(JSON.stringify(clean.tags)).toBe(JSON.stringify(
+            ['9','10','11',')','bikini','blue eyes','character:samus aran','flower','wew']
+        ))
+
+
+        // test set_favourite_tags
+        const fav_options = ['hi', 'happy', 'cat', 'dog']
+        const favs = [...new Set([
+            fav_options[Math.floor(Math.random() * fav_options.length)],
+            fav_options[Math.floor(Math.random() * fav_options.length)],
+        ])]
+        favs.sort()
+        const set_fav = await api.add_tags.set_favourite_tags({set: favs})
+        expect(JSON.stringify(set_fav.favourite_tags)).toBe(JSON.stringify(favs))
+
+        const get_fav = await api.add_tags.get_favourite_tags()
+        expect(JSON.stringify(get_fav.favourite_tags)).toBe(JSON.stringify(set_fav.favourite_tags))
         // TODO
     })
 
