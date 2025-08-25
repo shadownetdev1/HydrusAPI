@@ -332,6 +332,24 @@ describe('HyAPI', () => {
         expect(files2.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
         expect(files2.url_file_statuses.length).toBe(0)
 
+        // test: get_url_info
+        const info = await api.add_urls.get_url_info('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(info.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(info.url_type).toBe(5)
+        expect(info.url_type_string).toBe('unknown url')
+        expect(info.match_name).toBe('unknown url')
+        expect(info.can_parse).toBe(false)
+        expect(info.cannot_parse_reason).toBe('unknown url class')
+        expect(info.request_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+
+        // test: add_url
+        const add = await api.add_urls.add_url({
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg'
+        })
+        expect(add.human_result_text).toBe('"unknown url" URL added successfully.')
+        expect(add.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg')
+        console.log(add)
+
         // TODO
     })
 

@@ -7,7 +7,7 @@
  * Takes an options object and convert it to an URLSearchParams instance
  * making sure that all lists and objects are encoded as JSON strings first
  * @param {{[key: string]: any}} options
- * @returns {InstanceType<URLSearchParams>}
+ * @returns {URLSearchParams}
  */
 const optionsToURLSearchParams = (options) => {
     for (const [key, value] of Object.entries(options)) {
@@ -536,16 +536,11 @@ module.exports = class RawAPI{
      */
     get_url_info: async(url, return_as) => {
         // region: add_urls/get_url_info
-        return await this.old_call(
-            'GET',
-            '/add_urls/get_url_info',
-            {
-                queries: {
-                    url: url,
-                },
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/add_urls/get_url_info',
+            queries: optionsToURLSearchParams({url: url}),
+            return_as: return_as
+        })
     },
 
     /**
@@ -569,14 +564,11 @@ module.exports = class RawAPI{
      */
     add_url: async(options, return_as) => {
         // region: add_urls/add_url
-        return await this.old_call(
-            'POST',
-            '/add_urls/add_url',
-            {
-                options,
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/add_urls/add_url',
+            json: options,
+            return_as: return_as,
+        })
     },
 
     /**

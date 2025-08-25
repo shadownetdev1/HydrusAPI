@@ -323,6 +323,8 @@ interface URLInfo {
     url_type_string: "post url"|"file url"|"gallery url"|"watchable url"|"unknown url" // TODO: validate
     match_name: string
     can_parse: boolean
+    /** Undefined if can_parse is true; The reason Hydrus cannot parse this url */
+    cannot_parse_reason?: string
 }
 
 interface get_url_info_response extends api_version_response, URLInfo {}
