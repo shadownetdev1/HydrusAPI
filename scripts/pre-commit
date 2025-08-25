@@ -2,17 +2,22 @@
 
 echo "*****Running tests******"
 
+# Stash unstaged changes
 stash_commit="$(git stash create)"
+
+# Remove unstaged changes
 git reset —-hard
 
+# run tests and create coverage report
 npm test
-
 status=$?
 
+# Stage updated coverage report files
+git add docs/coverage
+
+# Restore unstaged changes from stash
 if [[ -n "${stash_commit}" ]]
 then git stash apply "${stash_commit}"
 fi
-
-git add coverage/
 
 exit $status
