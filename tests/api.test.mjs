@@ -131,7 +131,7 @@ describe('HyAPI', () => {
             await upload()
         }
 
-        // delete file
+        // trash the file
         const trash_res = await api.add_files.delete_files({
             hash: f_hash,
             reason: 'HyAPI Test'
@@ -144,12 +144,25 @@ describe('HyAPI', () => {
         })).metadata[0].is_trashed
         expect(is_trashed).toBe(true)
 
+        // un trash the file
+        const untrash_res = await api.add_files.undelete_files({
+            hash: f_hash
+        })
+        expect(untrash_res).toBe(true)
+
+        // trash the file again
+        const trash_res2 = await api.add_files.delete_files({
+            hash: f_hash,
+            reason: 'HyAPI Test'
+        })
+        expect(trash_res2).toBe(true)
+
         // get file_service_key for 'all local files'
         const file_service_key = (await api.get_service({
             service_name: 'all local files'
         })).service.service_key
 
-        // delete the file again
+        // delete the file
         const delete_res = await api.add_files.delete_files({
             hash: f_hash,
             reason: 'HyAPI Test',
@@ -248,7 +261,6 @@ describe('HyAPI', () => {
         // TODO: validate that hyapi_test_render.png is a render of the image (PHash?)
         jetpack.remove('./hyapi_test_render.png')
 
-        // TODO: undelete_files
         // TODO: migrate_files, archive_files
         // TODO: unarchive_files, generate_hashes
     }, 120000)
