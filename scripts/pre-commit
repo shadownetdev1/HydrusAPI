@@ -9,7 +9,7 @@ stash_commit="$(git stash create)"
 git reset —-hard
 
 # run tests and create coverage report
-npm test
+npx vitest run --coverage
 status=$?
 
 # Stage updated coverage report files
