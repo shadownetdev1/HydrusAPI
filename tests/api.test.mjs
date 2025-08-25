@@ -474,7 +474,35 @@ describe('HyAPI', () => {
     })
 
     test('manage_pages.*', async() => {
-        // TODO
+        // test get_pages
+        const pages = (await api.manage_pages.get_pages()).pages
+        expect(pages.name).toBe('top page notebook')
+        expect(pages.page_state).toBe(0)
+        expect(pages.page_type).toBe(10)
+        expect(pages.is_media_page).toBe(false)
+        expect(pages.selected).toBe(true)
+        const page = pages.pages[0]
+        expect(page.name).toBe('files')
+        expect(page.page_state).toBe(0)
+        expect(page.page_type).toBe(6)
+        expect(page.is_media_page).toBe(true)
+        expect(page.selected).toBe(true)
+
+        // test get_page_info
+        const info = (await api.manage_pages.get_page_info({
+            page_key: page.page_key,
+            // simple: false,
+        })).page_info
+        expect(info.name).toBe(page.name)
+        expect(info.page_key).toBe(page.page_key)
+        expect(info.page_state).toBe(page.page_state)
+        expect(info.page_type).toBe(page.page_type)
+        expect(info.is_media_page).toBe(page.is_media_page)
+        expect(typeof info.media.num_files).toBe('number')
+        expect(Array.isArray(info.media.hash_ids)).toBe(true)
+        if (info.media.hash_ids.length !== 0) {
+            expect(typeof info.media.hash_ids[0]).toBe('number')
+        }
     })
 
     test('manage_popups.*', async() => {

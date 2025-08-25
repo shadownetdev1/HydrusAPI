@@ -945,3 +945,30 @@ interface get_pages_response extends api_version_response {
     }
 }
 
+interface PageInfoObject {
+    name: string
+    /**
+     * `page_key` is a unique identifier for the page.
+     * It will stay the same for a particular page throughout the session,
+     * but new ones are generated on a session reload.
+     */
+    page_key: string
+    page_state: PAGE_STATE
+    page_type: PAGE_TYPE
+    /**
+     * `is_media_page` is simply a shorthand for whether the page is
+     * a normal page that holds thumbnails or a 'page of pages'.
+     * Only media pages can have files (and accept /manage_files/add_files commands).
+     */
+    is_media_page: boolean
+    /** TODO: type def; See https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_page_info--idmanage_pages_get_page_info- */
+    management: {}
+    media: {
+        num_files: number
+        hash_ids: number[]
+    }
+}
+
+interface get_page_info_response extends api_version_response {
+    page_info: PageInfoObject
+}

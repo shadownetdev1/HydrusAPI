@@ -1120,12 +1120,10 @@ module.exports = class RawAPI{
      */
     get_pages: async(return_as) => {
         // region: manage_pages/get_pages
-        return await this.old_call(
-            'GET',
-            '/manage_pages/get_pages',
-            undefined,
-            return_as
-        );
+        return await this.call({
+            endpoint: '/manage_pages/get_pages',
+            return_as: return_as
+        })
     },
 
     /**
@@ -1142,20 +1140,17 @@ module.exports = class RawAPI{
      * Endpoint: /manage_pages/get_page_info
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_page_info--idmanage_pages_get_page_info-
-     * @param {{page_key: string,  simple?: boolean}}
+     * @param {{page_key: string,  simple?: boolean}} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {any} // TODO: typedef
+     * @returns {get_page_info_response}
      */
     get_page_info: async(options, return_as) => {
         // region: manage_pages/get_page_info
-        return await this.old_call(
-            'GET',
-            `/manage_pages/get_page_info`,
-            {
-                options,
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: `/manage_pages/get_page_info`,
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
     },
 
     // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
