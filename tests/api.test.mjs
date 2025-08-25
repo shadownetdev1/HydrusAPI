@@ -296,23 +296,23 @@ describe('HyAPI', () => {
         // test: associate_url (cleanup in case it already has the url)
         const cleanup = await api.add_urls.associate_url({
             hash: f_hash,
-            url_to_delete: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree'
+            url_to_delete: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
         })
         expect(cleanup).toBe(true)
 
         // test: associate_url (addition)
         const addition = await api.add_urls.associate_url({
             hash: f_hash,
-            urls_to_add: ['https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree']
+            urls_to_add: ['https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
         })
         expect(addition).toBe(true)
 
         // test: get_url_files (expect 1)
         const files = await api.add_urls.get_url_files({
-            url: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree',
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg',
             doublecheck_file_system: true
         })
-        expect(files.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(files.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(files.url_file_statuses.length).toBe(1)
         expect(files.url_file_statuses[0].status).toBe(2)
         expect(files.url_file_statuses[0].hash).toBe(f_hash)
@@ -321,26 +321,26 @@ describe('HyAPI', () => {
         // test: associate_url (removal)
         const removal = await api.add_urls.associate_url({
             hash: f_hash,
-            urls_to_delete: ['https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree']
+            urls_to_delete: ['https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
         })
         expect(removal).toBe(true)
 
         // test: get_url_files (expect 0)
         const files2 = await api.add_urls.get_url_files({
-            url: 'https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree'
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
         })
-        expect(files2.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(files2.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(files2.url_file_statuses.length).toBe(0)
 
         // test: get_url_info
-        const info = await api.add_urls.get_url_info('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
-        expect(info.normalised_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        const info = await api.add_urls.get_url_info('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        expect(info.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(info.url_type).toBe(5)
         expect(info.url_type_string).toBe('unknown url')
         expect(info.match_name).toBe('unknown url')
         expect(info.can_parse).toBe(false)
         expect(info.cannot_parse_reason).toBe('unknown url class')
-        expect(info.request_url).toBe('https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree')
+        expect(info.request_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
 
         // test: add_url
         const add = await api.add_urls.add_url({
@@ -348,9 +348,6 @@ describe('HyAPI', () => {
         })
         expect(add.human_result_text).toBe('"unknown url" URL added successfully.')
         expect(add.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg')
-        console.log(add)
-
-        // TODO
     })
 
     test('add_tags.*', async() => {
