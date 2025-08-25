@@ -273,9 +273,16 @@ describe('HyAPI', () => {
         })
         expect(unArced).toBe(true)
 
+        // test: generate_hashes
+        // api.debug = true
+        // const gen_hashes = await api.add_files.generate_hashes({
+        //     bytes: jetpack.read(f_path, 'buffer')
+        // })
+        // console.log(gen_hashes)
+        // expect(gen_hashes.hash).toBe(f_hash)
 
-        // TODO: migrate_files
-        // TODO: generate_hashes
+
+        // TODO: migrate_files (needs more than one file service)
     }, 120000)
 
     test('add_urls.*', async() => {

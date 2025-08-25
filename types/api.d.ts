@@ -238,19 +238,25 @@ interface add_file_response extends api_version_response {
     note: string
 }
 
+/** bytes or path must be provided. If path is provided it should be reachable by Hydrus */
+interface generate_hashes_options {
+    bytes?: any
+    path?: string
+}
+
 interface generate_hashes_response extends api_version_response {
     /** The file's SHA256 hash as computed by Hydrus */
     hash: string
     /** 
      * An array of one or more perceptual hashes for the file.
      * Can be undefined if Hydrus cannot create perceptual hashes
-     * for the given file// TODO: validate
+     * for the given file// TODO: validate the undefined statement
      */
     perceptual_hashes?: string[]
     /** 
      * A SHA256 hash of the pixel data for the given file.
      * Can be undefined if Hydrus cannot create pixel hashes
-     * for the given file // TODO: validate
+     * for the given file // TODO: validate the undefined statement
      */
     pixel_hash?: string
 }
