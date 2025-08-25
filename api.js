@@ -1064,16 +1064,11 @@ module.exports = class RawAPI{
      */
     get_cookies: async(domain, return_as) => {
         // region: manage_cookies/get_cookies
-        return await this.old_call(
-            'GET',
-            '/manage_cookies/get_cookies',
-            {
-                queries: {
-                    'domain': domain,
-                },
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/manage_cookies/get_cookies',
+            queries: optionsToURLSearchParams({domain: domain}),
+            return_as: return_as
+        })
     },
 
     /**
@@ -1084,21 +1079,17 @@ module.exports = class RawAPI{
      * /manage_cookies/set_cookies
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_cookiesset_cookies--idmanage_cookies_set_cookies-
-     * @param {set_cookies_data} data
+     * @param {set_cookies_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {any} // TODO: documentation doesn't mention response type. Figure it out
+     * @returns {boolean} Successful if true
      */
-    set_cookies: async(data, return_as) => {
+    set_cookies: async(options, return_as) => {
         // region: manage_cookies/set_cookies
-        this.api_compat_check(11, "set_cookies")
-        return await this.old_call(
-            'POST',
-            '/manage_cookies/set_cookies',
-            {
-                json: data,
-            },
-            return_as
-        );
+        return await this.call({
+            endpoint: '/manage_cookies/set_cookies',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
     },
 
         }

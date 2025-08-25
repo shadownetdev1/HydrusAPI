@@ -874,7 +874,7 @@ interface get_cookies_response extends api_version_response {
     cookies: [string, string, string, string, number|null][]
 }
 
-interface set_cookies_data {
+interface set_cookies_options {
     /**
      * list of all the cookies for a domain in the format of [ name, value, domain, path, expires ]
      * 

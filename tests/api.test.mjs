@@ -450,7 +450,23 @@ describe('HyAPI', () => {
     })
 
     test('manage_cookies.*', async() => {
-        // TODO
+        // test set_cookies
+        const expires = Math.floor(Date.now() / 1000) + 2592000 // current time plus 30 days
+        const set = await api.manage_cookies.set_cookies({
+            cookies: [
+                ["name", "value", ".example.com", "/", expires],
+            ]
+        })
+        expect(set).toBe(true)
+
+        // test get_cookies
+        const get = await api.manage_cookies.get_cookies('example.com')
+        expect(get.cookies.length).toBe(1)
+        expect(get.cookies[0][0]).toBe('name')
+        expect(get.cookies[0][1]).toBe('value')
+        expect(get.cookies[0][2]).toBe('.example.com')
+        expect(get.cookies[0][3]).toBe('/')
+        expect(get.cookies[0][4]).toBe(expires)
     })
 
     test('manage_headers.*', async() => {
