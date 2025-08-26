@@ -1,11 +1,11 @@
 {
-  "name": "hyapi",
+  "name": "hydrusapi",
   "version": "80.635.0-alpha",
   "description": "A JavaScript based implementation of the Hydrus client API with documentation, tests, and type definitions.",
-  "main": "hyapi.js",
+  "main": "hydrusapi.js",
   "scripts": {
-    "test": "cp scripts/pre-commit .git/hooks/pre-commit && vitest run --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hyapi_coverage",
-    "test:watch": "cp scripts/pre-commit .git/hooks/pre-commit && vitest --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hyapi_coverage"
+    "test": "cp scripts/pre-commit .git/hooks/pre-commit && vitest run --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage",
+    "test:watch": "cp scripts/pre-commit .git/hooks/pre-commit && vitest --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage"
   },
   "keywords": [
     "hydrusnetwork",

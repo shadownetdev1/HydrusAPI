@@ -8,7 +8,7 @@ export default defineConfig({
       reporter: process.env.GITHUB_ACTIONS ? ['text', 'html', 'json-summary', 'github-actions'] : ['text', 'html', 'json-summary'],
       // If you want a coverage reports even if your tests are failing, include the reportOnFailure option
       reportOnFailure: true,
-      exclude: ['docs/coverage', 'eslint.config.mjs', 'vite.config.mjs', 'types', 'tests/hydrus'],
+      exclude: ['docs/coverage', 'scripts', 'eslint.config.mjs', 'vite.config.mjs', 'types', 'tests/hydrus'],
       reportsDirectory: './docs/coverage'
     },
   },
