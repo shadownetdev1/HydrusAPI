@@ -457,34 +457,34 @@ module.exports = class RawAPI{
         })
     },
 
-    // /**
-    //  * Asks Hydrus to attempt to generate hashes for the given file.
-    //  * supply a json with either bytes : *file bytes* 
-    //  * or path: *file path*
-    //  * 
-    //  * Endpoint: /add_files/generate_hashes
-    //  * 
-    //  * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesgenerate_hashes--idadd_files_generate_hashes-
-    //  * @param {generate_hashes_options} options path to the file or the file data
-    //  * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-    //  * @returns {generate_hashes_response}
-    //  */
-    // generate_hashes: async(options, return_as) => {
-    //     // region: add_files/generate_hashes
-    //     const o = {
-    //         endpoint: '/add_files/generate_hashes',
-    //         return_as: return_as
-    //     }
-    //     if ('path' in options) {
-    //         o.json = options
-    //     } else if ('bytes' in options) {
-    //         o.headers = new Headers({'content-type': 'application/octet-stream'})
-    //         o.body = options.bytes
-    //     } else {
-    //         throw new Error('path or bytes must be defined in options')
-    //     }
-    //     return await this.call(o)
-    // },
+    /**
+     * Asks Hydrus to attempt to generate hashes for the given file.
+     * supply a json with either bytes : *file bytes* 
+     * or path: *file path*
+     * 
+     * Endpoint: /add_files/generate_hashes
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesgenerate_hashes--idadd_files_generate_hashes-
+     * @param {generate_hashes_options} options path to the file or the file data
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {generate_hashes_response}
+     */
+    generate_hashes: async(options, return_as) => {
+        // region: add_files/generate_hashes
+        const o = {
+            endpoint: '/add_files/generate_hashes',
+            return_as: return_as
+        }
+        if ('path' in options) {
+            o.json = options
+        } else if ('bytes' in options) {
+            o.headers = new Headers({'content-type': 'application/octet-stream'})
+            o.body = options.bytes
+        } else {
+            throw new Error('path or bytes must be defined in options')
+        }
+        return await this.call(o)
+    },
 
         }
     }
