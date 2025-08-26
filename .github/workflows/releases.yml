@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.npm_token}}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -97,5 +99,3 @@ jobs:
 
       # Publish to NPM
       - run: npm publish --tag alpha
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
