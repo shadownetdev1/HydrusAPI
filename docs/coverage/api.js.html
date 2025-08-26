@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.67% </span>
+                <span class="strong">93.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1038/1120</span>
+                <span class='fraction'>1036/1113</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.67% </span>
+                <span class="strong">93.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1038/1120</span>
+                <span class='fraction'>1036/1113</span>
             </div>
         
             
@@ -1245,14 +1245,7 @@
 <a name='L1180'></a><a href='#L1180'>1180</a>
 <a name='L1181'></a><a href='#L1181'>1181</a>
 <a name='L1182'></a><a href='#L1182'>1182</a>
-<a name='L1183'></a><a href='#L1183'>1183</a>
-<a name='L1184'></a><a href='#L1184'>1184</a>
-<a name='L1185'></a><a href='#L1185'>1185</a>
-<a name='L1186'></a><a href='#L1186'>1186</a>
-<a name='L1187'></a><a href='#L1187'>1187</a>
-<a name='L1188'></a><a href='#L1188'>1188</a>
-<a name='L1189'></a><a href='#L1189'>1189</a>
-<a name='L1190'></a><a href='#L1190'>1190</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1183'></a><a href='#L1183'>1183</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1444,13 +1437,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2628,25 +2614,18 @@ module.exports = class RawAPI{
      * Endpoint: /request_new_permissions
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-request_new_permissions--idrequest_new_permissions-
-     * @param {string} name descriptive name of your client to be shown in Hydrus' GUI
-     * @param {BASIC_PERMS_VALUE[]|"all"} permissions a list of permission identifiers you want to request
-     * @param {boolean} [permit_everything=false] If set to true then this client will get all permissions, both now and in the future
+     * @param {request_new_permissions_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {request_new_permissions_response}
      */
-<span class="fstat-no" title="function not covered" >    async request_new_permissions(name, permissions, permit_everything=false, return_as) {</span>
+<span class="fstat-no" title="function not covered" >    async request_new_permissions(options, return_as) {</span>
 <span class="cstat-no" title="statement not covered" >        // region: request_new_permissions</span>
-<span class="cstat-no" title="statement not covered" >        const query = optionsToURLSearchParams({</span>
-<span class="cstat-no" title="statement not covered" >            name: name</span>
-<span class="cstat-no" title="statement not covered" >        })</span>
-<span class="cstat-no" title="statement not covered" >        if (permissions === "all" || permit_everything) {</span>
-<span class="cstat-no" title="statement not covered" >            permissions = Object.values(this.BASIC_PERM)</span>
+<span class="cstat-no" title="statement not covered" >        if (options?.permissions === 'all') {</span>
+<span class="cstat-no" title="statement not covered" >            options.permissions = Object.values(this.BASIC_PERM)</span>
 <span class="cstat-no" title="statement not covered" >        }</span>
-<span class="cstat-no" title="statement not covered" >        query.set('permit_everything', permit_everything ?? false)  // FIXME: report bug. As of API version 80 and Hydrus version 629 permit_everything does nothing</span>
-<span class="cstat-no" title="statement not covered" >        query.set('basic_permissions', JSON.stringify(permissions))</span>
 <span class="cstat-no" title="statement not covered" >        return await this.call({</span>
 <span class="cstat-no" title="statement not covered" >            endpoint: '/request_new_permissions',</span>
-<span class="cstat-no" title="statement not covered" >            queries: query,</span>
+<span class="cstat-no" title="statement not covered" >            queries: optionsToURLSearchParams(options),</span>
 <span class="cstat-no" title="statement not covered" >            return_as: return_as</span>
 <span class="cstat-no" title="statement not covered" >        })</span>
 <span class="cstat-no" title="statement not covered" >    }</span>
@@ -3637,7 +3616,7 @@ module.exports = class RawAPI{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T10:06:18.581Z
+                at 2025-08-26T13:24:17.662Z
             </div>
         <script src="prettify.js"></script>
         <script>

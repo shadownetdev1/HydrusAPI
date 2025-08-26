@@ -173,7 +173,6 @@ const upload = async(path, hash) => {
  * This still means that we are stressing Hydrus a little,
  * but it should be fine.
  */
-
 describe('HyAPI', () => {
     test('api_version, session_key, and verify_access_key', async() => {
         const api_version = await api.api_version()

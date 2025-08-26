@@ -185,25 +185,18 @@ module.exports = class RawAPI{
      * Endpoint: /request_new_permissions
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-request_new_permissions--idrequest_new_permissions-
-     * @param {string} name descriptive name of your client to be shown in Hydrus' GUI
-     * @param {BASIC_PERMS_VALUE[]|"all"} permissions a list of permission identifiers you want to request
-     * @param {boolean} [permit_everything=false] If set to true then this client will get all permissions, both now and in the future
+     * @param {request_new_permissions_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {request_new_permissions_response}
      */
-    async request_new_permissions(name, permissions, permit_everything=false, return_as) {
+    async request_new_permissions(options, return_as) {
         // region: request_new_permissions
-        const query = optionsToURLSearchParams({
-            name: name
-        })
-        if (permissions === "all" || permit_everything) {
-            permissions = Object.values(this.BASIC_PERM)
+        if (options?.permissions === 'all') {
+            options.permissions = Object.values(this.BASIC_PERM)
         }
-        query.set('permit_everything', permit_everything ?? false)  // FIXME: report bug. As of API version 80 and Hydrus version 629 permit_everything does nothing
-        query.set('basic_permissions', JSON.stringify(permissions))
         return await this.call({
             endpoint: '/request_new_permissions',
-            queries: query,
+            queries: optionsToURLSearchParams(options),
             return_as: return_as
         })
     }

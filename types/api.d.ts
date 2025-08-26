@@ -167,6 +167,16 @@ interface api_version_response {
     hydrus_version: number
 }
 
+/** name must be defined; permissions or permits_everything must be defined */
+interface request_new_permissions_options {
+    /** The name that will be displayed in Hydrus for this client */
+    name: string
+    /** A list of basic permissions or the string 'all'; If 'all' then all basic permissions will be added, though you probably just want to use permits_everything instead */
+    permissions?: BASIC_PERMS_VALUE[]|"all"
+    /** Defaults to false; if true the client gets all permissions both now and in the future */
+    permits_everything?: boolean
+}
+
 interface request_new_permissions_response extends api_version_response {
     error?: string
     exception_type?: string
