@@ -9,6 +9,12 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 ## [80.635.1-alpha](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.635.1-alpha) - 2025-7-26
 
+
+_Fix workflow not saving package.json_
+
+
+## [80.635.1-alpha](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.635.1-alpha) - 2025-7-26
+
 _Fix NPM page formatting_
 
 
