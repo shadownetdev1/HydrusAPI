@@ -2,4 +2,4 @@
 
 ## <!-- version -->
 
-_Release system test_
+_Fix NPM page formatting_
