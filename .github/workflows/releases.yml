@@ -2,8 +2,6 @@ name: Create release
 
 on:
   push:
-    branches:
-      - main
     tags:
       - "v*"
 
@@ -19,7 +17,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Prep
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -35,11 +33,55 @@ jobs:
       # replace CHANGELOG.UNCOMMITTED.MD with CHANGELOG.TEMPLATE.MD
       - run: cp -f CHANGELOG.TEMPLATE.MD CHANGELOG.UNCOMMITTED.MD
 
-      - name: Commit CHANGELOGs
+      - name: Publish Statements Badge
+        uses: wjervis7/vitest-badge-action@v1.0.0
+        if: success() || failure() # run whether steps succeed or not
+        with:
+          result-type: statements
+          badge-text: 'Coverage (Statements)'
+          upload-badge: false
+          vitest-config-path: 'vite.config.mjs'
+          summary-path: 'docs/coverage/coverage-summary.json'
+          badge-path: 'badges/statements.svg'
+
+      - name: Publish Lines Badge
+        uses: wjervis7/vitest-badge-action@v1.0.0
+        if: success() || failure() # run whether steps succeed or not
+        with:
+          result-type: lines
+          badge-text: 'Coverage (Lines)'
+          upload-badge: false
+          vitest-config-path: 'vite.config.mjs'
+          summary-path: 'docs/coverage/coverage-summary.json'
+          badge-path: 'badges/lines.svg'
+
+      - name: Publish Functions Badge
+        uses: wjervis7/vitest-badge-action@v1.0.0
+        if: success() || failure() # run whether steps succeed or not
+        with:
+          result-type: functions
+          badge-text: 'Coverage (Functions)'
+          upload-badge: false
+          vitest-config-path: 'vite.config.mjs'
+          summary-path: 'docs/coverage/coverage-summary.json'
+          badge-path: 'badges/functions.svg'
+
+      - name: Publish Branches Badge
+        uses: wjervis7/vitest-badge-action@v1.0.0
+        if: success() || failure() # run whether steps succeed or not
+        with:
+          result-type: branches
+          badge-text: 'Coverage (Branches)'
+          upload-badge: false
+          vitest-config-path: 'vite.config.mjs'
+          summary-path: 'docs/coverage/coverage-summary.json'
+          badge-path: 'badges/branches.svg'
+
+      - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
           commit_message: Updated changelogs for release
-          file_pattern: 'CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
+          file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
       # minify hyapi.js and save as hyapi.${{ github.ref_name }}.min.js
       - run: npm install @node-minify/cli @node-minify/uglify-js
       - run: node-minify --compressor uglify-js --input 'hyapi.js' --output 'hyapi.${{ github.ref_name }}.min.js'
