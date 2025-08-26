@@ -6,8 +6,3 @@ The contents of this file are automatically generated on release.
 This changelog follows the standards defined by [Common Changelog](https://common-changelog.org/).
 
 <!-- insert_point -->
-
-## [80.635.0-alpha](https://github.com/shadownetdev1/HyAPI/releases/tag/80.635.0-alpha) - 2025-7-26
-
-_Release system test_
-
