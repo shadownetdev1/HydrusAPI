@@ -95,18 +95,7 @@ jobs:
             hydrusapi.${{ github.ref_name }}.js
             hydrusapi.${{ github.ref_name }}.min.js
 
-  publish-npm:
-    needs: create-release
-    name: Publish to NPM
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          registry-url: https://registry.npmjs.org/
-      # set version in package.json
-      - run: npm version --no-git-tag-version --allow-same-version ${{ github.ref_name }}
+      # Publish to NPM
       - run: npm publish --tag alpha
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
