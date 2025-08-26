@@ -503,11 +503,23 @@ describe('HyAPI', () => {
         expect(JSON.stringify(get_fav.favourite_tags)).toBe(JSON.stringify(set_fav.favourite_tags))
 
         // get the my files service
-        const service_key = (await api.get_service({service_name: 'my files'})).service.service_key
+        const tags_service_key = (await api.get_service({service_name: 'my tags'})).service.service_key
+
+        // test get_siblings_and_parents
+        const sib_parent_data = await api.add_tags.get_siblings_and_parents(['stream'])
+        expect(Object.keys(sib_parent_data.tags).includes('stream')).toBe(true)
+        expect(Object.keys(sib_parent_data.tags.stream).includes(tags_service_key)).toBe(true)
+        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].siblings)).toBe(JSON.stringify(['river', 'stream']))
+        expect(sib_parent_data.tags.stream[tags_service_key].ideal_tag).toBe('river')
+        expect(sib_parent_data.tags.stream[tags_service_key].descendants.length).toBe(0)
+        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].ancestors)).toBe(JSON.stringify(['water']))
+
+        // get the my files service
+        const files_service_key = (await api.get_service({service_name: 'my files'})).service.service_key
 
         // test: add_tags
         // const service_keys_to_tags = {}
-        // service_keys_to_tags[service_key] = ['boat', 'bridge', 'water', 'tower']
+        // service_keys_to_tags[files_service_key] = ['boat', 'bridge', 'river', 'tower']
         // api.debug = true
         // const add = await api.add_tags.add_tags({
         //     hash: f_hash,
@@ -516,7 +528,6 @@ describe('HyAPI', () => {
         // console.log(add)
 
         // TODO: search_tags
-        // TODO: get_siblings_and_parents
     })
 
     test('edit_ratings.*', async() => {

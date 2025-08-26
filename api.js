@@ -650,7 +650,7 @@ module.exports = class RawAPI{
         // region add_tags/get_siblings_and_parents
         return await this.call({
             endpoint: '/add_tags/get_siblings_and_parents',
-            json: tags,
+            queries: optionsToURLSearchParams({tags: tags}),
             return_as: return_as
         })
     },
