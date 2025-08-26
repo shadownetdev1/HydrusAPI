@@ -76,7 +76,7 @@ jobs:
         with:
           branch: main
           commit_message: Updated changelogs for release
-          file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
+          file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD package.json'
       # minify hydrusapi.js and save as hydrusapi.${{ github.ref_name }}.min.js
       - run: npm install @node-minify/cli @node-minify/uglify-js
       - run: npx node-minify --compressor uglify-js --input 'hydrusapi.js' --output 'hydrusapi.${{ github.ref_name }}.min.js'
