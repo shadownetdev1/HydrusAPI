@@ -1,0 +1,73 @@
+name: Create release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  create-release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+
+      - name: Prep
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # set version in package.json
+      - run: npm version --no-git-tag-version --allow-same-version ${{ github.ref_name }}
+      # replace {version} in CHANGELOG.UNCOMMITTED.MD with ${{ github.ref_name }}
+      - run: sed -i "s/<!-- version -->/## [${{ github.ref_name }}](https://github.com/owner/name/releases/tag/${{ github.ref_name }}) - $(date +"%Y-%m-%d")/g" CHANGELOG.UNCOMMITTED.MD
+      # add contents from $(cat CHANGELOG.UNCOMMITTED.MD) to CHANGELOG.MD
+      - run: sed -i "s/<!-- insert_point -->/$(cat CHANGELOG.UNCOMMITTED.MD)" CHANGELOG.MD
+      # copy CHANGELOG.UNCOMMITTED.MD to LOG.MD
+      - run: cp -f CHANGELOG.UNCOMMITTED.MD LOG.MD
+      # replace CHANGELOG.UNCOMMITTED.MD with CHANGELOG.TEMPLATE.MD
+      - run: cp -f CHANGELOG.TEMPLATE.MD CHANGELOG.UNCOMMITTED.MD
+
+      - name: Commit CHANGELOGs
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: Updated changelogs for release
+          file_pattern: 'CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
+      # minify hyapi.js and save as hyapi.${{ github.ref_name }}.min.js
+      - run: npm install @node-minify/cli @node-minify/uglify-js
+      - run: node-minify --compressor uglify-js --input 'hyapi.js' --output 'hyapi.${{ github.ref_name }}.min.js'
+      # copy hyapi.js to hyapi.${{ github.ref_name }}.js
+      - run: cp -f hyapi.js hyapi.${{ github.ref_name }}.js
+
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          prerelease: true
+          body_path: LOG.MD
+          fail_on_unmatched_files: true
+          preserve_order: true
+          files: |
+            hyapi.${{ github.ref_name }}.js
+            hyapi.${{ github.ref_name }}.min.js
+
+  publish-npm:
+    needs: create-release
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: https://registry.npmjs.org/
+      - run: npm publish --tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}

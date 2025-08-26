@@ -1,10 +1,10 @@
 
 # HyAPI
 
+[![NPM](https://nodei.co/npm/hyapi.svg?data=d,s)](https://www.npmjs.com/package/hyapi)
+
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
 [![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v635)
-
-<!-- [![NPM](https://nodei.co/npm/hyapi.svg?data=d,s)](https://www.npmjs.com/package/hyapi) -->
 
 [![Line Test Coverage Badge](badges/lines.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
 [![Statement Test Coverage Badge](badges/statements.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
@@ -12,32 +12,36 @@
 [![Branch Test Coverage Badge](badges/branches.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
 
 <p align="center">
-  <img width="100%" alt="Warning: This API implementation is in an pre-alpha state and is provided as is. While I expect that all implemented and tested endpoints work as expected I cannot guarantee that that is the case. Also as of right now there are several API endpoints that are implemented that don't have tests and there are many endpoints that still need to be implemented." src="badges/warning.svg">
+  <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented endpoints work as expected I cannot guarantee that that is the case." src="badges/warning.svg">
 </p>
 
-HyAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a fully typed and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
+HyAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
 
-As of currently all endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) and a few more are implemented. There is still a lot to do to fully implement Hydrus API Version 80.
+As of currently most Hydrus API endpoints are implemented and all API endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at the bottom of this page.
 
 ## Installation
 
-HyAPI currently doesn't have an npm package or release. The best way to us it at this point in time would be to git clone the repo or to download [api.js](api.js) and use it directly.
+If you are using npm installation is as simple as `npm install hyapi@alpha`.
+
+For browser users [download the latest release](https://github.com/shadownetdev1/HyAPI/releases). Do note that minified versions are not yet provided.
 
 ## Documentation and Usage
 
-HyAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [unit tests](src/tests/api.test.mjs) are implemented.
+HyAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [tests](src/tests/api.test.mjs) are implemented.
 
 ## Contributing
 
-Contributions are greatly appreciated. These can come in the form of reporting issues and creating pull requests. If you have working knowledge of JavaScript, want to contribute, but don't know where to get started then looking at our currently open issues would be suggested
+Contributions are greatly appreciated. These can come in the form of [reporting issues](https://github.com/shadownetdev1/HyAPI/issues/new/choose) and [creating pull requests](https://github.com/shadownetdev1/HyAPI/compare). If you have working knowledge of JavaScript and want to contribute, but don't know where to get started then looking at our [currently open issues](https://github.com/shadownetdev1/HyAPI/issues) or [unimplemented endpoints](#endpoints) would be suggested.
+
+We do not provide a way support us monetarily (at this time). We suggest supporting the wonderful Hydrus Developer on their [Patreon](https://www.patreon.com/hydrus_dev) instead. This project would have no reason to exist if it wasn't for the over a decade of work that Hydrus Developer has put into their project.
 
 ## Versioning
 
-HyAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair
+HyAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. The version in [`package.json`](./package.json) is automatically updated to match the tag name on release.
 
-## Thanks
+## Thanks and Attribution
 
-<!-- NPM badge provided by [NodeICO](https://nodei.co/npm/hyapi/). -->
+NPM badge provided by [NodeICO](https://nodei.co/npm/hyapi/).
 
 Hydrus version badges provided by [Shields.io](https://shields.io/).
 
@@ -54,3 +58,81 @@ Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s 
 ## License
 
 HyAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
+
+## Endpoints
+
+This is all the endpoints that exist as of Hydrus API version 80. Checked endpoints have been implemented.
+
+- [x] `/api_version`
+- [x] `/request_new_permissions`; While this is implemented and we do not expect it to break it cannot be automatically tested due to its nature.
+- [x] `/session_key`
+- [x] `/verify_access_key`
+- [x] `/get_service`
+- [x] `/get_services`
+- [x] `/add_files/add_file`
+- [x] `/add_files/delete_files`
+- [x] `/add_files/undelete_files`
+- [x] `/add_files/clear_file_deletion_record`
+- [x] `/add_files/migrate_files`
+- [x] `/add_files/archive_files`
+- [x] `/add_files/unarchive_files`
+- [x] `/add_files/generate_hashes`; While this is implemented it is not working due to Hydrus currently having a bug that makes it unusable. A pull request is pending that fixes this issue [here](https://github.com/hydrusnetwork/hydrus/pull/1784)
+- [x] `/add_urls/get_url_files`
+- [x] `/add_urls/get_url_info`
+- [x] `/add_urls/add_url`
+- [x] `/add_urls/associate_url`
+- [x] `/add_tags/clean_tags`
+- `/add_tags/get_tag_services`; No longer available. Use `/get_services` instead
+- [x] `/add_tags/get_favourite_tags`
+- [x] `/add_tags/get_siblings_and_parents`
+- [x] `/add_tags/search_tags`
+- [x] `/add_tags/add_tags`
+- [x] `/add_tags/set_favourite_tags`
+- [x] `/edit_ratings/set_rating`
+- [ ] `/edit_times/increment_file_viewtime`
+- [ ] `/edit_times/set_file_viewtime`
+- [ ] `/edit_times/set_time`
+- [ ] `/add_notes/set_notes`
+- [ ] `/add_notes/delete_notes`
+- [x] `/get_files/search_files`
+- [x] `/get_files/file_hashes`
+- [x] `/get_files/file_metadata`
+- [x] `/get_files/file`
+- [x] `/get_files/thumbnail`
+- [x] `/get_files/file_path`
+- [x] `/get_files/thumbnail_path`
+- [x] `/get_files/local_file_storage_locations`
+- [x] `/get_files/render`
+- [ ] `/manage_file_relationships/get_file_relationships`
+- [ ] `/manage_file_relationships/get_potentials_count`
+- [ ] `/manage_file_relationships/get_potential_pairs`
+- [ ] `/manage_file_relationships/get_random_potentials`
+- [ ] `/manage_file_relationships/remove_potentials`
+- [ ] `/manage_file_relationships/set_file_relationships`
+- [ ] `/manage_file_relationships/set_kings`
+- [ ] `/manage_services/get_pending_counts`
+- [ ] `/manage_services/commit_pending`
+- [ ] `/manage_services/forget_pending`
+- [x] `/manage_cookies/get_cookies`
+- [x] `/manage_cookies/set_cookies`
+- [ ] `/manage_headers/get_headers`
+- [ ] `/manage_headers/set_headers`
+- `/manage_headers/set_user_agent`; Will NOT BE implemented due to it being deprecated. Use `/manage_headers/set_headers` instead.
+- [x] `/manage_pages/get_pages`
+- [x] `/manage_pages/get_page_info`
+- [ ] `/manage_pages/add_files`
+- [x] `/manage_pages/focus_page`
+- [ ] `/manage_pages/refresh_page`
+- [ ] `/manage_popups/get_popups`
+- [ ] `/manage_popups/add_popup`
+- [ ] `/manage_popups/call_user_callable`
+- [ ] `/manage_popups/cancel_popup`
+- [ ] `/manage_popups/dismiss_popup`
+- [ ] `/manage_popups/finish_popup`
+- [ ] `/manage_popups/finish_and_dismiss_popup`
+- [ ] `/manage_popups/update_popup`
+- [ ] `/manage_database/force_commit`
+- [ ] `/manage_database/lock_on`
+- [ ] `/manage_database/lock_off`
+- [ ] `/manage_database/mr_bones`
+- [ ] `/manage_database/get_client_options`

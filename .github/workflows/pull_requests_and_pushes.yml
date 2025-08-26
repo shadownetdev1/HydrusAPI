@@ -1,5 +1,5 @@
 ---
-name: BadgesAndCoverageReport
+name: Pull request and push coverage reports
 
 on:
   pull_request:
@@ -79,4 +79,5 @@ jobs:
       - name: Commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
+          commit_message: Updated coverage badges
           file_pattern: 'badges/*'

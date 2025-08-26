@@ -8,7 +8,7 @@ const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb
 const ADDRESS = 'http://localhost:45869'
 
 import {test, expect, describe} from 'vitest'
-import API from '../api.js'
+import API from '../hyapi.js'
 import jetpack from 'fs-jetpack'
 import fs from 'fs/promises'
 

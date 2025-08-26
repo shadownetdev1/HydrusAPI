@@ -1,4 +1,7 @@
+.github/
 docs/
 scripts/
 tests/
+CHANGELOG.TEMPLATE.MD
+CHANGELOG.UNCOMMITTED.MD
 vite.config.mjs
