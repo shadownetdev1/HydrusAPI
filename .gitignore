@@ -1,2 +1,4 @@
 node_modules/
+tests/hydrus/
+tests/hydrus-v???.tar.zst
 package-lock.json

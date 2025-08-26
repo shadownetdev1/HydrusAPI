@@ -1,19 +1,129 @@
 
 // cSpell: ignore hyapi, undelete
 
-import {test, expect, describe, beforeAll} from 'vitest'
+const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567'
+// WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
+// WARNING: Some of these tests are destructive and will cause data loss.
+// WARNING: You have been warned and I am not responsible for any damages.
+const ADDRESS = 'http://localhost:45869'
+
+import {test, expect, describe} from 'vitest'
 import API from '../api.js'
 import jetpack from 'fs-jetpack'
-import fs from 'fs/promises';
+import fs from 'fs/promises'
+
+const util = require('util')
+const exec_async = util.promisify(require('child_process').exec)
+const exec = require('child_process').exec
+
+if (!process.platform === 'linux') {
+    throw new Error('This test script currently only supports linux')
+}
 
 const api = new API({
     debug: false,
-    access_key: "6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567", // TODO: pull from environment
+    access_key: ACCESS_KEY,
     // WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
     // WARNING: Some of these tests are destructive and will cause data loss.
     // WARNING: You have been warned and I am not responsible for any damages.
-    address: "http://localhost:45869", // TODO: pull from environment
+    address: ADDRESS,
 })
+
+const get_hydrus = async() => {
+    const link = `https://github.com/hydrusnetwork/hydrus/releases/download/v${api.HYDRUS_TARGET_VERSION}/Hydrus.Network.${api.HYDRUS_TARGET_VERSION}.-.Linux.-.Executable.tar.zst`
+    const dest = `tests/hydrus-v${api.HYDRUS_TARGET_VERSION}.tar.zst`
+
+    // const exec = require('child_process').exec
+    if (jetpack.exists(dest) === false) {
+        console.log(`Downloading Hydrus version ${api.HYDRUS_TARGET_VERSION} (this will likely take a while)...`)
+        const download_command = `curl -L -o ${dest} '${link}'`
+        // const download_command = `wget '${link}' -O ${dest}`
+        
+        let { stdout, stderr } = await exec_async(download_command)
+        console.log('stdout:', stdout)
+        console.log('stderr:', stderr)
+    }
+    
+    console.log(`Extracting Hydrus...`)
+    jetpack.remove('tests/hydrus')
+    jetpack.dir('tests/hydrus')
+    const extract_command = `tar --use-compress-program=unzstd -xvf '${jetpack.cwd()}/${dest}' --strip-components=1 -C '${jetpack.cwd()}/tests/hydrus'`
+    let { stdout2, stderr2 } = await exec_async(extract_command)
+    console.log('stdout:', stdout2)
+    console.log('stderr:', stderr2)
+}
+
+const hydrus_running = async() => {
+    const path = `${jetpack.cwd()}/tests/hydrus/hydrus_client`.replaceAll('/', '\\/')
+    let { stdout, stderr } = await exec_async(`ps ax -ww -o pid,args | sed -n '/${path}/p'`)
+    if (stderr || stdout.trim().length === 0) {
+        return false
+    } else {
+        return stdout.trim().split(` `)[0].trim()
+    }
+}
+
+const exit_hydrus = async() => {
+    const pid = await hydrus_running()
+    if (pid) {
+        process.kill(pid, 'SIGTERM')
+    }
+    const start = Math.floor(Date.now() / 1000)
+    while (await hydrus_running()) {
+        let now = Math.floor(Date.now() / 1000)
+        if ((now - start) > 30) {
+            throw new Error(`Hydrus is taking too long to exit`)
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000))
+    }
+}
+
+const start_hydrus = async() => {
+    console.log(`Starting Hydrus...`)
+    exec(`${jetpack.cwd()}/tests/hydrus/hydrus_client`)
+    const start = Math.floor(Date.now() / 1000)
+    let api_accessible = false
+    console.log(`Waiting up to 60 seconds for Hydrus to be available...`)
+    while (!api_accessible) {
+        let now = Math.floor(Date.now() / 1000)
+        if ((now - start) > 60) {
+            if (await hydrus_running()) {
+                throw new Error(`Hydrus is running, but it isn't responding to it's API. Is it loaded? Is the API setup correctly?`)
+            }
+            throw new Error(`Hydrus is taking too long to launch`)
+        }
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        try {
+            const api_version = await api.api_version()
+            console.log(api_version)
+            api_accessible = true
+        } catch {
+            // nothing to do
+        }
+    }
+}
+
+if (jetpack.exists('tests/hydrus') === false) {
+    await get_hydrus()
+}
+
+try {
+    const api_version = await api.api_version()
+    console.log(api_version)
+    if (api_version.version !== api.VERSION | api_version.hydrus_version !== api.HYDRUS_TARGET_VERSION) {
+        await exit_hydrus()
+        await get_hydrus()
+    }
+} catch (e) {
+    if (await hydrus_running()) {
+        throw e
+    }
+    if (jetpack.exists('tests/hydrus') !== 'dir') {throw new Error('Hydrus was not installed correctly')}
+    console.log(`Copying test database to hydrus`)
+    jetpack.remove('tests/hydrus/db')
+    jetpack.copy('tests/db', 'tests/hydrus/db')
+    await start_hydrus()
+}
 
 const exists = async(hash) => {
     try {
@@ -65,15 +175,6 @@ const upload = async(path, hash) => {
  */
 
 describe('HyAPI', () => {
-
-    beforeAll(async() => {
-        const api_version = await api.api_version()
-        console.log(api_version)
-        if (api_version.version !== api.VERSION) {
-            console.warn(`HyAPI is designed for API version ${api.VERSION}, but the Hydrus client we connected to is at API version ${api_version.version}`)
-        }
-    })
-
     test('api_version, session_key, and verify_access_key', async() => {
         const api_version = await api.api_version()
         expect(api_version?.version).toBeTypeOf('number')

@@ -29,6 +29,8 @@ module.exports = class RawAPI{
     address
 
     VERSION = 80
+    /** What version of Hydrus are we testing against */
+    HYDRUS_TARGET_VERSION = 635
 
     /**
      * These are the permissions that the client can have
