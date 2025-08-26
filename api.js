@@ -120,13 +120,17 @@ module.exports = class RawAPI{
             if (this.debug) {
                 console.log(response)
             }
-            const throw_not_okay = () => {
+            const throw_not_okay = async() => {
                 if (!response.ok) {
-                    const message = `endpoint '${o.endpoint}' responded with status code '${response.status}' and status text '${response.statusText}'`
+                    const message = `endpoint '${o.endpoint}' responded with status code '${response.status}' and text '${response.statusText}'. Previous messages may review more details.`
                     if (!this.debug) {
                         console.error(response)
                     }
-                    // TODO: attempt to parse Hydrus error message from json
+                    try {
+                        console.error(await response.json())
+                    } catch {
+                        // do nothing
+                    }
                     throw new Error(message)
                 }
             }
@@ -135,7 +139,7 @@ module.exports = class RawAPI{
                 case 'raw':
                     return response
                 case 'json':
-                    throw_not_okay()
+                    await throw_not_okay()
                     try {
                         return await response.json()
                     } catch (e) {
@@ -149,7 +153,7 @@ module.exports = class RawAPI{
                 case 'success':
                     return response.ok
                 case 'readable_stream':
-                    throw_not_okay()
+                    await throw_not_okay()
                     if (!(response?.body instanceof ReadableStream)) {
                         throw new Error(`response.body doesn't exist or isn't a readable stream`)
                     }

@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.08% </span>
+                <span class="strong">92.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1036/1113</span>
+                <span class='fraction'>1036/1117</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.08% </span>
+                <span class="strong">92.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1036/1113</span>
+                <span class='fraction'>1036/1117</span>
             </div>
         
             
@@ -1245,7 +1245,11 @@
 <a name='L1180'></a><a href='#L1180'>1180</a>
 <a name='L1181'></a><a href='#L1181'>1181</a>
 <a name='L1182'></a><a href='#L1182'>1182</a>
-<a name='L1183'></a><a href='#L1183'>1183</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L1183'></a><a href='#L1183'>1183</a>
+<a name='L1184'></a><a href='#L1184'>1184</a>
+<a name='L1185'></a><a href='#L1185'>1185</a>
+<a name='L1186'></a><a href='#L1186'>1186</a>
+<a name='L1187'></a><a href='#L1187'>1187</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -1369,6 +1373,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-yes">66x</span>
 <span class="cline-any cline-yes">46x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -2549,13 +2557,17 @@ module.exports = class RawAPI{
             if (this.debug) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >                console.log(response)</span>
 <span class="cstat-no" title="statement not covered" >            }</span>
-            const throw_not_okay = () =&gt; {
+            const throw_not_okay = async() =&gt; {
                 if (!response.ok) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
-<span class="cstat-no" title="statement not covered" >                    const message = `endpoint '${o.endpoint}' responded with status code '${response.status}' and status text '${response.statusText}'`</span>
+<span class="cstat-no" title="statement not covered" >                    const message = `endpoint '${o.endpoint}' responded with status code '${response.status}' and text '${response.statusText}'. Previous messages may review more details.`</span>
 <span class="cstat-no" title="statement not covered" >                    if (!this.debug) {</span>
 <span class="cstat-no" title="statement not covered" >                        console.error(response)</span>
 <span class="cstat-no" title="statement not covered" >                    }</span>
-<span class="cstat-no" title="statement not covered" >                    // TODO: attempt to parse Hydrus error message from json</span>
+<span class="cstat-no" title="statement not covered" >                    try {</span>
+<span class="cstat-no" title="statement not covered" >                        console.error(await response.json())</span>
+<span class="cstat-no" title="statement not covered" >                    } catch {</span>
+<span class="cstat-no" title="statement not covered" >                        // do nothing</span>
+<span class="cstat-no" title="statement not covered" >                    }</span>
 <span class="cstat-no" title="statement not covered" >                    throw new Error(message)</span>
 <span class="cstat-no" title="statement not covered" >                }</span>
             }
@@ -2564,7 +2576,7 @@ module.exports = class RawAPI{
                 case 'raw':
                     return response
                 case 'json':
-                    throw_not_okay()
+                    await throw_not_okay()
                     try {
                         return await response.json()
                     } <span class="branch-0 cbranch-no" title="branch not covered" >catch (e) {</span>
@@ -2578,7 +2590,7 @@ module.exports = class RawAPI{
                 case 'success':
                     return response.ok
                 case 'readable_stream':
-                    throw_not_okay()
+                    await throw_not_okay()
                     if (!(response?.body instanceof ReadableStream)) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >                        throw new Error(`response.body doesn't exist or isn't a readable stream`)</span>
 <span class="cstat-no" title="statement not covered" >                    }</span>
@@ -3616,7 +3628,7 @@ module.exports = class RawAPI{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-26T13:24:17.662Z
+                at 2025-08-26T13:36:53.785Z
             </div>
         <script src="prettify.js"></script>
         <script>
