@@ -1,47 +1,47 @@
 
-# HyAPI
+# HydrusAPI
 
-[![NPM](https://nodei.co/npm/hyapi.svg?data=d,s)](https://www.npmjs.com/package/hyapi)
+[![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
 [![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v635)
 
-[![Line Test Coverage Badge](badges/lines.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
-[![Statement Test Coverage Badge](badges/statements.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
-[![Function Test Coverage Badge](badges/functions.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
-[![Branch Test Coverage Badge](badges/branches.svg)](https://shadownetdev1.github.io/HyAPI/coverage/)
+[![Line Test Coverage Badge](badges/lines.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
+[![Statement Test Coverage Badge](badges/statements.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
+[![Function Test Coverage Badge](badges/functions.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
+[![Branch Test Coverage Badge](badges/branches.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 
 <p align="center">
   <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented endpoints work as expected I cannot guarantee that that is the case." src="badges/warning.svg">
 </p>
 
-HyAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
+HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
 
 As of currently most Hydrus API endpoints are implemented and all API endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at the bottom of this page.
 
 ## Installation
 
-If you are using npm installation is as simple as `npm install hyapi@alpha`.
+If you are using npm installation is as simple as `npm install hydrusapi@alpha`.
 
-For browser users [download the latest release](https://github.com/shadownetdev1/HyAPI/releases). Do note that minified versions are not yet provided.
+For browser users [download the latest release](https://github.com/shadownetdev1/HydrusAPI/releases). Do note that minified versions are not yet provided.
 
 ## Documentation and Usage
 
-HyAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [tests](src/tests/api.test.mjs) are implemented.
+HydrusAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [tests](src/tests/api.test.mjs) are implemented.
 
 ## Contributing
 
-Contributions are greatly appreciated. These can come in the form of [reporting issues](https://github.com/shadownetdev1/HyAPI/issues/new/choose) and [creating pull requests](https://github.com/shadownetdev1/HyAPI/compare). If you have working knowledge of JavaScript and want to contribute, but don't know where to get started then looking at our [currently open issues](https://github.com/shadownetdev1/HyAPI/issues) or [unimplemented endpoints](#endpoints) would be suggested.
+Contributions are greatly appreciated. These can come in the form of [reporting issues](https://github.com/shadownetdev1/HydrusAPI/issues/new/choose) and [creating pull requests](https://github.com/shadownetdev1/HydrusAPI/compare). If you have working knowledge of JavaScript and want to contribute, but don't know where to get started then looking at our [currently open issues](https://github.com/shadownetdev1/HydrusAPI/issues) or [unimplemented endpoints](#endpoints) would be suggested.
 
 We do not provide a way support us monetarily (at this time). We suggest supporting the wonderful Hydrus Developer on their [Patreon](https://www.patreon.com/hydrus_dev) instead. This project would have no reason to exist if it wasn't for the over a decade of work that Hydrus Developer has put into their project.
 
 ## Versioning
 
-HyAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. The version in [`package.json`](./package.json) is automatically updated to match the tag name on release.
+HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. The version in [`package.json`](./package.json) is automatically updated to match the tag name on release.
 
 ## Thanks and Attribution
 
-NPM badge provided by [NodeICO](https://nodei.co/npm/hyapi/).
+NPM badge provided by [NodeICO](https://nodei.co/npm/hydrusapi/).
 
 Hydrus version badges provided by [Shields.io](https://shields.io/).
 
@@ -57,7 +57,7 @@ Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s 
 
 ## License
 
-HyAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
+HydrusAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
 
 ## Endpoints
 

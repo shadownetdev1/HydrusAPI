@@ -13,7 +13,7 @@ const version = process.argv[2]
 const date = new Date()
 const date_string = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`
 
-u_text = u_text.replaceAll('<!-- version -->', `[${ version }](https://github.com/shadownetdev1/HyAPI/releases/tag/${version}) - ${date_string}`)
+u_text = u_text.replaceAll('<!-- version -->', `[${ version }](https://github.com/shadownetdev1/HydrusAPI/releases/tag/${version}) - ${date_string}`)
 
 jetpack.write(p_path, u_text)
 

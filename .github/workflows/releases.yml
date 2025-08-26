@@ -77,11 +77,11 @@ jobs:
           branch: main
           commit_message: Updated changelogs for release
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
-      # minify hyapi.js and save as hyapi.${{ github.ref_name }}.min.js
+      # minify hydrusapi.js and save as hydrusapi.${{ github.ref_name }}.min.js
       - run: npm install @node-minify/cli @node-minify/uglify-js
-      - run: npx node-minify --compressor uglify-js --input 'hyapi.js' --output 'hyapi.${{ github.ref_name }}.min.js'
-      # copy hyapi.js to hyapi.${{ github.ref_name }}.js
-      - run: cp -f hyapi.js hyapi.${{ github.ref_name }}.js
+      - run: npx node-minify --compressor uglify-js --input 'hydrusapi.js' --output 'hydrusapi.${{ github.ref_name }}.min.js'
+      # copy hydrusapi.js to hydrusapi.${{ github.ref_name }}.js
+      - run: cp -f hydrusapi.js hydrusapi.${{ github.ref_name }}.js
 
       - name: Release
         uses: softprops/action-gh-release@v2
@@ -92,8 +92,8 @@ jobs:
           fail_on_unmatched_files: true
           preserve_order: true
           files: |
-            hyapi.${{ github.ref_name }}.js
-            hyapi.${{ github.ref_name }}.min.js
+            hydrusapi.${{ github.ref_name }}.js
+            hydrusapi.${{ github.ref_name }}.min.js
 
   publish-npm:
     needs: create-release

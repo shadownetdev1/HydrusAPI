@@ -1,5 +1,5 @@
 
-// cSpell: ignore hyapi, undelete
+// cSpell: ignore hydrusapi, undelete
 
 const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567'
 // WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
@@ -8,7 +8,7 @@ const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb
 const ADDRESS = 'http://localhost:45869'
 
 import {test, expect, describe} from 'vitest'
-import API from '../hyapi.js'
+import API from '../hydrusapi.js'
 import jetpack from 'fs-jetpack'
 import fs from 'fs/promises'
 
@@ -173,7 +173,7 @@ const upload = async(path, hash) => {
  * This still means that we are stressing Hydrus a little,
  * but it should be fine.
  */
-describe('HyAPI', () => {
+describe('HydrusAPI', () => {
     test('api_version, session_key, and verify_access_key', async() => {
         const api_version = await api.api_version()
         expect(api_version?.version).toBeTypeOf('number')
@@ -192,7 +192,7 @@ describe('HyAPI', () => {
         expect(Array.isArray(verify_access_key.basic_permissions)).toBe(true)
         expect(verify_access_key.human_description).toBeTypeOf('string')
 
-        console.warn(`HyAPI.request_new_permissions() requires manual testing`)
+        console.warn(`HydrusAPI.request_new_permissions() requires manual testing`)
     })
 
     test('get_services and get_service', async() => {
@@ -236,7 +236,7 @@ describe('HyAPI', () => {
         // trash the file
         const trash_res = await api.add_files.delete_files({
             hash: f_hash,
-            reason: 'HyAPI Test'
+            reason: 'HydrusAPI Test'
         })
         expect(trash_res).toBe(true)
 
@@ -255,7 +255,7 @@ describe('HyAPI', () => {
         // trash the file again
         const trash_res2 = await api.add_files.delete_files({
             hash: f_hash,
-            reason: 'HyAPI Test'
+            reason: 'HydrusAPI Test'
         })
         expect(trash_res2).toBe(true)
 
@@ -267,7 +267,7 @@ describe('HyAPI', () => {
         // delete the file
         const delete_res = await api.add_files.delete_files({
             hash: f_hash,
-            reason: 'HyAPI Test',
+            reason: 'HydrusAPI Test',
             file_service_key: file_service_key,
         })
         expect(delete_res).toBe(true)
@@ -310,25 +310,25 @@ describe('HyAPI', () => {
         }))?.path).toBeTypeOf('string')
 
         // prep before testing file and thumbnail
-        jetpack.remove('./hyapi_test_file.jpeg')
-        jetpack.remove('./hyapi_test_thumb.jpeg')
+        jetpack.remove('./hydrusapi_test_file.jpeg')
+        jetpack.remove('./hydrusapi_test_thumb.jpeg')
 
         // test file
         const file = await api.get_files.file({
             hash: f_hash
         })
-        await fs.writeFile('./hyapi_test_file.jpeg', file)
+        await fs.writeFile('./hydrusapi_test_file.jpeg', file)
         expect(jetpack.inspect(f_path, {checksum: 'sha256'}).sha256).toBe(f_hash)
 
         // test thumbnail
         const thumbnail = await api.get_files.thumbnail({
             hash: f_hash
         })
-        await fs.writeFile('./hyapi_test_thumb.jpeg', thumbnail)
+        await fs.writeFile('./hydrusapi_test_thumb.jpeg', thumbnail)
         // TODO: validate that test_thumb.jpeg is a thumbnail of the image (PHash?)
         // cleanup from file and thumbnail testing
-        jetpack.remove('./hyapi_test_file.jpeg')
-        jetpack.remove('./hyapi_test_thumb.jpeg')
+        jetpack.remove('./hydrusapi_test_file.jpeg')
+        jetpack.remove('./hydrusapi_test_thumb.jpeg')
 
 
         // test search_files
@@ -358,11 +358,11 @@ describe('HyAPI', () => {
         expect(locs.locations[0].prefixes.length === 0).toBe(false)
 
         // test: render
-        jetpack.remove('./hyapi_test_render.png')
+        jetpack.remove('./hydrusapi_test_render.png')
         const render = await api.get_files.render({hash: f_hash})
-        await fs.writeFile('./hyapi_test_render.png', render)
-        // TODO: validate that hyapi_test_render.png is a render of the image (PHash?)
-        jetpack.remove('./hyapi_test_render.png')
+        await fs.writeFile('./hydrusapi_test_render.png', render)
+        // TODO: validate that hydrusapi_test_render.png is a render of the image (PHash?)
+        jetpack.remove('./hydrusapi_test_render.png')
 
         // test: archive_files
         const arced = await api.add_files.archive_files({
@@ -420,23 +420,23 @@ describe('HyAPI', () => {
         // test: associate_url (cleanup in case it already has the url)
         const cleanup = await api.add_urls.associate_url({
             hash: f_hash,
-            url_to_delete: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
+            url_to_delete: 'https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
         })
         expect(cleanup).toBe(true)
 
         // test: associate_url (addition)
         const addition = await api.add_urls.associate_url({
             hash: f_hash,
-            urls_to_add: ['https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
+            urls_to_add: ['https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
         })
         expect(addition).toBe(true)
 
         // test: get_url_files (expect 1)
         const files = await api.add_urls.get_url_files({
-            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg',
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg',
             doublecheck_file_system: true
         })
-        expect(files.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        expect(files.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(files.url_file_statuses.length).toBe(1)
         expect(files.url_file_statuses[0].status).toBe(2)
         expect(files.url_file_statuses[0].hash).toBe(f_hash)
@@ -445,33 +445,33 @@ describe('HyAPI', () => {
         // test: associate_url (removal)
         const removal = await api.add_urls.associate_url({
             hash: f_hash,
-            urls_to_delete: ['https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
+            urls_to_delete: ['https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg']
         })
         expect(removal).toBe(true)
 
         // test: get_url_files (expect 0)
         const files2 = await api.add_urls.get_url_files({
-            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg'
         })
-        expect(files2.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        expect(files2.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(files2.url_file_statuses.length).toBe(0)
 
         // test: get_url_info
-        const info = await api.add_urls.get_url_info('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
-        expect(info.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        const info = await api.add_urls.get_url_info('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        expect(info.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(info.url_type).toBe(5)
         expect(info.url_type_string).toBe('unknown url')
         expect(info.match_name).toBe('unknown url')
         expect(info.can_parse).toBe(false)
         expect(info.cannot_parse_reason).toBe('unknown url class')
-        expect(info.request_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
+        expect(info.request_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
 
         // test: add_url
         const add = await api.add_urls.add_url({
-            url: 'https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg'
+            url: 'https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg'
         })
         expect(add.human_result_text).toBe('"unknown url" URL added successfully.')
-        expect(add.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HyAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg')
+        expect(add.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg')
     })
 
     test('add_tags.*', async() => {
