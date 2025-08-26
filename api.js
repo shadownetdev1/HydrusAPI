@@ -673,36 +673,36 @@ module.exports = class RawAPI{
         // region add_tags/search_tags
         return await this.call({
             endpoint: '/add_tags/search_tags',
-            json: options,
+            queries: optionsToURLSearchParams(options),
             return_as: return_as
         })
     },
 
-    // /**
-    //  * Make changes to the tags that files have.
-    //  * 
-    //  * Endpoint: /add_tags/add_tags
-    //  * 
-    //  * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsadd_tags--idadd_tags_add_tags-
-    //  * @param {Object} options
-    //  * @param {number} [options.file_id] the id of the file to be tagged
-    //  * @param {string} [options.hash] the SHA256 hash of the file to be tagged
-    //  * @param {string[]} [options.hashes] the SHA256 hashes of the files to be tagged
-    //  * @param {{[key: string]: string[]}} [options.service_keys_to_tags] key is a service key and the value is an array of tags to add
-    //  * @param {*} [options.service_keys_to_actions_to_tags] // TODO: type def
-    //  * @param {boolean} [options.override_previously_deleted_mappings=true]
-    //  * @param {boolean} [options.create_new_deleted_mappings=true]
-    //  * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-    //  * @returns {boolean} successful if true
-    //  */
-    // add_tags: async(options, return_as) => {
-    //     // region: add_tags/add_tags
-    //     return await this.call({
-    //         endpoint: '/add_tags/add_tags',
-    //         json: options,
-    //         return_as: return_as ?? 'success'
-    //     })
-    // },
+    /**
+     * Make changes to the tags that files have.
+     * 
+     * Endpoint: /add_tags/add_tags
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsadd_tags--idadd_tags_add_tags-
+     * @param {Object} options
+     * @param {number} [options.file_id] the id of the file to be tagged
+     * @param {string} [options.hash] the SHA256 hash of the file to be tagged
+     * @param {string[]} [options.hashes] the SHA256 hashes of the files to be tagged
+     * @param {{[key: string]: string[]}} [options.service_keys_to_tags] key is a service key and the value is an array of tags to add
+     * @param {*} [options.service_keys_to_actions_to_tags] // TODO: type def
+     * @param {boolean} [options.override_previously_deleted_mappings=true]
+     * @param {boolean} [options.create_new_deleted_mappings=true]
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} successful if true
+     */
+    add_tags: async(options, return_as) => {
+        // region: add_tags/add_tags
+        return await this.call({
+            endpoint: '/add_tags/add_tags',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
 
     /**
      * Edit Hydrus' favourite tags.

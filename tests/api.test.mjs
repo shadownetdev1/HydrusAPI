@@ -509,25 +509,59 @@ describe('HyAPI', () => {
         const sib_parent_data = await api.add_tags.get_siblings_and_parents(['stream'])
         expect(Object.keys(sib_parent_data.tags).includes('stream')).toBe(true)
         expect(Object.keys(sib_parent_data.tags.stream).includes(tags_service_key)).toBe(true)
-        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].siblings)).toBe(JSON.stringify(['river', 'stream']))
+        sib_parent_data.tags.stream[tags_service_key].siblings.sort()
+        const tags = ['river', 'stream']
+        tags.sort()
+        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].siblings)).toBe(JSON.stringify(tags))
         expect(sib_parent_data.tags.stream[tags_service_key].ideal_tag).toBe('river')
         expect(sib_parent_data.tags.stream[tags_service_key].descendants.length).toBe(0)
         expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].ancestors)).toBe(JSON.stringify(['water']))
 
-        // get the my files service
-        const files_service_key = (await api.get_service({service_name: 'my files'})).service.service_key
+        // test: add_tags (add)
+        const service_keys_to_tags = {}
+        service_keys_to_tags[tags_service_key] = ['boat', 'bridge', 'stream', 'tower']
+        const add_tags = await api.add_tags.add_tags({
+            hash: f_hash,
+            service_keys_to_tags: service_keys_to_tags
+        })
+        expect(add_tags).toBe(true)
 
-        // test: add_tags
-        // const service_keys_to_tags = {}
-        // service_keys_to_tags[files_service_key] = ['boat', 'bridge', 'river', 'tower']
-        // api.debug = true
-        // const add = await api.add_tags.add_tags({
-        //     hash: f_hash,
-        //     service_keys_to_tags: service_keys_to_tags
-        // }, 'raw')
-        // console.log(add)
+        // validate
+        const meta = await api.get_files.file_metadata({hash: f_hash})
+        expect(JSON.stringify(meta.metadata[0].tags[tags_service_key].storage_tags['0'])).toBe(JSON.stringify(
+            ['boat', 'bridge', 'stream', 'tower']
+        ))
+        expect(JSON.stringify(meta.metadata[0].tags[tags_service_key].display_tags['0'])).toBe(JSON.stringify(
+            ['boat', 'bridge', 'river', 'tower', 'water']
+        ))
 
-        // TODO: search_tags
+        // test: search_tags
+        const search = await api.add_tags.search_tags({
+            search: 'stream'
+        })
+        expect(search.tags.length).toBe(1)
+        expect(search.tags[0].value).toBe('stream')
+        expect(search.tags[0].count).toBe(1)
+
+        // test: add_tags (remove)
+        const service_keys_to_actions_to_tags = {}
+        service_keys_to_actions_to_tags[tags_service_key] = {
+            '1': ['boat', 'bridge', 'stream', 'tower']
+        }
+        const remove_tags = await api.add_tags.add_tags({
+            hash: f_hash,
+            service_keys_to_actions_to_tags: service_keys_to_actions_to_tags
+        })
+        expect(remove_tags).toBe(true)
+
+        // validate
+        const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        expect(JSON.stringify(meta2.metadata[0].tags[tags_service_key].storage_tags['2'])).toBe(JSON.stringify(
+            ['boat', 'bridge', 'stream', 'tower']
+        ))
+        expect(JSON.stringify(meta2.metadata[0].tags[tags_service_key].display_tags['2'])).toBe(JSON.stringify(
+            ['boat', 'bridge', 'stream', 'tower']
+        ))
     })
 
     test('edit_ratings.*', async() => {
