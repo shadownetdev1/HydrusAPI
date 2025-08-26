@@ -1,6 +1,6 @@
 <!-- insert_point -->
 
-## {version}
+## <!-- version -->
 
 <!--
     DO NOT change the insert_point and version lines above.

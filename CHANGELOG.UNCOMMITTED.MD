@@ -1,5 +1,5 @@
 <!-- insert_point -->
 
-## {version}
+## <!-- version -->
 
 _Release system test_
