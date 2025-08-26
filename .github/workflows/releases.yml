@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    env:
-      NODE_AUTH_TOKEN: ${{secrets.npm_token}}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -98,4 +96,7 @@ jobs:
             hydrusapi.${{ github.ref_name }}.min.js
 
       # Publish to NPM
-      - run: npm publish --tag alpha
+      - name: Publish to NPM
+        run: npm publish --tag alpha
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
