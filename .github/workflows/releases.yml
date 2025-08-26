@@ -25,9 +25,9 @@ jobs:
       # set version in package.json
       - run: npm version --no-git-tag-version --allow-same-version ${{ github.ref_name }}
       # replace {version} in CHANGELOG.UNCOMMITTED.MD with ${{ github.ref_name }}
-      - run: sed -i "s/<!-- version -->/## [${{ github.ref_name }}](https://github.com/owner/name/releases/tag/${{ github.ref_name }}) - $(date +"%Y-%m-%d")/g" CHANGELOG.UNCOMMITTED.MD
+      - run: sed -i "s@@@<!-- version -->@@@## [${{ github.ref_name }}](https://github.com/owner/name/releases/tag/${{ github.ref_name }}) - $(date +"%Y-%m-%d")@@@g" CHANGELOG.UNCOMMITTED.MD
       # add contents from $(cat CHANGELOG.UNCOMMITTED.MD) to CHANGELOG.MD
-      - run: sed -i "s/<!-- insert_point -->/$(cat CHANGELOG.UNCOMMITTED.MD)" CHANGELOG.MD
+      - run: sed -i "s@@@<!-- insert_point -->@@@$(cat CHANGELOG.UNCOMMITTED.MD)@@@g" CHANGELOG.MD
       # copy CHANGELOG.UNCOMMITTED.MD to LOG.MD
       - run: cp -f CHANGELOG.UNCOMMITTED.MD LOG.MD
       # replace CHANGELOG.UNCOMMITTED.MD with CHANGELOG.TEMPLATE.MD
