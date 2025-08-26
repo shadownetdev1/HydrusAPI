@@ -74,6 +74,7 @@ jobs:
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v6
         with:
+          branch: main
           commit_message: Updated changelogs for release
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
       # minify hyapi.js and save as hyapi.${{ github.ref_name }}.min.js
