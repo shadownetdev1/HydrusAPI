@@ -2,4 +2,4 @@
 
 ## <!-- version -->
 
-_Fix NPM page formatting_
+_Fix workflow not saving package.json_
