@@ -79,7 +79,7 @@ jobs:
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD'
       # minify hyapi.js and save as hyapi.${{ github.ref_name }}.min.js
       - run: npm install @node-minify/cli @node-minify/uglify-js
-      - run: node-minify --compressor uglify-js --input 'hyapi.js' --output 'hyapi.${{ github.ref_name }}.min.js'
+      - run: npx node-minify --compressor uglify-js --input 'hyapi.js' --output 'hyapi.${{ github.ref_name }}.min.js'
       # copy hyapi.js to hyapi.${{ github.ref_name }}.js
       - run: cp -f hyapi.js hyapi.${{ github.ref_name }}.js
 
