@@ -384,7 +384,27 @@ describe('HyAPI', () => {
         // expect(gen_hashes.hash).toBe(f_hash)
 
 
-        // TODO: migrate_files (needs more than one file service so we will likely need to test it in the `manage_services` test section)
+        // test migrate_files (add)
+        const other_service_key = (await api.get_service({service_name: 'my other files'})).service.service_key
+        // add to `my other files`
+        const migrate = await api.add_files.migrate_files({
+            hash: f_hash,
+            file_service_keys: [other_service_key]
+        })
+        expect(migrate).toBe(true)
+        // validate
+        const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        expect(Object.keys(meta2.metadata[0].file_services.current).includes(other_service_key)).toBe(true)
+        // remove from `my other files`
+        const un_migrate = await api.add_files.delete_files({
+            hash: f_hash,
+            file_domain: other_service_key,
+        })
+        expect(un_migrate).toBe(true)
+        // validate
+        const meta3 = await api.get_files.file_metadata({hash: f_hash})
+        expect(Object.keys(meta3.metadata[0].file_services.current).includes(other_service_key)).toBe(false)
+        expect(Object.keys(meta3.metadata[0].file_services.deleted).includes(other_service_key)).toBe(true)
     }, 120000)
 
     test('add_urls.*', async() => {
