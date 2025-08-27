@@ -1011,7 +1011,86 @@ module.exports = class API{
      */
     get manage_services() {
         return {
-            // TODO
+    /**
+     * Get the counts of pending content for each upload-capable service. This basically lets you construct the "pending" menu in the main GUI menubar.
+     * 
+     * GET Endpoint: /manage_services/get_pending_counts
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_servicesget_pending_counts--idmanage_services_get_pending_counts-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_pending_counts_response}
+     */
+    get_pending_counts: async(return_as) => {
+        // region: manage_services/get_pending_counts
+        return await this.call({
+            endpoint: '/manage_services/get_pending_counts',
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Start the job to upload a service's pending content.
+     * 
+     * This starts the upload popup,
+     * just like if you click 'commit' in the menu.
+     * This upload could ultimately take one second or several minutes
+     * to finish, but the response will come back immediately.
+     * 
+     * If the job is already running, this will return 409.
+     * If it cannot start because of a difficult problem,
+     * like all repositories being paused or the service account object
+     * being unsynced or something, it gives 422; in this case,
+     * please direct the user to check their client manually,
+     * since there is probably an error popup on screen.
+     * 
+     * If tracking the upload job's progress is important,
+     * you could hit it again and see if it gives 409, or you could
+     * `manage_services.get_pending_counts()` again--since
+     * the counts will update live as the upload happens--but note
+     * that the user may pend more just after the upload is complete,
+     * so do not wait forever for it to fall back down to 0.
+     * 
+     * !!! Due to the nature of this endpoint it tested
+     * 
+     * POST Endpoint: /manage_services/commit_pending
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_servicescommit_pending--idmanage_services_commit_pending-
+     * @param {string} service_key The service to commit
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    commit_pending: async(service_key, return_as) => {
+        // region: manage_services/commit_pending
+        return await this.call({
+            endpoint: '/manage_services/commit_pending',
+            json: {service_key: service_key},
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Forget all pending content for a service.
+     * 
+     * This clears all pending content for a service, just like if you click 'forget' in the menu.
+     * 
+     * !!! Due to the nature of this endpoint it tested
+     * 
+     * POST Endpoint: /manage_services/forget_pending
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_servicesforget_pending--idmanage_services_forget_pending-
+     * @param {string} service_key The service to forget for
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    forget_pending: async(service_key, return_as) => {
+        // region: manage_services/forget_pending
+        return await this.call({
+            endpoint: '/manage_services/forget_pending',
+            json: {service_key: service_key},
+            return_as: return_as ?? 'success'
+        })
+    },
+
         }
     }
 
