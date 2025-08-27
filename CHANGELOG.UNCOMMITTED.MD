@@ -2,13 +2,7 @@
 
 ## <!-- version -->
 
-<!--
-    DO NOT change the insert_point and version lines above.
-    This note, "_Optional notice_" (if unchanged), and any unused groups should be removed before release.
-    Reference https://common-changelog.org/ for formatting.
-    Make sure to attribute all authors. Ideally by linking to their GitHub profile with their name as the text.
-    [shadownetdev1](https://github.com/shadownetdev1) for example.
--->
+_The main thing of note in this release is that the `add_notes.set_notes()` and `add_notes.delete_notes()` endpoints have been implemented_
 
 ### Changed
 
@@ -17,12 +11,13 @@
 - Moved `add_tags.add_tags()`'s options definition into [hydrusapi.d.ts](/types/hydrusapi.d.ts) (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
 - Moved most cSpell ignore lines to the cspell property in package.json (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
 - Moved all remaining complex JSDoc objects into [hydrusapi.d.ts](/types/hydrusapi.d.ts) (18ec141d2c615a19b7302f97d361621abad6db3d)
+- Updated `package.json` to include links to the github repo (eb227828dc645cf732f1ddd5e959081b450ad7f3)
 
 ### Added
 
-- Implemented `add_notes.set_notes()` ()
-- Implemented `add_notes.delete_notes()` ()
-- Added VSCode snippets (templates) for endpoints ()
+- Implemented `add_notes.set_notes()` (18ec141d2c615a19b7302f97d361621abad6db3d)
+- Implemented `add_notes.delete_notes()` (18ec141d2c615a19b7302f97d361621abad6db3d)
+- Added VSCode snippets (templates) for endpoints (18ec141d2c615a19b7302f97d361621abad6db3d)
 
 ### Fixed
 
