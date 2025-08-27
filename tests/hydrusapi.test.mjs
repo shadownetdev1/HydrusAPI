@@ -396,13 +396,12 @@ describe('HydrusAPI', () => {
         expect(unArced).toBe(true)
 
         // test: generate_hashes
-        // TODO: waiting on https://github.com/hydrusnetwork/hydrus/pull/1784 to merge
-        // const gen_hashes = await api.add_files.generate_hashes({
-        //     bytes: jetpack.read(f_path, 'buffer')
-        //     // path: `${jetpack.cwd()}/${f_path}`
-        // })
-        // expect(gen_hashes.hash).toBe(f_hash)
-        // expect(gen_hashes.pixel_hash).toBe('46bd14e11cb1cef52248a36a3998887a5ca70cab397bed5d925a66a678f43231')
+        const gen_hashes = await api.add_files.generate_hashes({
+            bytes: jetpack.read(f_path, 'buffer')
+            // path: `${jetpack.cwd()}/${f_path}`
+        })
+        expect(gen_hashes.hash).toBe(f_hash)
+        expect(gen_hashes.pixel_hash).toBe('46bd14e11cb1cef52248a36a3998887a5ca70cab397bed5d925a66a678f43231')
 
         // test migrate_files (add)
         const other_service_key = (await api.get_service({service_name: 'my other files'})).service.service_key

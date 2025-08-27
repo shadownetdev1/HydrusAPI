@@ -81,7 +81,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/add_files/migrate_files`
 - [x] `/add_files/archive_files`
 - [x] `/add_files/unarchive_files`
-- [x] `/add_files/generate_hashes`; While this is implemented it is not working due to Hydrus currently having a bug that makes it unusable. A pull request is pending that fixes this issue [here](https://github.com/hydrusnetwork/hydrus/pull/1784)
+- [x] `/add_files/generate_hashes`
 - [x] `/add_urls/get_url_files`
 - [x] `/add_urls/get_url_info`
 - [x] `/add_urls/add_url`
