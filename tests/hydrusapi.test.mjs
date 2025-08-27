@@ -719,6 +719,21 @@ describe('HydrusAPI', () => {
         if (info.media.hash_ids.length !== 0) {
             expect(typeof info.media.hash_ids[0]).toBe('number')
         }
+
+        // test add_files
+        const added = await api.manage_pages.add_files({
+            page_key: page.page_key,
+            file_id: 3
+        })
+        expect(added).toBe(true)
+
+        // validate that the page has file 3
+        const update = (await api.manage_pages.get_page_info({
+            page_key: page.page_key,
+            // simple: false,
+        })).page_info
+        expect(Array.isArray(update.media.hash_ids)).toBe(true)
+        expect(update.media.hash_ids.includes(3)).toBe(true)
     })
 
     test('manage_popups.*', async() => {

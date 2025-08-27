@@ -122,7 +122,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - `/manage_headers/set_user_agent`; Will NOT BE implemented due to it being deprecated. Use `/manage_headers/set_headers` instead.
 - [x] `/manage_pages/get_pages`
 - [x] `/manage_pages/get_page_info`
-- [ ] `/manage_pages/add_files`
+- [x] `/manage_pages/add_files`
 - [x] `/manage_pages/focus_page`
 - [ ] `/manage_pages/refresh_page`
 - [ ] `/manage_popups/get_popups`

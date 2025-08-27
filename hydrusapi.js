@@ -1126,7 +1126,24 @@ module.exports = class RawAPI{
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
+    /**
+     * Add files to a page.
+     * 
+     * POST Endpoint: /manage_pages/add_files
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
+     * @param {add_files_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    add_files: async(options, return_as) => {
+        // region: manage_pages/add_files
+        return await this.call({
+            endpoint: '/manage_pages/add_files',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
 
     /**
      * 'Show' a page in the main GUI, making it the current page in view. If it is already the current page, no change is made.

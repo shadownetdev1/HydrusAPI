@@ -18,7 +18,7 @@ _Optional notice_
 
 ### Added
 
-- N/A
+- Implemented `manage_pages.add_files()` ()
 
 ### Removed
 

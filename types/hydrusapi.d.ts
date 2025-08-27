@@ -521,13 +521,15 @@ interface search_tags_response extends api_version_response {
     tags: {value: string, count:number}[]
 }
 
-/** At least one of file_id, hash, or hashes must be defined */
+/** One of file_id, file_ids, hash, or hashes must be defined */
 interface FilesObject {
-    /** The id of the file to be deleted */
+    /** The id of the file to be acted upon */
     file_id?: number
-    /** The SHA256 hash of the file to be deleted */
+    /** The ids of the files to be acted upon */
+    file_ids?: number[]
+    /** The SHA256 hash of the file to be acted upon */
     hash?: string
-    /** The SHA256 hashes of the files to be deleted */
+    /** The SHA256 hashes of the files to be acted upon */
     hashes?: string[]
 }
 
@@ -1153,4 +1155,11 @@ interface PageInfoObject {
 
 interface get_page_info_response extends api_version_response {
     page_info: PageInfoObject
+}
+
+
+/** One of hash, hashes, */
+interface add_files_options extends FilesObject {
+    /** The page key for the page you wish to add files to */
+    page_key: string
 }
