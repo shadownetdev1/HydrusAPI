@@ -28,9 +28,9 @@ For other users you can download from the [releases page](https://github.com/sha
 
 ## Documentation and Usage
 
-We highly suggest making sure that at least Hydrus API version if not the Hydrus client version matches this API implementations version.
+We highly suggest making sure that at least the Hydrus API version if not the Hydrus Client version matches the version of HydrusAPI that you are using.
 
-HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](src/tests/api.test.mjs) are implemented.
+HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](tests/api.test.mjs) are implemented.
 
 ## Contributing
 
