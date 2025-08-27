@@ -34,11 +34,14 @@
       "azur",
       "booru",
       "Hodan",
+      "hpos",
       "hydrusapi",
       "IPFS",
       "shadownetdev1",
       "Ugoiras",
-      "unzstd"
+      "unanchor",
+      "unzstd",
+      "vpos"
     ],
     "ignoreWords": [
       "someoverbooru"

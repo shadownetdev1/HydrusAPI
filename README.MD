@@ -140,4 +140,4 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/manage_database/lock_on`
 - [x] `/manage_database/lock_off`
 - [x] `/manage_database/mr_bones`
-- [ ] `/manage_database/get_client_options`
+- [x] `/manage_database/get_client_options`; While this is implemented it will not be documented or tested due to its UNSTABLE nature! Expect the results of this endpoint to change with each Hydrus Client version!

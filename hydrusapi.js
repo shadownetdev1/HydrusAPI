@@ -1337,6 +1337,34 @@ module.exports = class RawAPI{
         })
     },
 
+    /**
+     * Gets the current options from the client.
+     * 
+     * !!! This endpoint is unstable and could potentially change with hydrus version instead of api version
+     * !!! This endpoint will throw an error if Hydrus' version doesn't match this.HYDRUS_TARGET_VERSION
+     * 
+     * !!! While this endpoint's response will be type defined it will not be documented or tested due to its unstable nature
+     * 
+     * !!! Type defs are a best attempt and should be taken with a grain of salt
+     * 
+     * GET Endpoint: /manage_database/get_client_options
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databaseget_client_options--idmanage_database_get_client_options-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_client_options_response}
+     */
+    get_client_options: async(return_as) => {
+        const ver = await this.api_version()
+        if (ver.hydrus_version !== this.HYDRUS_TARGET_VERSION) {
+            throw new Error(`This endpoint is currently experimental. Please use a version of HydrusAPI that matches '${this.VERSION}.${this.HYDRUS_TARGET_VERSION}.*'!`)
+        }
+        // region: manage_database/get_client_options
+        return await this.call({
+            endpoint: '/manage_database/get_client_options',
+            return_as: return_as
+        })
+    },
+
         }
     }
 }
