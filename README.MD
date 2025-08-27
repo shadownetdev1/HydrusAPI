@@ -4,7 +4,7 @@
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
-[![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v635)
+[![Tested with Hydrus version 636](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-636%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v636)
 
 [![Line Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/lines.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 [![Statement Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/statements.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)

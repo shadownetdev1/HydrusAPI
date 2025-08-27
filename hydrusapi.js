@@ -14,8 +14,8 @@ const optionsToURLSearchParams = (options) => {
     return new URLSearchParams(options)
 }
 
-module.exports = class RawAPI{
-    // region: RawAPI
+module.exports = class API{
+    // region: API
 
     /** @type {boolean} */
     debug
@@ -24,9 +24,10 @@ module.exports = class RawAPI{
     /** @type {string} */
     address
 
+    /** What API version do we support */
     VERSION = 80
     /** What version of Hydrus are we testing against */
-    HYDRUS_TARGET_VERSION = 635
+    HYDRUS_TARGET_VERSION = 636
 
     /**
      * These are the permissions that the client can have
