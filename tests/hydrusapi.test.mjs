@@ -38,6 +38,16 @@ const get_hydrus = async() => {
         console.log(`Downloading Hydrus version ${api.HYDRUS_TARGET_VERSION} (this will likely take a while)...`)
         const download_command = `curl -L -o ${dest} '${link}'`
         // const download_command = `wget '${link}' -O ${dest}`
+
+        // if we are download hydrus then this is likely a git clone
+        // make sure all db folders exist
+        const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g']
+        for (const f of digits) {
+            for (const s of digits) {
+                jetpack.dir(`tests/db/client_files/f${f}${s}`)
+                jetpack.dir(`tests/db/client_files/t${f}${s}`)
+            }
+        }
         
         let { stdout, stderr } = await exec_async(download_command)
         console.log('stdout:', stdout)
