@@ -163,7 +163,7 @@ module.exports = class RawAPI{
     /**
      * Gets the current API version.
      * 
-     * Endpoint: /api_version
+     * GET Endpoint: /api_version
      *
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-api_version--idapi_version-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -182,7 +182,7 @@ module.exports = class RawAPI{
      * This requires the 'add from api request' mini-dialog
      * under services->review services to be open, otherwise it will 403.
      * 
-     * Endpoint: /request_new_permissions
+     * GET Endpoint: /request_new_permissions
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-request_new_permissions--idrequest_new_permissions-
      * @param {request_new_permissions_options} options
@@ -209,7 +209,7 @@ module.exports = class RawAPI{
      * or if the underlying access key is deleted.
      * A request on an expired session key returns 419.
      * 
-     * Endpoint: /session_key
+     * GET Endpoint: /session_key
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-session_key--idsession_key-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -227,7 +227,7 @@ module.exports = class RawAPI{
      * Returns the permissions that the client has
      * with its current access key.
      * 
-     * Endpoint: /verify_access_key
+     * GET Endpoint: /verify_access_key
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-verify_access_key--idverify_access_key-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -248,7 +248,7 @@ module.exports = class RawAPI{
      * two services will have the same name,
      * in this case you'll get the pseudorandom first.
      * 
-     * Endpoint: /get_service
+     * GET Endpoint: /get_service
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_service--idget_service-
      * @param {{service_name?: string, service_key?: string}} service either service_name or service_key must be provided
@@ -267,7 +267,7 @@ module.exports = class RawAPI{
     /**
      * Returns info for all services
      * 
-     * Endpoint: /get_services
+     * GET Endpoint: /get_services
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_services--idget_services-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -291,7 +291,7 @@ module.exports = class RawAPI{
      * supply a json with either bytes : *file bytes* 
      * or path: *file path*
      * 
-     * Endpoint: /add_files/add_file
+     * POST Endpoint: /add_files/add_file
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesadd_file--idadd_files_add_file-
      * @param {{bytes: *}|{path: string, delete_after_successful_import?: boolean}} options path to the file or the file data
@@ -319,7 +319,7 @@ module.exports = class RawAPI{
     /**
      * Tell Hydrus to delete one or more files
      * 
-     * Endpoint: /add_files/delete_files
+     * POST Endpoint: /add_files/delete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesdelete_files--idadd_files_delete_files-
      * @param {delete_files_options} options
@@ -338,7 +338,7 @@ module.exports = class RawAPI{
     /**
      * Tell Hydrus to undelete one or more files
      * 
-     * Endpoint: /add_files/undelete_files
+     * POST Endpoint: /add_files/undelete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesundelete_files--idadd_files_undelete_files-
      * @param {undelete_files_options} options
@@ -357,7 +357,7 @@ module.exports = class RawAPI{
     /**
      * Tell Hydrus to clear any deletion records it has for a file
      * 
-     * Endpoint: /add_files/clear_file_deletion_record
+     * POST Endpoint: /add_files/clear_file_deletion_record
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesclear_file_deletion_record--idadd_files_clear_file_deletion_record-
      * @param {FilesObject} options
@@ -376,7 +376,7 @@ module.exports = class RawAPI{
     /**
      * Add a file to one or more local file services
      * 
-     * Endpoint: /add_files/migrate_files
+     * POST Endpoint: /add_files/migrate_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesmigrate_files--idadd_files_migrate_files-
      * @param {migrate_files_options} options
@@ -395,7 +395,7 @@ module.exports = class RawAPI{
     /**
      * Tell Hydrus to archive inboxed files
      * 
-     * Endpoint: /add_files/archive_files
+     * POST Endpoint: /add_files/archive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesarchive_files--idadd_files_archive_files-
      * @param {FilesObject} options
@@ -414,7 +414,7 @@ module.exports = class RawAPI{
     /**
      * Tell Hydrus to unarchive files which moves them to the inbox
      * 
-     * Endpoint: /add_files/unarchive_files
+     * POST Endpoint: /add_files/unarchive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesunarchive_files--idadd_files_unarchive_files-
      * @param {FilesObject} options
@@ -435,7 +435,7 @@ module.exports = class RawAPI{
      * supply a json with either bytes : *file bytes* 
      * or path: *file path*
      * 
-     * Endpoint: /add_files/generate_hashes
+     * POST Endpoint: /add_files/generate_hashes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesgenerate_hashes--idadd_files_generate_hashes-
      * @param {generate_hashes_options} options path to the file or the file data
@@ -470,7 +470,7 @@ module.exports = class RawAPI{
     /**
      * Ask Hydrus about a URL's files.
      * 
-     * Endpoint: /add_urls/get_url_files
+     * GET Endpoint: /add_urls/get_url_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_urlsget_url_files--idadd_urls_get_url_files-
      * @param {get_url_files_options} options
@@ -494,7 +494,7 @@ module.exports = class RawAPI{
     /**
      * Ask Hydrus for information about a URL.
      * 
-     * Endpoint: /add_urls/get_url_info
+     * GET Endpoint: /add_urls/get_url_info
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_urlsget_url_info--idadd_urls_get_url_info-
      * @param {string} url url you want to check
@@ -515,7 +515,7 @@ module.exports = class RawAPI{
      * This triggers the exact same routine as drag-and-dropping
      * a text URL onto the main Hydrus window.
      * 
-     * Endpoint: /add_urls/add_url
+     * POST Endpoint: /add_urls/add_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsadd_url--idadd_urls_add_url-
      * @param {add_url_options} options
@@ -534,7 +534,7 @@ module.exports = class RawAPI{
     /**
      * Manage which URLs Hydrus considers to be associated with which files.
      * 
-     * Endpoint: /add_urls/associate_url
+     * POST Endpoint: /add_urls/associate_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsassociate_url--idadd_urls_associate_url-
      * @param {associate_url_options} options
@@ -561,7 +561,7 @@ module.exports = class RawAPI{
     /**
      * Ask Hydrus about how it will see certain tags.
      * 
-     * Endpoint: /add_tags/clean_tags
+     * GET Endpoint: /add_tags/clean_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsclean_tags--idadd_tags_clean_tags-
      * @param {string[]} tags
@@ -580,7 +580,7 @@ module.exports = class RawAPI{
     /**
      * Fetch Hydrus' favourite tags. This is the list of tags you see beneath an autocomplete input, under the 'favourites' tab. This is not the per-service 'most used' tab you see in manage tags.
      * 
-     * Endpoint: /add_tags/get_favourite_tags
+     * GET Endpoint: /add_tags/get_favourite_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsget_favourite_tags--idadd_tags_get_favourite_tags-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -597,7 +597,7 @@ module.exports = class RawAPI{
     /**
      * Ask Hydrus about a tags' sibling and parent relationships.
      * 
-     * /add_tags/get_siblings_and_parents
+     * GET Endpoint: /add_tags/get_siblings_and_parents
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsget_siblings_and_parents--idadd_tags_get_siblings_and_parents-
      * @param {string[]} tags
@@ -616,7 +616,7 @@ module.exports = class RawAPI{
     /**
      * Search Hydrus for tags.
      * 
-     * Endpoint: /add_tags/search_tags
+     * GET Endpoint: /add_tags/search_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagssearch_tags--idadd_tags_search_tags-
      * @param {search_tags_options} options
@@ -635,7 +635,7 @@ module.exports = class RawAPI{
     /**
      * Make changes to the tags that files have.
      * 
-     * Endpoint: /add_tags/add_tags
+     * POST Endpoint: /add_tags/add_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsadd_tags--idadd_tags_add_tags-
      * @param {add_tags_options} options
@@ -655,7 +655,7 @@ module.exports = class RawAPI{
      * Edit Hydrus' favourite tags.
      * This is the complement to /add_tags/get_favourite_tags.
      * 
-     * Endpoint: set_favourite_tags
+     * POST Endpoint: set_favourite_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsset_favourite_tags--idadd_tags_set_favourite_tags-
      * @param {set_favourite_tags_options} options
@@ -682,7 +682,7 @@ module.exports = class RawAPI{
     /**
      * Add or remove ratings associated with a file.
      * 
-     * Endpoint: /edit_ratings/set_rating
+     * POST Endpoint: /edit_ratings/set_rating
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_ratingsset_rating--idedit_ratings_set_rating-
      * @param {set_rating_options} options
@@ -715,7 +715,45 @@ module.exports = class RawAPI{
      */
     get add_notes() {
         return {
-            // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-notes
+    /**
+     * Add or update notes associated with a file.
+     * 
+     * POST Endpoint: /add_notes/set_notes
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_notesset_notes--idadd_notes_set_notes-
+     * @param {set_notes_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {set_notes_response}
+     */
+    set_notes: async(options, return_as) => {
+        // region: add_notes/set_notes
+        return await this.call({
+            endpoint: '/add_notes/set_notes',
+            json: options,
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Remove notes associated with a file.
+     * 
+     * This operation is idempotent.
+     * 
+     * POST Endpoint: /add_notes/delete_notes
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_notesdelete_notes--idadd_notes_delete_notes-
+     * @param {delete_notes_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    delete_notes: async(options, return_as) => {
+        // region: add_notes/delete_notes
+        return await this.call({
+            endpoint: '/add_notes/delete_notes',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
         }
     }
 
@@ -727,7 +765,7 @@ module.exports = class RawAPI{
     /**
      * Search Hydrus for files.
      * 
-     * Endpoint: /get_files/search_files
+     * GET Endpoint: /get_files/search_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filessearch_files--idget_files_search_files-
      * @param {search_files_options} options
@@ -748,7 +786,7 @@ module.exports = class RawAPI{
      * Example use case: You have a MD5 hash and want to find a SHA256 hash.
      * Hydrus will return results for any files it has ever had imported.
      * 
-     * Endpoint: /get_files/file_hashes
+     * GET Endpoint: /get_files/file_hashes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_hashes--idget_files_file_hashes-
      * @param {file_hashes_options} options
@@ -767,7 +805,7 @@ module.exports = class RawAPI{
     /**
      * Get a file's metadata
      * 
-     * Endpoint: get_files/file_metadata
+     * GET Endpoint: get_files/file_metadata
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_metadata--idget_files_file_metadata-
      * @param {get_file_metadata_options} options
@@ -796,7 +834,7 @@ module.exports = class RawAPI{
      * This stuff supports Range requests,
      * so if you want to build a video player, go nuts.
      * 
-     * Endpoint: /get_files/file
+     * GET Endpoint: /get_files/file
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile--idget_files_file-
      * @param {file_options} options
@@ -849,7 +887,7 @@ module.exports = class RawAPI{
      * you will be pulling the pngs straight from the hydrus/static folder.
      * They will most likely be 200x200 pixels.
      * 
-     * Endpoint: /get_files/thumbnail
+     * GET Endpoint: /get_files/thumbnail
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesthumbnail--idget_files_thumbnail-
      * @param {thumbnail_options} options
@@ -874,7 +912,7 @@ module.exports = class RawAPI{
      * (which includes if it should exist
      * but is actually missing from the file store).
      * 
-     * Endpoint: /get_files/file_path
+     * GET Endpoint: /get_files/file_path
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_path--idget_files_file_path-
      * @param {file_path_options} options
@@ -904,7 +942,7 @@ module.exports = class RawAPI{
      * but one does not exist and cannot be generated from the source file
      * (which probably would mean that the source file was itself Not Found).
      * 
-     * Endpoint: /get_files/thumbnail_path
+     * GET Endpoint: /get_files/thumbnail_path
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesthumbnail_path--idget_files_thumbnail_path-
      * @param {thumbnail_path_options} options
@@ -922,7 +960,7 @@ module.exports = class RawAPI{
 
     /**
      * 
-     * Endpoint: /get_files/local_file_storage_locations
+     * GET Endpoint: /get_files/local_file_storage_locations
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_fileslocal_file_storage_locations--idget_local_file_storage_locations-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -938,7 +976,7 @@ module.exports = class RawAPI{
 
     /**
      * 
-     * Endpoint: /get_files/render
+     * GET Endpoint: /get_files/render
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesrender--idget_files_render-
      * @param {render_options} options
@@ -990,7 +1028,7 @@ module.exports = class RawAPI{
      * so if you request for specific.someoverbooru.net,
      * you will still get the cookies for someoverbooru.net and all its subdomains.
      * 
-     * Endpoint: /manage_cookies/get_cookies
+     * GET Endpoint: /manage_cookies/get_cookies
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_cookiesget_cookies--idmanage_cookies_get_cookies-
      * @param {string} domain the domain to get cookies for
@@ -1011,7 +1049,7 @@ module.exports = class RawAPI{
      * This makes it easier to 'copy' a login from a web browser or similar
      * to hydrus if hydrus's login system can't handle the site yet
      *
-     * /manage_cookies/set_cookies
+     * POST Endpoint: /manage_cookies/set_cookies
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_cookiesset_cookies--idmanage_cookies_set_cookies-
      * @param {set_cookies_options} options
@@ -1047,7 +1085,7 @@ module.exports = class RawAPI{
     /**
      * Get the page structure of the current UI session.
      * 
-     * Endpoint: /manage_pages/get_pages
+     * GET Endpoint: /manage_pages/get_pages
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_pages--idmanage_pages_get_pages-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
@@ -1072,7 +1110,7 @@ module.exports = class RawAPI{
      * POST commands to alter pages (adding, removing, highlighting),
      * will come later.
      * 
-     * Endpoint: /manage_pages/get_page_info
+     * GET Endpoint: /manage_pages/get_page_info
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_page_info--idmanage_pages_get_page_info-
      * @param {{page_key: string,  simple?: boolean}} options
@@ -1093,7 +1131,7 @@ module.exports = class RawAPI{
     /**
      * 'Show' a page in the main GUI, making it the current page in view. If it is already the current page, no change is made.
      * 
-     * Endpoint: /manage_pages/focus_page
+     * POST Endpoint: /manage_pages/focus_page
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesfocus_page--idmanage_pages_focus_page-
      * @param {string} page_key

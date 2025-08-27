@@ -577,9 +577,88 @@ interface set_rating_options extends FilesObject {
      * * Like/Dislike Ratings: Send true for 'like', false for 'dislike', or null for 'unset'.
      * * Numerical Ratings: Send an int for the number of stars to set, or null for 'unset'.
      * * Inc/Dec Ratings: Send an int for the number to set. 0 is your minimum.
-     * As with GET /get_files/file_metadata, check The Services Object for the min/max stars on a numerical rating service.
+     *
+     * As with GET /get_files/file_metadata, check The Services Object
+     * for the min/max stars on a numerical rating service.
      */
     rating: RATING_TYPES
+}
+
+/**
+ * hash or file_id must be defined.
+ * 
+ * With `merge_cleverly` left `false`, then this is a simple update operation.
+ * Existing notes will be overwritten exactly as you specify.
+ * Any other notes the file has will be untouched.
+ * 
+ * If you turn on `merge_cleverly`, then the client will merge your new notes
+ * into the file's existing notes using the same logic you have seen
+ * in Note Import Options and the Duplicate Metadata Merge Options.
+ * This navigates conflict resolution, and you should use it if you are
+ * adding potential duplicate content from an 'automatic' source like a parser
+ * and do not want to wade into the logic.
+ * Do not use it for a user-editing experience (a user expects a strict
+ * overwrite/replace experience and will be confused by this mode).
+ * 
+ * To start off, in this mode, if your note text exists under
+ * a different name for the file, your dupe note will not be added
+ * to your new name. `extend_existing_note_if_possible` makes it so
+ * your existing note text will overwrite an existing name
+ * (or a '... (1)' rename of that name) if the existing text is
+ * inside your given text.
+ * `conflict_resolution` is an enum governing what to do in all other conflicts
+ */
+interface set_notes_options {
+    /**
+     * An object where the keys are note names
+     * and the values are the contents of the notes
+     */
+    notes: {[key: string]: string}
+    /** The hash of the file to add notes to */
+    hash?: string
+    /** The file id of the file to add notes to */
+    file_id?: number
+    /**
+     * Optional; Defaults to false
+     */
+    merge_cleverly?: boolean
+    /**
+     * Optional; Defaults to true.
+     */
+    extend_existing_note_if_possible?: boolean
+    /**
+     * Optional; Defaults to 3.
+     * 
+     * If a new note name already exists and its new text differs from what already exists
+     * * 0 - replace - Overwrite the existing conflicting note.
+     * * 1 - ignore - Make no changes.
+     * * 2 - append - Append the new text to the existing text.
+     * * 3 - rename (default) - Add the new text under a 'name (x)'-style rename.
+     */
+    conflict_resolution?: 0 | 1 | 2 | 3
+}
+
+interface set_notes_response extends api_version_response {
+    /**
+     * The note changes actually sent through.
+     *
+     * If `merge_cleverly=false`, this is exactly what you gave,
+     * and this operation is idempotent.
+     * 
+     * If `merge_cleverly=true`, then this may differ, even be empty,
+     * and this operation might not be idempotent.
+     */
+    notes: {[key: string]: string}
+}
+
+/** hash or file_id must be defined. */
+interface delete_notes_options {
+    /** A list of note names to be deleted */
+    note_names: string[]
+    /** The hash of the file to add notes to */
+    hash?: string
+    /** The file id of the file to add notes to */
+    file_id?: number
 }
 
 type RecursiveTagList = string|RecursiveTagList[]

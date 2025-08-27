@@ -140,7 +140,7 @@ const exists = async(hash) => {
         }))
         return !!res?.path
     } catch (e) {
-        if (e.message.includes(`responded with status code '404' and status text 'Not Found'`)) {
+        if (e.message.includes(`responded with status code '404' and text 'Not Found'`)) {
             return false
         } else {
             throw e
@@ -614,7 +614,37 @@ describe('HydrusAPI', () => {
     })
 
     test('add_notes.*', async() => {
-        // TODO
+        const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
+
+        // test delete_notes
+        const ensure_clean = await api.add_notes.delete_notes({
+            note_names: ['test_note'],
+            hash: f_hash,
+        })
+        expect(ensure_clean).toBe(true)
+
+        // test set_notes
+        const notes = {
+            'test_note': 'This is a test note that should have multiple lines\nline 2\nline 3\nBye :)'
+        }
+        const res = await api.add_notes.set_notes({
+            notes: notes,
+            hash: f_hash
+        })
+        expect(JSON.stringify(res.notes)).toBe(JSON.stringify(notes))
+
+        // test delete_notes again
+        const clean = await api.add_notes.delete_notes({
+            note_names: ['test_note'],
+            hash: f_hash,
+        })
+        expect(clean).toBe(true)
     })
 
     test('manage_file_relationships.*', async() => {

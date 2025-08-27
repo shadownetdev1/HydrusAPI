@@ -14,17 +14,15 @@
 
 - Reworded Installation instructions (775881d6ed4a6c9d7380585a1de22e8a4abf0c8a)
 - Reworded Readme in regards to API endpoints (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
-- Moved `add_tags.add_tags`'s options definition into [hydrusapi.d.ts](/types/hydrusapi.d.ts) (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
+- Moved `add_tags.add_tags()`'s options definition into [hydrusapi.d.ts](/types/hydrusapi.d.ts) (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
 - Moved most cSpell ignore lines to the cspell property in package.json (b7425f72b91b3a2cb41d2916bc96a8ddb60b7724)
-- Moved all remaining complex JSDoc objects into [hydrusapi.d.ts](/types/hydrusapi.d.ts) ()
+- Moved all remaining complex JSDoc objects into [hydrusapi.d.ts](/types/hydrusapi.d.ts) (18ec141d2c615a19b7302f97d361621abad6db3d)
 
 ### Added
 
-- N/A
-
-### Removed
-
-- N/A
+- Implemented `add_notes.set_notes()` ()
+- Implemented `add_notes.delete_notes()` ()
+- Added VSCode snippets (templates) for endpoints ()
 
 ### Fixed
 
