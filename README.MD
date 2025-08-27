@@ -21,9 +21,9 @@ As of currently most Hydrus API endpoints are implemented and all API endpoints 
 
 ## Installation
 
-If you are using npm installation is as simple as `npm install hydrusapi@alpha`.
+If you are using npm or a alternative installation is as simple as `npm install hydrusapi` or `[alternative] install hydrusapi`.
 
-For browser users [download the latest release](https://github.com/shadownetdev1/HydrusAPI/releases). Do note that minified versions are not yet provided.
+For other users you can download from the [releases page](https://github.com/shadownetdev1/HydrusAPI/releases).
 
 ## Documentation and Usage
 
