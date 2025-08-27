@@ -1207,7 +1207,47 @@ module.exports = class RawAPI{
      */
     get manage_database() {
         return {
-            // TODO
+    /**
+     * Force the database to write all pending changes to disk immediately.
+     * 
+     * !!! info:
+     * Hydrus holds a constant BEGIN IMMEDIATE transaction
+     * on its database. Separate jobs are 'transactionalised'
+     * using SAVEPOINT, and the real transactions are only COMMIT-ed
+     * to disk every 30 seconds or so.
+     * Thus, if the client crashes, a user can lose up to 30 seconds
+     * of changes (or more, if they use the launch path
+     * to extend the inter-transaction duration).
+     *
+     * This command lets you force a COMMIT as soon as possible.
+     * The request will only return when the commit is done
+     * and finished, so you can trust when this returns 200 OK
+     * that you are in the clear and everything is saved.
+     * If the database is currently disconnected (e.g. there
+     * is a vacuum going on), then it returns very fast,
+     * but you can typically expect it to take a handful
+     * of milliseconds. If there is a normal database job already
+     * happening when you call, it will COMMIT when that is complete,
+     * and if things are really busy (e.g. amidst idle-time
+     * repository processing) then there could be hundreds of
+     * megabytes to write. This job may, when the database is under
+     * strain, take ten or more seconds to complete.
+     * 
+     * POST Endpoint: /manage_database/force_commit
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaseforce_commit--idmanage_database_force_commit-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {force_commit_response}
+     */
+    force_commit: async(return_as) => {
+        // region: manage_database/force_commit
+        return await this.call({
+            endpoint: '/manage_database/force_commit',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
         }
     }
 }

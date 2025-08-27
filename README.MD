@@ -136,7 +136,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/manage_popups/finish_popup`
 - [ ] `/manage_popups/finish_and_dismiss_popup`
 - [ ] `/manage_popups/update_popup`
-- [ ] `/manage_database/force_commit`
+- [x] `/manage_database/force_commit`
 - [ ] `/manage_database/lock_on`
 - [ ] `/manage_database/lock_off`
 - [ ] `/manage_database/mr_bones`

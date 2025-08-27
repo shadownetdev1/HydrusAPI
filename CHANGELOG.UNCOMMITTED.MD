@@ -2,15 +2,7 @@
 
 ## <!-- version -->
 
-<!--
-    DO NOT change the insert_point and version lines above.
-    This note, "_Optional notice_" (if unchanged), and any unused groups should be removed before release.
-    Reference https://common-changelog.org/ for formatting.
-    Make sure to attribute all authors. Ideally by linking to their GitHub profile with their name as the text.
-    [shadownetdev1](https://github.com/shadownetdev1) for example.
--->
-
-_Optional notice_
+_First official release_
 
 ### Changed
 
@@ -20,6 +12,7 @@ _Optional notice_
 
 - Implemented `manage_pages.add_files()` ()
 - Implemented `manage_pages.refresh_page()` ()
+- Implemented `manage_database.force_commit()` ()
 
 ### Removed
 

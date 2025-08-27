@@ -759,6 +759,8 @@ describe('HydrusAPI', () => {
     })
 
     test('manage_database.*', async() => {
-        // TODO
+        // test force_commit
+        const commit = await api.manage_database.force_commit()
+        expect(commit).toBe(true)
     })
 })
