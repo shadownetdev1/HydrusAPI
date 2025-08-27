@@ -521,13 +521,15 @@ interface search_tags_response extends api_version_response {
     tags: {value: string, count:number}[]
 }
 
-/** At least one of file_id, hash, or hashes must be defined */
+/** One of file_id, file_ids, hash, or hashes must be defined */
 interface FilesObject {
-    /** The id of the file to be deleted */
+    /** The id of the file to be acted upon */
     file_id?: number
-    /** The SHA256 hash of the file to be deleted */
+    /** The ids of the files to be acted upon */
+    file_ids?: number[]
+    /** The SHA256 hash of the file to be acted upon */
     hash?: string
-    /** The SHA256 hashes of the files to be deleted */
+    /** The SHA256 hashes of the files to be acted upon */
     hashes?: string[]
 }
 
@@ -1153,4 +1155,574 @@ interface PageInfoObject {
 
 interface get_page_info_response extends api_version_response {
     page_info: PageInfoObject
+}
+
+
+/** One of hash, hashes, */
+interface add_files_options extends FilesObject {
+    /** The page key for the page you wish to add files to */
+    page_key: string
+}
+
+interface mr_bones_options extends FileDomainObject {
+    /** Optional; A list of tags you wish to search for */
+    tags?: string[]
+    /** Optional; The tag domain on which to search, defaults to `all my files` */
+    tag_service_key?: string
+}
+
+interface mr_bones_response extends api_version_response {
+    boned_stats: {
+        /** Number of inboxed files */
+        num_inbox: number
+        /** Number of archived files */
+        num_archive: number
+        /** Size of all inboxed files in bytes */
+        size_inbox: number
+        /** Size of all archived files in bytes */
+        size_archive: number
+        /** Number of deleted files */
+        num_deleted: number
+        /** Size of all deleted files in bytes */
+        size_deleted: number
+        /** Earliest file import timestamp in seconds since Epoch */
+        earliest_import_time: number
+        /**
+         * number of media views, seconds viewing media,
+         * number of preview views, seconds previewing media
+         */
+        total_viewtime: [number, number, number, number]
+        /** Number of alternative duplicate groups available */
+        total_alternate_groups: number
+        /** Number of files in alternative duplicate groups */
+        total_alternate_files: number
+        /** 
+         * The number of files that have/had at least one duplicate
+         */
+        total_duplicate_files: number
+    }
+}
+
+/**
+* A JSON dump of nearly all options set in the client.
+* The format of this is based on internal hydrus structures
+* and is subject to change without warning with new hydrus versions.
+* Do not rely on anything you find here to continue to exist
+* and don't rely on the structure to be the same.
+* 
+* !!! While these values will be type defined they will not be documented or tested due to their unstable nature
+* 
+* !!! Type defs are a best attempt and should be taken with a grain of salt
+*/
+interface get_client_options_response extends api_version_response {
+    old_options: {
+        animation_start_position: number,
+        confirm_archive: boolean,
+        confirm_client_exit: boolean,
+        confirm_trash: boolean,
+        default_gui_session: 'last session' | string,
+        delete_to_recycle_bin: boolean,
+        export_path: null | any,
+        gallery_file_limit: number,
+        hide_preview: boolean,
+        hpos: number,
+        idle_mouse_period: number,
+        idle_normal: boolean,
+        idle_period: number,
+        idle_shutdown: number,
+        idle_shutdown_max_minutes: number,
+        namespace_colours: {
+            character: [number, number, number],
+            creator: [number, number, number],
+            meta: [number, number, number],
+            person: [number, number, number],
+            series: [number, number, number],
+            studio: [number, number, number],
+            system: [number, number, number],
+            null: [number, number, number],
+            '': [number, number, number]
+        },
+        password: null | any,
+        proxy: null | any,
+        regex_favourites: string[][],
+        remove_filtered_files: boolean,
+        remove_trashed_files: boolean,
+        thumbnail_dimensions: [ number, number ],
+        trash_max_age: number,
+        trash_max_size: number,
+        vpos: number
+    },
+    options: {
+        booleans: {
+            advanced_mode: boolean,
+            remove_filtered_files_even_when_skipped: boolean,
+            discord_dnd_fix: boolean,
+            secret_discord_dnd_fix: boolean,
+            show_unmatched_urls_in_media_viewer: boolean,
+            set_search_focus_on_page_change: boolean,
+            allow_remove_on_manage_tags_input: boolean,
+            yes_no_on_remove_on_manage_tags: boolean,
+            activate_window_on_tag_search_page_activation: boolean,
+            show_related_tags: boolean,
+            show_file_lookup_script_tags: boolean,
+            use_native_menubar: boolean,
+            shortcuts_merge_non_number_numpad: boolean,
+            disable_get_safe_position_test: boolean,
+            save_window_size_and_position_on_close: boolean,
+            freeze_message_manager_when_mouse_on_other_monitor: boolean,
+            freeze_message_manager_when_main_gui_minimised: boolean,
+            load_images_with_pil: boolean,
+            only_show_delete_from_all_local_domains_when_filtering: boolean,
+            use_system_ffmpeg: boolean,
+            elide_page_tab_names: boolean,
+            maintain_similar_files_duplicate_pairs_during_idle: boolean,
+            show_namespaces: boolean,
+            show_number_namespaces: boolean,
+            show_subtag_number_namespaces: boolean,
+            replace_tag_underscores_with_spaces: boolean,
+            replace_tag_emojis_with_boxes: boolean,
+            verify_regular_https: boolean,
+            page_drop_chase_normally: boolean,
+            page_drop_chase_with_shift: boolean,
+            page_drag_change_tab_normally: boolean,
+            page_drag_change_tab_with_shift: boolean,
+            wheel_scrolls_tab_bar: boolean,
+            remove_local_domain_moved_files: boolean,
+            anchor_and_hide_canvas_drags: boolean,
+            touchscreen_canvas_drags_unanchor: boolean,
+            import_page_progress_display: boolean,
+            rename_page_of_pages_on_pick_new: boolean,
+            rename_page_of_pages_on_send: boolean,
+            process_subs_in_random_order: boolean,
+            ac_select_first_with_count: boolean,
+            saving_sash_positions_on_exit: boolean,
+            database_deferred_delete_maintenance_during_idle: boolean,
+            database_deferred_delete_maintenance_during_active: boolean,
+            duplicates_auto_resolution_during_idle: boolean,
+            duplicates_auto_resolution_during_active: boolean,
+            file_maintenance_during_idle: boolean,
+            file_maintenance_during_active: boolean,
+            tag_display_maintenance_during_idle: boolean,
+            tag_display_maintenance_during_active: boolean,
+            save_page_sort_on_change: boolean,
+            disable_page_tab_dnd: boolean,
+            force_hide_page_signal_on_new_page: boolean,
+            pause_export_folders_sync: boolean,
+            pause_import_folders_sync: boolean,
+            pause_repo_sync: boolean,
+            pause_subs_sync: boolean,
+            pause_all_new_network_traffic: boolean,
+            boot_with_network_traffic_paused: boolean,
+            pause_all_file_queues: boolean,
+            pause_all_watcher_checkers: boolean,
+            pause_all_gallery_searches: boolean,
+            popup_message_force_min_width: boolean,
+            always_show_iso_time: boolean,
+            confirm_multiple_local_file_services_move: boolean,
+            confirm_multiple_local_file_services_copy: boolean,
+            use_advanced_file_deletion_dialog: boolean,
+            show_new_on_file_seed_short_summary: boolean,
+            show_deleted_on_file_seed_short_summary: boolean,
+            only_save_last_session_during_idle: boolean,
+            do_human_sort_on_hdd_file_import_paths: boolean,
+            highlight_new_watcher: boolean,
+            highlight_new_query: boolean,
+            delete_files_after_export: boolean,
+            file_viewing_statistics_active: boolean,
+            file_viewing_statistics_active_on_archive_delete_filter: boolean,
+            file_viewing_statistics_active_on_dupe_filter: boolean,
+            prefix_hash_when_copying: boolean,
+            file_system_waits_on_wakeup: boolean,
+            show_system_everything: boolean,
+            watch_clipboard_for_watcher_urls: boolean,
+            watch_clipboard_for_other_recognised_urls: boolean,
+            default_search_synchronised: boolean,
+            autocomplete_float_main_gui: boolean,
+            global_audio_mute: boolean,
+            media_viewer_audio_mute: boolean,
+            media_viewer_uses_its_own_audio_volume: boolean,
+            preview_audio_mute: boolean,
+            preview_uses_its_own_audio_volume: boolean,
+            always_loop_gifs: boolean,
+            always_show_system_tray_icon: boolean,
+            minimise_client_to_system_tray: boolean,
+            close_client_to_system_tray: boolean,
+            start_client_in_system_tray: boolean,
+            use_qt_file_dialogs: boolean,
+            notify_client_api_cookies: boolean,
+            expand_parents_on_storage_taglists: boolean,
+            expand_parents_on_storage_autocomplete_taglists: boolean,
+            show_parent_decorators_on_storage_taglists: boolean,
+            show_parent_decorators_on_storage_autocomplete_taglists: boolean,
+            show_sibling_decorators_on_storage_taglists: boolean,
+            show_sibling_decorators_on_storage_autocomplete_taglists: boolean,
+            show_session_size_warnings: boolean,
+            delete_lock_for_archived_files: boolean,
+            delete_lock_reinbox_deletees_after_archive_delete: boolean,
+            delete_lock_reinbox_deletees_after_duplicate_filter: boolean,
+            delete_lock_reinbox_deletees_in_auto_resolution: boolean,
+            remember_last_advanced_file_deletion_reason: boolean,
+            remember_last_advanced_file_deletion_special_action: boolean,
+            do_macos_debug_dialog_menus: boolean,
+            save_default_tag_service_tab_on_change: boolean,
+            force_animation_scanbar_show: boolean,
+            call_mouse_buttons_primary_secondary: boolean,
+            start_note_editing_at_end: boolean,
+            draw_transparency_checkerboard_media_canvas: boolean,
+            draw_transparency_checkerboard_media_canvas_duplicates: boolean,
+            menu_choice_buttons_can_mouse_scroll: boolean,
+            remember_options_window_panel: boolean,
+            focus_preview_on_ctrl_click: boolean,
+            focus_preview_on_ctrl_click_only_static: boolean,
+            focus_preview_on_shift_click: boolean,
+            focus_preview_on_shift_click_only_static: boolean,
+            focus_media_tab_on_viewer_close_if_possible: boolean,
+            fade_sibling_connector: boolean,
+            use_custom_sibling_connector_colour: boolean,
+            hide_uninteresting_modified_time: boolean,
+            draw_tags_hover_in_media_viewer_background: boolean,
+            draw_top_hover_in_media_viewer_background: boolean,
+            draw_top_right_hover_in_media_viewer_background: boolean,
+            draw_top_right_hover_in_preview_window_background: boolean,
+            preview_window_hover_top_right_shows_popup: boolean,
+            draw_notes_hover_in_media_viewer_background: boolean,
+            draw_bottom_right_index_in_media_viewer_background: boolean,
+            disable_tags_hover_in_media_viewer: boolean,
+            disable_top_right_hover_in_media_viewer: boolean,
+            media_viewer_window_always_on_top: boolean,
+            media_viewer_lock_current_zoom_type: boolean,
+            media_viewer_lock_current_zoom: boolean,
+            media_viewer_lock_current_pan: boolean,
+            allow_blurhash_fallback: boolean,
+            fade_thumbnails: boolean,
+            slideshow_always_play_duration_media_once_through: boolean,
+            enable_truncated_images_pil: boolean,
+            do_icc_profile_normalisation: boolean,
+            mpv_available_at_start: boolean,
+            do_sleep_check: boolean,
+            override_stylesheet_colours: boolean,
+            command_palette_show_page_of_pages: boolean,
+            command_palette_show_main_menu: boolean,
+            command_palette_show_media_menu: boolean,
+            disallow_media_drags_on_duration_media: boolean,
+            show_all_my_files_on_page_chooser: boolean,
+            show_all_my_files_on_page_chooser_at_top: boolean,
+            show_local_files_on_page_chooser: boolean,
+            show_local_files_on_page_chooser_at_top: boolean,
+            use_nice_resolution_strings: boolean,
+            use_listbook_for_tag_service_panels: boolean,
+            open_files_to_duplicate_filter_uses_all_my_files: boolean,
+            show_extended_single_file_info_in_status_bar: boolean,
+            hide_duplicates_needs_work_message_when_reasonably_caught_up: boolean,
+            file_info_line_consider_archived_interesting: boolean,
+            file_info_line_consider_archived_time_interesting: boolean,
+            file_info_line_consider_file_services_interesting: boolean,
+            file_info_line_consider_file_services_import_times_interesting: boolean,
+            file_info_line_consider_trash_time_interesting: boolean,
+            file_info_line_consider_trash_reason_interesting: boolean,
+            set_requests_ca_bundle_env: boolean,
+            mpv_loop_playlist_instead_of_file: boolean,
+            draw_thumbnail_rating_background: boolean,
+            draw_thumbnail_numerical_ratings_collapsed_always: boolean,
+            show_destination_page_when_dnd_url: boolean,
+            confirm_non_empty_downloader_page_close: boolean,
+            confirm_all_page_closes: boolean,
+            refresh_search_page_on_system_limited_sort_changed: boolean,
+            do_not_setgeometry_on_an_mpv: boolean,
+            focus_media_thumb_on_viewer_close: boolean,
+            skip_yesno_on_write_autocomplete_multiline_paste: boolean,
+            activate_main_gui_on_viewer_close: boolean,
+            activate_main_gui_on_focusing_viewer_close: boolean,
+            override_bandwidth_on_file_urls_from_post_urls: boolean,
+            remove_leading_url_double_slashes: boolean,
+            always_apply_ntfs_export_filename_rules: boolean,
+            replace_percent_twenty_with_space_in_gug_input: boolean
+        },
+        strings: {
+            app_display_name: string,
+            namespace_connector: string,
+            sibling_connector: string,
+            or_connector: string,
+            export_phrase: string,
+            current_colourset: string,
+            favourite_simple_downloader_formula: string,
+            thumbnail_scroll_rate: string,
+            pause_character: string,
+            stop_character: string,
+            default_gug_name: string,
+            has_audio_label: string,
+            has_duration_label: string,
+            discord_dnd_filename_pattern: string,
+            default_suggested_tags_notebook_page: string,
+            last_incremental_tagging_namespace: string,
+            last_incremental_tagging_prefix: string,
+            last_incremental_tagging_suffix: string,
+            last_options_window_panel: string
+        },
+        noneable_strings: {
+            favourite_file_lookup_script: string | null,
+            suggested_tags_layout: string | null,
+            backup_path: string | null,
+            web_browser_path: string | null,
+            last_png_export_dir: string | null,
+            media_background_bmp_path: string | null,
+            http_proxy: string | null,
+            https_proxy: string | null,
+            no_proxy: string | null,
+            qt_style_name: string | null,
+            qt_stylesheet_name: string | null,
+            last_advanced_file_deletion_reason: string | null,
+            last_advanced_file_deletion_special_action: string | null,
+            sibling_connector_custom_namespace_colour: string | null,
+            or_connector_custom_namespace_colour: string | null
+        },
+        integers: {
+            notebook_tab_alignment: number,
+            video_buffer_size: number,
+            related_tags_search_1_duration_ms: number,
+            related_tags_search_2_duration_ms: number,
+            related_tags_search_3_duration_ms: number,
+            related_tags_concurrence_threshold_percent: number,
+            suggested_tags_width: number,
+            similar_files_duplicate_pairs_search_distance: number,
+            default_new_page_goes: number,
+            close_page_focus_goes: number,
+            num_recent_petition_reasons: number,
+            max_page_name_chars: number,
+            page_file_count_display: number,
+            network_timeout: number,
+            connection_error_wait_time: number,
+            serverside_bandwidth_wait_time: number,
+            thumbnail_visibility_scroll_percent: number,
+            ideal_tile_dimension: number,
+            wake_delay_period: number,
+            media_viewer_zoom_center: number,
+            last_session_save_period_minutes: number,
+            shutdown_work_period: number,
+            max_network_jobs: number,
+            max_network_jobs_per_domain: number,
+            max_connection_attempts_allowed: number,
+            max_request_attempts_allowed_get: number,
+            thumbnail_scale_type: number,
+            max_simultaneous_subscriptions: number,
+            gallery_page_wait_period_pages: number,
+            gallery_page_wait_period_subscriptions: number,
+            watcher_page_wait_period: number,
+            popup_message_character_width: number,
+            duplicate_filter_max_batch_size: number,
+            video_thumbnail_percentage_in: number,
+            global_audio_volume: number,
+            media_viewer_audio_volume: number,
+            preview_audio_volume: number,
+            duplicate_comparison_score_higher_jpeg_quality: number,
+            duplicate_comparison_score_much_higher_jpeg_quality: number,
+            duplicate_comparison_score_higher_filesize: number,
+            duplicate_comparison_score_much_higher_filesize: number,
+            duplicate_comparison_score_higher_resolution: number,
+            duplicate_comparison_score_much_higher_resolution: number,
+            duplicate_comparison_score_more_tags: number,
+            duplicate_comparison_score_older: number,
+            duplicate_comparison_score_nicer_ratio: number,
+            duplicate_comparison_score_has_audio: number,
+            thumbnail_cache_size: number,
+            image_cache_size: number,
+            image_tile_cache_size: number,
+            thumbnail_cache_timeout: number,
+            image_cache_timeout: number,
+            image_tile_cache_timeout: number,
+            image_cache_storage_limit_percentage: number,
+            image_cache_prefetch_limit_percentage: number,
+            media_viewer_prefetch_delay_base_ms: number,
+            media_viewer_prefetch_num_previous: number,
+            media_viewer_prefetch_num_next: number,
+            duplicate_filter_prefetch_num_pairs: number,
+            thumbnail_border: number,
+            thumbnail_margin: number,
+            thumbnail_dpr_percent: number,
+            file_maintenance_idle_throttle_files: number,
+            file_maintenance_idle_throttle_time_delta: number,
+            file_maintenance_active_throttle_files: number,
+            file_maintenance_active_throttle_time_delta: number,
+            subscription_network_error_delay: number,
+            subscription_other_error_delay: number,
+            downloader_network_error_delay: number,
+            file_viewing_stats_menu_display: number,
+            number_of_gui_session_backups: number,
+            animated_scanbar_height: number,
+            animated_scanbar_nub_width: number,
+            domain_network_infrastructure_error_number: number,
+            domain_network_infrastructure_error_time_delta: number,
+            ac_read_list_height_num_chars: number,
+            ac_write_list_height_num_chars: number,
+            system_busy_cpu_percent: number,
+            human_bytes_sig_figs: number,
+            ms_to_wait_between_physical_file_deletes: number,
+            potential_duplicates_search_work_time_ms: number,
+            potential_duplicates_search_rest_percentage: number,
+            repository_processing_work_time_ms_very_idle: number,
+            repository_processing_rest_percentage_very_idle: number,
+            repository_processing_work_time_ms_idle: number,
+            repository_processing_rest_percentage_idle: number,
+            repository_processing_work_time_ms_normal: number,
+            repository_processing_rest_percentage_normal: number,
+            tag_display_processing_work_time_ms_idle: number,
+            tag_display_processing_rest_percentage_idle: number,
+            tag_display_processing_work_time_ms_normal: number,
+            tag_display_processing_rest_percentage_normal: number,
+            tag_display_processing_work_time_ms_work_hard: number,
+            tag_display_processing_rest_percentage_work_hard: number,
+            deferred_table_delete_work_time_ms_idle: number,
+            deferred_table_delete_rest_percentage_idle: number,
+            deferred_table_delete_work_time_ms_normal: number,
+            deferred_table_delete_rest_percentage_normal: number,
+            deferred_table_delete_work_time_ms_work_hard: number,
+            deferred_table_delete_rest_percentage_work_hard: number,
+            gallery_page_status_update_time_minimum_ms: number,
+            gallery_page_status_update_time_ratio_denominator: number,
+            watcher_page_status_update_time_minimum_ms: number,
+            watcher_page_status_update_time_ratio_denominator: number,
+            media_viewer_default_zoom_type_override: number,
+            preview_default_zoom_type_override: number,
+            export_filename_character_limit: number
+        },
+        noneable_integers: {
+            forced_search_limit: number| null,
+            num_recent_tags: number| null,
+            duplicate_background_switch_intensity_a: number| null,
+            duplicate_background_switch_intensity_b: number| null,
+            last_review_bandwidth_search_distance: number| null,
+            file_viewing_statistics_media_min_time_ms: number| null,
+            file_viewing_statistics_media_max_time_ms: number| null,
+            file_viewing_statistics_preview_min_time_ms: number| null,
+            file_viewing_statistics_preview_max_time_ms: number| null,
+            subscription_file_error_cancel_threshold: number| null,
+            media_viewer_cursor_autohide_time_ms: number| null,
+            idle_mode_client_api_timeout: number| null,
+            system_busy_cpu_count: number| null,
+            animated_scanbar_hide_height: number| null,
+            last_backup_time: number| null,
+            slideshow_short_duration_loop_percentage: number| null,
+            slideshow_short_duration_loop_seconds: number| null,
+            slideshow_short_duration_cutoff_percentage: number| null,
+            slideshow_long_duration_overspill_percentage: number| null,
+            num_to_show_in_ac_dropdown_children_tab: number| null,
+            number_of_unselected_medias_to_present_tags_for: number| null,
+            export_path_character_limit: number| null,
+            export_dirname_character_limit: number| null
+        },
+        keys: {
+            default_tag_service_tab: string,
+            default_tag_service_search_page: string,
+            default_gug_key: string
+        },
+        colors: {
+            default: {
+                '0': [ number, number, number ],
+                '1': [ number, number, number ],
+                '2': [ number, number, number ],
+                '3': [ number, number, number ],
+                '4': [ number, number, number ],
+                '5': [ number, number, number ],
+                '6': [ number, number, number ],
+                '7': [ number, number, number ],
+                '8': [ number, number, number ],
+                '9': [ number, number, number ],
+                '10': [ number, number, number ],
+                '11': [ number, number, number ],
+                '12': [ number, number, number ],
+            },
+            darkmode: {
+                '0': [ number, number, number ],
+                '1': [ number, number, number ],
+                '2': [ number, number, number ],
+                '3': [ number, number, number ],
+                '4': [ number, number, number ],
+                '5': [ number, number, number ],
+                '6': [ number, number, number ],
+                '7': [ number, number, number ],
+                '8': [ number, number, number ],
+                '9': [ number, number, number ],
+                '10': [ number, number, number ],
+                '11': [ number, number, number ],
+                '12': [ number, number, number ],
+            }
+        },
+        media_zooms: number[],
+        slideshow_durations: number[],
+        default_file_import_options: {
+            loud: string,
+            quiet: string
+        },
+        default_namespace_sorts: {
+            sort_metatype: 'namespaces' | string,
+            sort_order: number,
+            tag_context: {
+                service_key: string,
+                include_current_tags: boolean,
+                include_pending_tags: boolean,
+                display_service_key: string
+            },
+            namespaces: string[],
+            tag_display_type: number
+        }[],
+        default_sort: {
+            sort_metatype: 'system' | string,
+            sort_order: number,
+            tag_context: {
+                service_key: string,
+                include_current_tags: boolean,
+                include_pending_tags: boolean,
+                display_service_key: string
+            },
+            sort_type: number
+        },
+        default_tag_sort: {
+            sort_type: number,
+            sort_order: number,
+            use_siblings: boolean,
+            group_by: number
+        },
+        default_tag_sort_search_page: {
+            sort_type: number,
+            sort_order: number,
+            use_siblings: boolean,
+            group_by: number
+        },
+        default_tag_sort_search_page_manage_tags: {
+            sort_type: number,
+            sort_order: number,
+            use_siblings: boolean,
+            group_by: number
+        },
+        default_tag_sort_media_viewer: {
+            sort_type: number,
+            sort_order: number,
+            use_siblings: boolean,
+            group_by: number
+        },
+        // cSpell: ignore vewier
+        default_tag_sort_media_vewier_manage_tags: {
+            sort_type: number,
+            sort_order: number,
+            use_siblings: boolean,
+            group_by: number
+        },
+        fallback_sort: {
+            sort_metatype: 'system' | string,
+            sort_order: number,
+            tag_context: {
+                service_key: string,
+                include_current_tags: boolean,
+                include_pending_tags: boolean,
+                display_service_key: string
+            },
+            sort_type: number
+        },
+        suggested_tags_favourites: {[key: string]: any[]},
+        default_local_location_context: {
+            current_service_keys: string[],
+            deleted_service_keys: string[]
+        }
+    },
+    services: {[key: string]: Omit<ServiceObject, "service_key">}
 }

@@ -14,8 +14,8 @@ const optionsToURLSearchParams = (options) => {
     return new URLSearchParams(options)
 }
 
-module.exports = class RawAPI{
-    // region: RawAPI
+module.exports = class API{
+    // region: API
 
     /** @type {boolean} */
     debug
@@ -24,9 +24,10 @@ module.exports = class RawAPI{
     /** @type {string} */
     address
 
+    /** What API version do we support */
     VERSION = 80
     /** What version of Hydrus are we testing against */
-    HYDRUS_TARGET_VERSION = 635
+    HYDRUS_TARGET_VERSION = 636
 
     /**
      * These are the permissions that the client can have
@@ -1126,7 +1127,24 @@ module.exports = class RawAPI{
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
+    /**
+     * Add files to a page.
+     * 
+     * POST Endpoint: /manage_pages/add_files
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
+     * @param {add_files_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    add_files: async(options, return_as) => {
+        // region: manage_pages/add_files
+        return await this.call({
+            endpoint: '/manage_pages/add_files',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
 
     /**
      * 'Show' a page in the main GUI, making it the current page in view. If it is already the current page, no change is made.
@@ -1149,7 +1167,29 @@ module.exports = class RawAPI{
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-
+    /**
+     * Refresh a page in the main GUI.
+     * 
+     * Like hitting F5 in the client,
+     * this obviously makes file search pages perform their
+     * search again, but for other page types it will force
+     * the currently in-view files to be re-sorted.
+     * 
+     * POST Endpoint: /manage_pages/refresh_page
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-
+     * @param {string} page_key The page key for the page you wish to refresh
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    refresh_page: async(page_key, return_as) => {
+        // region: manage_pages/refresh_page
+        return await this.call({
+            endpoint: '/manage_pages/refresh_page',
+            json: {page_key: page_key},
+            return_as: return_as ?? 'success'
+        })
+    },
 
         }
     }
@@ -1168,7 +1208,164 @@ module.exports = class RawAPI{
      */
     get manage_database() {
         return {
-            // TODO
+    /**
+     * Force the database to write all pending changes to disk immediately.
+     * 
+     * !!! info:
+     * Hydrus holds a constant BEGIN IMMEDIATE transaction
+     * on its database. Separate jobs are 'transactionalised'
+     * using SAVEPOINT, and the real transactions are only COMMIT-ed
+     * to disk every 30 seconds or so.
+     * Thus, if the client crashes, a user can lose up to 30 seconds
+     * of changes (or more, if they use the launch path
+     * to extend the inter-transaction duration).
+     *
+     * This command lets you force a COMMIT as soon as possible.
+     * The request will only return when the commit is done
+     * and finished, so you can trust when this returns 200 OK
+     * that you are in the clear and everything is saved.
+     * If the database is currently disconnected (e.g. there
+     * is a vacuum going on), then it returns very fast,
+     * but you can typically expect it to take a handful
+     * of milliseconds. If there is a normal database job already
+     * happening when you call, it will COMMIT when that is complete,
+     * and if things are really busy (e.g. amidst idle-time
+     * repository processing) then there could be hundreds of
+     * megabytes to write. This job may, when the database is under
+     * strain, take ten or more seconds to complete.
+     * 
+     * POST Endpoint: /manage_database/force_commit
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaseforce_commit--idmanage_database_force_commit-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    force_commit: async(return_as) => {
+        // region: manage_database/force_commit
+        return await this.call({
+            endpoint: '/manage_database/force_commit',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Pause the client's database activity and disconnect the current connection.
+     * 
+     * This is a hacky prototype.
+     * 
+     * It commands the client database to pause its job queue
+     * and release its connection (and related file locks
+     * and journal files). This puts the client in a similar position
+     * as a long VACUUM command--it'll hang in there,
+     * but not much will work, and since the UI async code isn't
+     * great yet, the UI may lock up after a minute or two.
+     * If you would like to automate database backup without shutting
+     * the client down, this is the thing to play with.
+     *
+     * This should return pretty quick, but it will wait
+     * up to five seconds for the database to actually disconnect.
+     * If there is a big job (like a VACUUM) current going on,
+     * it may take substantially longer to finish that up
+     * and process this STOP command.
+     * You might like to check for the existence of a journal file
+     * in the db dir just to be safe.
+     *
+     * As long as this lock is on,
+     * all Client API calls except the unlock command will return 503.
+     * (This is a decent way to test the current lock status, too)
+     * 
+     * POST Endpoint: /manage_database/lock_on
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_on--idmanage_database_lock_on-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    lock_on: async(return_as) => {
+        // region: manage_database/lock_on
+        return await this.call({
+            endpoint: '/manage_database/lock_on',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Reconnect the client's database and resume activity.
+     * 
+     * This is the obvious complement to lock_on.
+     * The client will resume processing its job queue
+     * and will catch up. If the UI was frozen,
+     * it should free up in a few seconds,
+     * just like after a big VACUUM.
+     * 
+     * POST Endpoint: /manage_database/lock_off
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_off--idmanage_database_lock_off-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    lock_off: async(return_as) => {
+        // region: manage_database/lock_off
+        return await this.call({
+            endpoint: '/manage_database/lock_off',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Gets the data from database->how boned am I?.
+     * 
+     * This is a simple Object of numbers for advanced purposes.
+     * Useful if you want to show or record some stats.
+     * The numbers are the same as the dialog shows,
+     * so double check that to confirm what each value is for.
+     * 
+     * GET Endpoint: /manage_database/mr_bones
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databasemr_bones--idmanage_database_mr_bones-
+     * @param {mr_bones_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {mr_bones_response}
+     */
+    mr_bones: async(options = {}, return_as) => {
+        // region: manage_database/mr_bones
+        return await this.call({
+            endpoint: '/manage_database/mr_bones',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Gets the current options from the client.
+     * 
+     * !!! This endpoint is unstable and could potentially change with hydrus version instead of api version
+     * !!! This endpoint will throw an error if Hydrus' version doesn't match this.HYDRUS_TARGET_VERSION
+     * 
+     * !!! While this endpoint's response will be type defined it will not be documented or tested due to its unstable nature
+     * 
+     * !!! Type defs are a best attempt and should be taken with a grain of salt
+     * 
+     * GET Endpoint: /manage_database/get_client_options
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databaseget_client_options--idmanage_database_get_client_options-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_client_options_response}
+     */
+    get_client_options: async(return_as) => {
+        const ver = await this.api_version()
+        if (ver.hydrus_version !== this.HYDRUS_TARGET_VERSION) {
+            throw new Error(`This endpoint is currently experimental. Please use a version of HydrusAPI that matches '${this.VERSION}.${this.HYDRUS_TARGET_VERSION}.*'!`)
+        }
+        // region: manage_database/get_client_options
+        return await this.call({
+            endpoint: '/manage_database/get_client_options',
+            return_as: return_as
+        })
+    },
+
         }
     }
 }

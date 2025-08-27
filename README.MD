@@ -4,7 +4,7 @@
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
-[![Tested with Hydrus version 635](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-635%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v635)
+[![Tested with Hydrus version 636](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-636%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v636)
 
 [![Line Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/lines.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 [![Statement Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/statements.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
@@ -12,7 +12,8 @@
 [![Branch Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/branches.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 
 <p align="center">
-  <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented endpoints work as expected I cannot guarantee that that is the case." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
+  <img width="100%" alt="Warning: This API implementation is provided as is (just like Hydrus). You should be regularly backing up your Hydrus database regardless of any external libraries (like this one) that you are or aren't using." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
+  <!-- The above text is also defined in `badges/warning.svg`. It only exists here to assist screen readers. When updating this text make sure change the text in `badges/warning.svg` to match -->
 </p>
 
 HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
@@ -21,13 +22,15 @@ As of currently most Hydrus API endpoints are implemented and all the API endpoi
 
 ## Installation
 
-If you are using npm or a alternative installation is as simple as `npm install hydrusapi` or `[alternative] install hydrusapi`.
+If you are using npm or an alternative package manager then installation is as simple as `npm install hydrusapi` or `[package manager] install hydrusapi`.
 
 For other users you can download from the [releases page](https://github.com/shadownetdev1/HydrusAPI/releases).
 
 ## Documentation and Usage
 
-HydrusAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [tests](src/tests/api.test.mjs) are implemented.
+We highly suggest making sure that at least Hydrus API version if not the Hydrus client version matches this API implementations version.
+
+HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](src/tests/api.test.mjs) are implemented.
 
 ## Contributing
 
@@ -37,7 +40,7 @@ We do not provide a way support us monetarily (at this time). We suggest support
 
 ## Versioning
 
-HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. The version in [`package.json`](./package.json) is automatically updated to match the tag name on release.
+HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusAPI version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
 
 ## Thanks and Attribution
 
@@ -78,7 +81,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/add_files/migrate_files`
 - [x] `/add_files/archive_files`
 - [x] `/add_files/unarchive_files`
-- [x] `/add_files/generate_hashes`; While this is implemented it is not working due to Hydrus currently having a bug that makes it unusable. A pull request is pending that fixes this issue [here](https://github.com/hydrusnetwork/hydrus/pull/1784)
+- [x] `/add_files/generate_hashes`
 - [x] `/add_urls/get_url_files`
 - [x] `/add_urls/get_url_info`
 - [x] `/add_urls/add_url`
@@ -122,9 +125,9 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - `/manage_headers/set_user_agent`; Will NOT BE implemented due to it being deprecated. Use `/manage_headers/set_headers` instead.
 - [x] `/manage_pages/get_pages`
 - [x] `/manage_pages/get_page_info`
-- [ ] `/manage_pages/add_files`
+- [x] `/manage_pages/add_files`
 - [x] `/manage_pages/focus_page`
-- [ ] `/manage_pages/refresh_page`
+- [x] `/manage_pages/refresh_page`
 - [ ] `/manage_popups/get_popups`
 - [ ] `/manage_popups/add_popup`
 - [ ] `/manage_popups/call_user_callable`
@@ -133,8 +136,8 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/manage_popups/finish_popup`
 - [ ] `/manage_popups/finish_and_dismiss_popup`
 - [ ] `/manage_popups/update_popup`
-- [ ] `/manage_database/force_commit`
-- [ ] `/manage_database/lock_on`
-- [ ] `/manage_database/lock_off`
-- [ ] `/manage_database/mr_bones`
-- [ ] `/manage_database/get_client_options`
+- [x] `/manage_database/force_commit`
+- [x] `/manage_database/lock_on`
+- [x] `/manage_database/lock_off`
+- [x] `/manage_database/mr_bones`
+- [x] `/manage_database/get_client_options`; While this is implemented it will not be documented or tested due to its UNSTABLE nature! Expect the results of this endpoint to change with each Hydrus Client version!

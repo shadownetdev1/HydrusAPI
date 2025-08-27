@@ -9,6 +9,7 @@ import {test, expect, describe} from 'vitest'
 import API from '../hydrusapi.js'
 import jetpack from 'fs-jetpack'
 import fs from 'fs/promises'
+import { detailedDiff } from 'deep-object-diff'
 
 const util = require('util')
 const exec_async = util.promisify(require('child_process').exec)
@@ -27,14 +28,16 @@ const api = new API({
     address: ADDRESS,
 })
 
+const download_dest = `tests/hydrus-v${api.HYDRUS_TARGET_VERSION}.tar.zst`
+const run_path = 'tests/hydrus'
+
 const get_hydrus = async() => {
     const link = `https://github.com/hydrusnetwork/hydrus/releases/download/v${api.HYDRUS_TARGET_VERSION}/Hydrus.Network.${api.HYDRUS_TARGET_VERSION}.-.Linux.-.Executable.tar.zst`
-    const dest = `tests/hydrus-v${api.HYDRUS_TARGET_VERSION}.tar.zst`
 
     // const exec = require('child_process').exec
-    if (jetpack.exists(dest) === false) {
+    if (jetpack.exists(download_dest) === false) {
         console.log(`Downloading Hydrus version ${api.HYDRUS_TARGET_VERSION} (this will likely take a while)...`)
-        const download_command = `curl -L -o ${dest} '${link}'`
+        const download_command = `curl -L -o ${download_dest} '${link}'`
         // const download_command = `wget '${link}' -O ${dest}`
 
         // if we are download hydrus then this is likely a git clone
@@ -53,9 +56,9 @@ const get_hydrus = async() => {
     }
     
     console.log(`Extracting Hydrus...`)
-    jetpack.remove('tests/hydrus')
-    jetpack.dir('tests/hydrus')
-    const extract_command = `tar --use-compress-program=unzstd -xvf '${jetpack.cwd()}/${dest}' --strip-components=1 -C '${jetpack.cwd()}/tests/hydrus'`
+    jetpack.remove(run_path)
+    jetpack.dir(run_path)
+    const extract_command = `tar --use-compress-program=unzstd -xvf '${jetpack.cwd()}/${download_dest}' --strip-components=1 -C '${jetpack.cwd()}/tests/hydrus'`
     let { stdout2, stderr2 } = await exec_async(extract_command)
     console.log('stdout:', stdout2)
     console.log('stderr:', stderr2)
@@ -74,15 +77,17 @@ const hydrus_running = async() => {
 const exit_hydrus = async() => {
     const pid = await hydrus_running()
     if (pid) {
+        console.log(`Attempting to exit hydrus`)
         process.kill(pid, 'SIGTERM')
-    }
-    const start = Math.floor(Date.now() / 1000)
-    while (await hydrus_running()) {
-        let now = Math.floor(Date.now() / 1000)
-        if ((now - start) > 30) {
-            throw new Error(`Hydrus is taking too long to exit`)
+        const start = Math.floor(Date.now() / 1000)
+        while (await hydrus_running()) {
+            let now = Math.floor(Date.now() / 1000)
+            if ((now - start) > 30) {
+                throw new Error(`Hydrus is taking too long to exit`)
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000))
         }
-        await new Promise(resolve => setTimeout(resolve, 1000))
+        console.log(`Hydrus exited successfully`)
     }
 }
 
@@ -111,7 +116,13 @@ const start_hydrus = async() => {
     }
 }
 
-if (jetpack.exists('tests/hydrus') === false) {
+if (jetpack.exists(run_path) === false) {
+    await get_hydrus()
+}
+
+if (jetpack.exists(download_dest) === false) {
+    await exit_hydrus()
+    jetpack.remove(run_path)
     await get_hydrus()
 }
 
@@ -126,10 +137,10 @@ try {
     if (await hydrus_running()) {
         throw e
     }
-    if (jetpack.exists('tests/hydrus') !== 'dir') {throw new Error('Hydrus was not installed correctly')}
+    if (jetpack.exists(run_path) !== 'dir') {throw new Error('Hydrus was not installed correctly')}
     console.log(`Copying test database to hydrus`)
-    jetpack.remove('tests/hydrus/db')
-    jetpack.copy('tests/db', 'tests/hydrus/db')
+    jetpack.remove(`${run_path}/db`)
+    jetpack.copy('tests/db', `${run_path}/db`)
     await start_hydrus()
 }
 
@@ -385,13 +396,12 @@ describe('HydrusAPI', () => {
         expect(unArced).toBe(true)
 
         // test: generate_hashes
-        // TODO: waiting on https://github.com/hydrusnetwork/hydrus/pull/1784 to merge
-        // const gen_hashes = await api.add_files.generate_hashes({
-        //     bytes: jetpack.read(f_path, 'buffer')
-        //     // path: `${jetpack.cwd()}/${f_path}`
-        // })
-        // expect(gen_hashes.hash).toBe(f_hash)
-        // expect(gen_hashes.pixel_hash).toBe('46bd14e11cb1cef52248a36a3998887a5ca70cab397bed5d925a66a678f43231')
+        const gen_hashes = await api.add_files.generate_hashes({
+            bytes: jetpack.read(f_path, 'buffer')
+            // path: `${jetpack.cwd()}/${f_path}`
+        })
+        expect(gen_hashes.hash).toBe(f_hash)
+        expect(gen_hashes.pixel_hash).toBe('46bd14e11cb1cef52248a36a3998887a5ca70cab397bed5d925a66a678f43231')
 
         // test migrate_files (add)
         const other_service_key = (await api.get_service({service_name: 'my other files'})).service.service_key
@@ -719,6 +729,39 @@ describe('HydrusAPI', () => {
         if (info.media.hash_ids.length !== 0) {
             expect(typeof info.media.hash_ids[0]).toBe('number')
         }
+
+        // test add_files
+        const added = await api.manage_pages.add_files({
+            page_key: page.page_key,
+            file_id: 3
+        })
+        expect(added).toBe(true)
+
+        // validate that the page has file 3
+        const update = (await api.manage_pages.get_page_info({
+            page_key: page.page_key,
+            // simple: false,
+        })).page_info
+        expect(Array.isArray(update.media.hash_ids)).toBe(true)
+        expect(update.media.hash_ids.includes(3)).toBe(true)
+        expect(update.media.num_files > 3).toBe(true)
+
+        // test refresh_page
+        const refreshed = await api.manage_pages.refresh_page(page.page_key)
+        expect(refreshed).toBe(true)
+
+        // The /manage_pages/refresh_page endpoint returns before
+        // the page has finished refreshing. Because of this we need
+        // to add a short wait to ensure the page has refreshed.
+        // One second should be more than enough time.
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // validate that the page was refreshed
+        const fresh = (await api.manage_pages.get_page_info({
+            page_key: page.page_key,
+            // simple: false,
+        })).page_info
+        expect(fresh.media.num_files).toBe(3)
     })
 
     test('manage_popups.*', async() => {
@@ -726,6 +769,72 @@ describe('HydrusAPI', () => {
     })
 
     test('manage_database.*', async() => {
-        // TODO
+        // test force_commit
+        const commit = await api.manage_database.force_commit()
+        expect(commit).toBe(true)
+
+        // test lock_on
+        const lock = await api.manage_database.lock_on()
+        expect(lock).toBe(true)
+
+        // test lock_off
+        const unlock = await api.manage_database.lock_off()
+        expect(unlock).toBe(true)
+
+        // test mr_bones
+        const bones = (await api.manage_database.mr_bones()).boned_stats
+        expect(bones.num_inbox).toBeTypeOf('number')
+        expect(bones.num_archive).toBeTypeOf('number')
+        expect(bones.size_inbox).toBeTypeOf('number')
+        expect(bones.size_archive).toBeTypeOf('number')
+        expect(bones.num_deleted).toBeTypeOf('number')
+        expect(bones.size_deleted).toBeTypeOf('number')
+        expect(bones.earliest_import_time).toBeTypeOf('number')
+        expect(Array.isArray(bones.total_viewtime)).toBe(true)
+        expect(bones.total_viewtime.length).toBe(4)
+        expect(bones.total_alternate_groups).toBeTypeOf('number')
+        expect(bones.total_alternate_files).toBeTypeOf('number')
+        expect(bones.total_duplicate_files).toBeTypeOf('number')
+
+        // test get_client_options
+        // !!! While this endpoint's response will be type defined it will not be documented or tested due to its unstable nature
+        // !!! Expect the results of this endpoint to change with each Hydrus client version
+        const options = await api.manage_database.get_client_options()
+        expect(options).toBeTypeOf('object')
+        expect(options === null).toBe(false)
+        const old_schema_path = `tests/files/get_client_options_schema_${api.HYDRUS_TARGET_VERSION-1}.json`
+        const schema_path = `tests/files/get_client_options_schema_${api.HYDRUS_TARGET_VERSION}.json`
+        // save schema to be checked against in newer versions
+        if (jetpack.exists(schema_path) === false) {
+            jetpack.write(schema_path, options)
+        }
+        // compare new and old schemas. Throw error with difference
+        const prep = (data) => {
+            if (typeof data === 'object' && data !== null) {
+                for (const [key, value] of Object.entries(data)) {
+                    data[key] = prep(value)
+                }
+                return data
+            } else if (Array.isArray(data)) {
+                data.forEach((value, index, array) => {
+                    array[index] = prep(value)
+                })
+                return data
+            } else if (data === null) {
+                return "null"
+            }
+            return typeof data
+        }
+        if (jetpack.exists(old_schema_path) === 'file') {
+            const old_schema = jetpack.read(old_schema_path, 'json')
+            // prep the schema's replacing all values with strings for their types
+            // and then diff it
+            const diff = detailedDiff(prep(options), prep(old_schema))
+            if (JSON.stringify(diff) !== JSON.stringify({"added": {},"deleted": {},"updated": {}})) {
+                diff["original"] = options
+                jetpack.write(`comparison.tmp.json`, diff, {atomic: true})
+                throw new Error(`The output of 'manage_database.get_client_options()' has changed! See 'comparison.tmp.json' for the differences!`)
+            }
+        }
     })
 })
