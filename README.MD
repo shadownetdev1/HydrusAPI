@@ -115,9 +115,9 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/manage_file_relationships/remove_potentials`
 - [ ] `/manage_file_relationships/set_file_relationships`
 - [ ] `/manage_file_relationships/set_kings`
-- [ ] `/manage_services/get_pending_counts`
-- [ ] `/manage_services/commit_pending`
-- [ ] `/manage_services/forget_pending`
+- [x] `/manage_services/get_pending_counts`
+- [x] `/manage_services/commit_pending`; Due to the nature of this endpoint it doesn't have a test
+- [x] `/manage_services/forget_pending`; Due to the nature of this endpoint it doesn't have a test
 - [x] `/manage_cookies/get_cookies`
 - [x] `/manage_cookies/set_cookies`
 - [ ] `/manage_headers/get_headers`

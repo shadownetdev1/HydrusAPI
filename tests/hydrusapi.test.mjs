@@ -668,6 +668,16 @@ describe('HydrusAPI', () => {
         expect(pending.pending_counts === null).toBe(false)
         expect(pending.services).toBeTypeOf('object')
         expect(pending.services === null).toBe(false)
+
+        // test: commit_pending
+        // !!! Due to the nature of this endpoint it isn't tested
+        // const commit = await api.manage_services.commit_pending()
+        // console.log(commit)
+
+        // test: forget_pending
+        // !!! Due to the nature of this endpoint it isn't tested
+        // const commit = await api.manage_services.forget_pending()
+        // console.log(commit)
     })
 
     test('manage_cookies.*', async() => {
