@@ -12,7 +12,10 @@
 
 ### Changed
 
-- Installation instructions
+- Reworded Installation instructions
+- Reworded Readme in regards to API endpoints
+- Moved `add_tags.add_tags`'s options definition into hydrusapi.d.ts
+- Moved most cSpell ignore lines to the cspell property in package.json
 
 ### Added
 

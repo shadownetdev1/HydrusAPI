@@ -30,5 +30,33 @@
     "globals": "^16.3.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
+  },
+  "cspell": {
+    "version": "0.2",
+    "language": "en",
+    "words": [
+      "APNG",
+      "azur",
+      "booru",
+      "hydrusapi",
+      "IPFS",
+      "shadownetdev1",
+      "Ugoiras",
+      "unzstd"
+    ],
+    "ignoreWords": [
+      "someoverbooru"
+    ],
+    "flagWords": [],
+    "allowCompoundWords": true,
+    "dictionaries": [
+      "en_US",
+      "en-gb",
+      "companies",
+      "softwareTerms",
+      "misc",
+      "typescript",
+      "npm"
+    ]
   }
 }

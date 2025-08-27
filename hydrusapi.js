@@ -1,8 +1,4 @@
 
-// cSpell: ignore undelete, inboxed, unarchived, doublecheck_file_system
-// cSpell: ignore normalise, favourite, favourites, pngs, pdfs, someoverbooru
-// cSpell: ignore normalised
-
 /**
  * Takes an options object and convert it to an URLSearchParams instance
  * making sure that all lists and objects are encoded as JSON strings first
@@ -681,14 +677,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_tags/add_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsadd_tags--idadd_tags_add_tags-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be tagged
-     * @param {string} [options.hash] the SHA256 hash of the file to be tagged
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to be tagged
-     * @param {{[key: string]: string[]}} [options.service_keys_to_tags] key is a service key and the value is an array of tags to add
-     * @param {*} [options.service_keys_to_actions_to_tags] // TODO: type def
-     * @param {boolean} [options.override_previously_deleted_mappings=true]
-     * @param {boolean} [options.create_new_deleted_mappings=true]
+     * @param {add_tags_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} successful if true
      */

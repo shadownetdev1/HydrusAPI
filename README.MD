@@ -17,7 +17,7 @@
 
 HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
 
-As of currently most Hydrus API endpoints are implemented and all API endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at the bottom of this page.
+As of currently most Hydrus API endpoints are implemented and all API endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at [the bottom of this page](#endpoints).
 
 ## Installation
 

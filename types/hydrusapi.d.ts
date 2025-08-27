@@ -1,7 +1,4 @@
 
-// cSpell: ignore booru, IPFS, viewtime, blurhash, colours, imageboard
-// cSpell: ignore favourite, azur lane, multihash, multihashes, exif
-
 type EnumOf<T> = T[keyof T]
 
 type ValueOf<T> = T[keyof T]
@@ -457,15 +454,6 @@ interface search_tags_response extends api_version_response {
     tags: {value: string, count:number}[]
 }
 
-interface set_favourite_tags_options {
-    /** (selective A, optional, a list of tags) If set then the existing favourite tags will be overwritten with these */
-    set?: string[]
-    /** (selective B, optional, a list of tags) A list of tags to add to the existing list */
-    add?: string[]
-    /** (selective B, optional, a list of tags) A list of tags to remove from the existing list */
-    remove?: string[]
-}
-
 /** At least one of file_id, hash, or hashes must be defined */
 interface FilesObject {
     /** The id of the file to be deleted */
@@ -474,6 +462,44 @@ interface FilesObject {
     hash?: string
     /** The SHA256 hashes of the files to be deleted */
     hashes?: string[]
+}
+
+/** either service_keys_to_tags or service_keys_to_actions_to_tags must be defined */
+interface add_tags_options extends FilesObject{
+    /**
+     * An object where the keys are service keys
+     * and the values are arrays of tags to add
+     */
+    service_keys_to_tags?: {[key: string]: string[]}
+    /** 
+     * An object of objects where the first objects keys
+     * are service keys and its values are objects.
+     * The second objects keys are actions (defined below)
+     * and its values are arrays of tags to act on
+     * 
+     * Permitted Actions:
+     * * '0' - Add to a local tag service.
+     * * '1' - Delete from a local tag service.
+     * * '2' - Pend to a tag repository.
+     * * '3' - Rescind a pend from a tag repository.
+     * * '4' - Petition from a tag repository. (This is special)
+     * * '5' - Rescind a petition from a tag repository.
+     */
+    service_keys_to_actions_to_tags?: {[key: string]: {[key: string]: string[]}}
+    /** Optional; Defaults to true */
+    override_previously_deleted_mappings?: boolean
+    /** Optional; Defaults to true */
+    create_new_deleted_mappings?: boolean
+
+}
+
+interface set_favourite_tags_options {
+    /** (selective A, optional, a list of tags) If set then the existing favourite tags will be overwritten with these */
+    set?: string[]
+    /** (selective B, optional, a list of tags) A list of tags to add to the existing list */
+    add?: string[]
+    /** (selective B, optional, a list of tags) A list of tags to remove from the existing list */
+    remove?: string[]
 }
 
 interface set_rating_options extends FilesObject {
