@@ -762,5 +762,13 @@ describe('HydrusAPI', () => {
         // test force_commit
         const commit = await api.manage_database.force_commit()
         expect(commit).toBe(true)
+
+        // test lock_on
+        const lock = await api.manage_database.lock_on()
+        expect(lock).toBe(true)
+
+        // test lock_off
+        const unlock = await api.manage_database.lock_off()
+        expect(unlock).toBe(true)
     })
 })

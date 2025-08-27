@@ -1237,12 +1237,77 @@ module.exports = class RawAPI{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaseforce_commit--idmanage_database_force_commit-
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {force_commit_response}
+     * @returns {boolean} Successful if true
      */
     force_commit: async(return_as) => {
         // region: manage_database/force_commit
         return await this.call({
             endpoint: '/manage_database/force_commit',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Pause the client's database activity and disconnect the current connection.
+     * 
+     * This is a hacky prototype.
+     * 
+     * It commands the client database to pause its job queue
+     * and release its connection (and related file locks
+     * and journal files). This puts the client in a similar position
+     * as a long VACUUM command--it'll hang in there,
+     * but not much will work, and since the UI async code isn't
+     * great yet, the UI may lock up after a minute or two.
+     * If you would like to automate database backup without shutting
+     * the client down, this is the thing to play with.
+     *
+     * This should return pretty quick, but it will wait
+     * up to five seconds for the database to actually disconnect.
+     * If there is a big job (like a VACUUM) current going on,
+     * it may take substantially longer to finish that up
+     * and process this STOP command.
+     * You might like to check for the existence of a journal file
+     * in the db dir just to be safe.
+     *
+     * As long as this lock is on,
+     * all Client API calls except the unlock command will return 503.
+     * (This is a decent way to test the current lock status, too)
+     * 
+     * POST Endpoint: /manage_database/lock_on
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_on--idmanage_database_lock_on-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    lock_on: async(return_as) => {
+        // region: manage_database/lock_on
+        return await this.call({
+            endpoint: '/manage_database/lock_on',
+            method: 'POST',
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Reconnect the client's database and resume activity.
+     * 
+     * This is the obvious complement to lock_on.
+     * The client will resume processing its job queue
+     * and will catch up. If the UI was frozen,
+     * it should free up in a few seconds,
+     * just like after a big VACUUM.
+     * 
+     * POST Endpoint: /manage_database/lock_off
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_off--idmanage_database_lock_off-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    lock_off: async(return_as) => {
+        // region: manage_database/lock_off
+        return await this.call({
+            endpoint: '/manage_database/lock_off',
             method: 'POST',
             return_as: return_as ?? 'success'
         })

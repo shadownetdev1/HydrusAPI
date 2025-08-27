@@ -13,6 +13,7 @@ _First official release_
 - Implemented `manage_pages.add_files()` ()
 - Implemented `manage_pages.refresh_page()` ()
 - Implemented `manage_database.force_commit()` ()
+- Implemented `manage_database.lock_on()` and `manage_database.lock_off()` ()
 
 ### Removed
 
