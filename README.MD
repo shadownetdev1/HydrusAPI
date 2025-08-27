@@ -50,15 +50,15 @@ Hydrus version badges provided by [Shields.io](https://shields.io/).
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
-[Hummingbird at feeder image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder)
+[Hummingbird at feeder image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder).
 
-[Tree image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree)
+[Tree image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree).
 
-[Tokyo travel image (used to test url imports)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage)
+[Tokyo travel image (used to test url imports)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage).
 
-[Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster)
+[Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
 
-[Seascape Sunset image (used to test notes)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset)
+[Seascape Sunset image (used to test notes)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
 
 ## License
 
@@ -66,10 +66,11 @@ HydrusAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENS
 
 ## Endpoints
 
-This is all the endpoints that exist as of Hydrus API version 80. Checked endpoints have been implemented.
+This is all the endpoints that exist as of Hydrus API version 80. Checked endpoints have been implemented or are no longer available.
 
 - [x] `/api_version`
-- [x] `/request_new_permissions`; While this is implemented and we do not expect it to break it cannot be automatically tested due to its nature.
+- [x] `/request_new_permissions`
+  - While this is implemented and we do not expect it to break it cannot be automatically tested due to its nature.
 - [x] `/session_key`
 - [x] `/verify_access_key`
 - [x] `/get_service`
@@ -87,7 +88,9 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/add_urls/add_url`
 - [x] `/add_urls/associate_url`
 - [x] `/add_tags/clean_tags`
-- `/add_tags/get_tag_services`; No longer available. Use `/get_services` instead
+- [x] `/add_tags/get_tag_services`
+  - No longer supported.
+  - Use `/get_services` instead.
 - [x] `/add_tags/get_favourite_tags`
 - [x] `/add_tags/get_siblings_and_parents`
 - [x] `/add_tags/search_tags`
@@ -116,13 +119,17 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/manage_file_relationships/set_file_relationships`
 - [ ] `/manage_file_relationships/set_kings`
 - [x] `/manage_services/get_pending_counts`
-- [x] `/manage_services/commit_pending`; Due to the nature of this endpoint it doesn't have a test
-- [x] `/manage_services/forget_pending`; Due to the nature of this endpoint it doesn't have a test
+- [x] `/manage_services/commit_pending`
+  - Due to the nature of this endpoint it doesn't have a test.
+- [x] `/manage_services/forget_pending`
+  - Due to the nature of this endpoint it doesn't have a test.
 - [x] `/manage_cookies/get_cookies`
 - [x] `/manage_cookies/set_cookies`
 - [ ] `/manage_headers/get_headers`
 - [ ] `/manage_headers/set_headers`
-- `/manage_headers/set_user_agent`; Will NOT BE implemented due to it being deprecated. Use `/manage_headers/set_headers` instead.
+- [x] `/manage_headers/set_user_agent`
+  - Will NOT BE implemented due to it being deprecated.
+  - Use `/manage_headers/set_headers` instead.
 - [x] `/manage_pages/get_pages`
 - [x] `/manage_pages/get_page_info`
 - [x] `/manage_pages/add_files`
@@ -140,4 +147,6 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/manage_database/lock_on`
 - [x] `/manage_database/lock_off`
 - [x] `/manage_database/mr_bones`
-- [x] `/manage_database/get_client_options`; While this is implemented it will not be documented or tested due to its UNSTABLE nature! Expect the results of this endpoint to change with each Hydrus Client version!
+- [x] `/manage_database/get_client_options`
+  - While this is implemented it will not be documented or tested due to its UNSTABLE nature!
+  - Expect the results of this endpoint to change with each Hydrus Client version!
