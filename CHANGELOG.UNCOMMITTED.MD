@@ -26,3 +26,4 @@
 
 - Moved from a .npmignore file to the files property in package.json so that we stop packaging unneeded files (7dce9696e2dfc6926a1bdcc44613ee3cbc263bfb)
 - Updated tests so that they create missing empty folders that git removes (81dcd1c5733911f88cec018f56c1bbc8747107a5)
+- Fixed Build dependencies showing up as normal dependencies on NPM ()
