@@ -12,7 +12,8 @@
 [![Branch Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/branches.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 
 <p align="center">
-  <img width="100%" alt="Warning: This API implementation is in an alpha state and is provided as is. While I expect that all implemented endpoints work as expected I cannot guarantee that that is the case." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
+  <img width="100%" alt="Warning: This API implementation is provided as is (just like Hydrus). You should be regularly backing up your Hydrus database regardless of any external libraries (like this one) that you are or aren't using." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
+  <!-- The above text is also defined in `badges/warning.svg`. It only exists here to assist screen readers. When updating this text make sure change the text in `badges/warning.svg` to match -->
 </p>
 
 HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
@@ -27,6 +28,8 @@ For other users you can download from the [releases page](https://github.com/sha
 
 ## Documentation and Usage
 
+We highly suggest making sure that at least Hydrus API version if not the Hydrus client version matches this API implementations version.
+
 HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](src/tests/api.test.mjs) are implemented.
 
 ## Contributing
@@ -37,7 +40,7 @@ We do not provide a way support us monetarily (at this time). We suggest support
 
 ## Versioning
 
-HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[Minor version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. The version in [`package.json`](./package.json) is automatically updated to match the tag name on release.
+HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusAPI version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
 
 ## Thanks and Attribution
 
