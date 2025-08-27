@@ -21,13 +21,13 @@ As of currently most Hydrus API endpoints are implemented and all the API endpoi
 
 ## Installation
 
-If you are using npm or a alternative installation is as simple as `npm install hydrusapi` or `[alternative] install hydrusapi`.
+If you are using npm or an alternative package manager then installation is as simple as `npm install hydrusapi` or `[package manager] install hydrusapi`.
 
 For other users you can download from the [releases page](https://github.com/shadownetdev1/HydrusAPI/releases).
 
 ## Documentation and Usage
 
-HydrusAPI currently doesn't have any documentation or usage instructions. Your best bet is to look at how the [tests](src/tests/api.test.mjs) are implemented.
+HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](src/tests/api.test.mjs) are implemented.
 
 ## Contributing
 
