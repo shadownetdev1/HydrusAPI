@@ -770,5 +770,20 @@ describe('HydrusAPI', () => {
         // test lock_off
         const unlock = await api.manage_database.lock_off()
         expect(unlock).toBe(true)
+
+        // test mr_bones
+        const bones = (await api.manage_database.mr_bones()).boned_stats
+        expect(bones.num_inbox).toBeTypeOf('number')
+        expect(bones.num_archive).toBeTypeOf('number')
+        expect(bones.size_inbox).toBeTypeOf('number')
+        expect(bones.size_archive).toBeTypeOf('number')
+        expect(bones.num_deleted).toBeTypeOf('number')
+        expect(bones.size_deleted).toBeTypeOf('number')
+        expect(bones.earliest_import_time).toBeTypeOf('number')
+        expect(Array.isArray(bones.total_viewtime)).toBe(true)
+        expect(bones.total_viewtime.length).toBe(4)
+        expect(bones.total_alternate_groups).toBeTypeOf('number')
+        expect(bones.total_alternate_files).toBeTypeOf('number')
+        expect(bones.total_duplicate_files).toBeTypeOf('number')
     })
 })

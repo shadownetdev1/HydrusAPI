@@ -1313,6 +1313,30 @@ module.exports = class RawAPI{
         })
     },
 
+    /**
+     * Gets the data from database->how boned am I?.
+     * 
+     * This is a simple Object of numbers for advanced purposes.
+     * Useful if you want to show or record some stats.
+     * The numbers are the same as the dialog shows,
+     * so double check that to confirm what each value is for.
+     * 
+     * GET Endpoint: /manage_database/mr_bones
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databasemr_bones--idmanage_database_mr_bones-
+     * @param {mr_bones_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {mr_bones_response}
+     */
+    mr_bones: async(options = {}, return_as) => {
+        // region: manage_database/mr_bones
+        return await this.call({
+            endpoint: '/manage_database/mr_bones',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
         }
     }
 }

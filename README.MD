@@ -139,5 +139,5 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/manage_database/force_commit`
 - [x] `/manage_database/lock_on`
 - [x] `/manage_database/lock_off`
-- [ ] `/manage_database/mr_bones`
+- [x] `/manage_database/mr_bones`
 - [ ] `/manage_database/get_client_options`

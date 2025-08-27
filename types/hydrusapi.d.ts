@@ -1163,3 +1163,42 @@ interface add_files_options extends FilesObject {
     /** The page key for the page you wish to add files to */
     page_key: string
 }
+
+interface mr_bones_options extends FileDomainObject {
+    /** Optional; A list of tags you wish to search for */
+    tags?: string[]
+    /** Optional; The tag domain on which to search, defaults to `all my files` */
+    tag_service_key?: string
+}
+
+interface mr_bones_response extends api_version_response {
+    boned_stats: {
+        /** Number of inboxed files */
+        num_inbox: number
+        /** Number of archived files */
+        num_archive: number
+        /** Size of all inboxed files in bytes */
+        size_inbox: number
+        /** Size of all archived files in bytes */
+        size_archive: number
+        /** Number of deleted files */
+        num_deleted: number
+        /** Size of all deleted files in bytes */
+        size_deleted: number
+        /** Earliest file import timestamp in seconds since Epoch */
+        earliest_import_time: number
+        /**
+         * number of media views, seconds viewing media,
+         * number of preview views, seconds previewing media
+         */
+        total_viewtime: [number, number, number, number]
+        /** Number of alternative duplicate groups available */
+        total_alternate_groups: number
+        /** Number of files in alternative duplicate groups */
+        total_alternate_files: number
+        /** 
+         * The number of files that have/had at least one duplicate
+         */
+        total_duplicate_files: number
+    }
+}
