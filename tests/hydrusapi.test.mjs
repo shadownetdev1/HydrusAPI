@@ -662,7 +662,12 @@ describe('HydrusAPI', () => {
     })
 
     test('manage_services.*', async() => {
-        // TODO
+        // test: get_pending_counts
+        const pending = await api.manage_services.get_pending_counts()
+        expect(pending.pending_counts).toBeTypeOf('object')
+        expect(pending.pending_counts === null).toBe(false)
+        expect(pending.services).toBeTypeOf('object')
+        expect(pending.services === null).toBe(false)
     })
 
     test('manage_cookies.*', async() => {

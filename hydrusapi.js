@@ -1011,7 +1011,22 @@ module.exports = class API{
      */
     get manage_services() {
         return {
-            // TODO
+    /**
+     * Get the counts of pending content for each upload-capable service. This basically lets you construct the "pending" menu in the main GUI menubar.
+     * 
+     * GET Endpoint: /manage_services/get_pending_counts
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_servicesget_pending_counts--idmanage_services_get_pending_counts-
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_pending_counts_response}
+     */
+    get_pending_counts: async(return_as) => {
+        // region: manage_services/get_pending_counts
+        return await this.call({
+            endpoint: '/manage_services/get_pending_counts',
+            return_as: return_as
+        })
+    },
         }
     }
 

@@ -1048,6 +1048,19 @@ interface render_options {
     height?: number
 }
 
+interface get_pending_counts_response extends api_version_response {
+    services: ServicesObject
+    /** key is a service key */
+    pending_counts: {[key: string]: {
+        pending_tag_mappings: number
+        petitioned_tag_mappings: number
+        pending_tag_siblings: number
+        petitioned_tag_siblings: number
+        pending_tag_parents: number
+        petitioned_tag_parents: number
+    }}
+}
+
 interface get_cookies_response extends api_version_response {
     /**
      * list of all the cookies for a domain in the format of [ name, value, domain, path, expires ]
