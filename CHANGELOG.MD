@@ -7,6 +7,29 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.636.3](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.3) - 2025-7-27
+
+_First official release_
+
+### Changed
+
+- Bumped target Hydrus version to 636
+- Fixed bugs in the test code that were discovered due to the Hydrus version bump
+
+### Added
+
+- Implemented `manage_pages.add_files()` ()
+- Implemented `manage_pages.refresh_page()` ()
+- Implemented `manage_database.force_commit()` ()
+- Implemented `manage_database.lock_on()` and `manage_database.lock_off()` ()
+- Implemented `manage_database.mr_bones()` ()
+- Implemented `manage_database.get_client_options()` ()
+
+### Fixed
+
+- N/A
+
+
 ## [80.635.2-alpha](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.635.2-alpha) - 2025-7-27
 
 _The main thing of note in this release is that the `add_notes.set_notes()` and `add_notes.delete_notes()` endpoints have been implemented_

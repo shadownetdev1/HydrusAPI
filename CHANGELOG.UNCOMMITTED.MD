@@ -2,21 +2,27 @@
 
 ## <!-- version -->
 
-_First official release_
+<!--
+    DO NOT change the insert_point and version lines above.
+    This note, "_Optional notice_" (if unchanged), and any unused groups should be removed before release.
+    Reference https://common-changelog.org/ for formatting.
+    Make sure to attribute all authors. Ideally by linking to their GitHub profile with their name as the text.
+    [shadownetdev1](https://github.com/shadownetdev1) for example.
+-->
+
+_Optional notice_
 
 ### Changed
 
-- Bumped target Hydrus version to 636
-- Fixed bugs in the test code that were discovered due to the Hydrus version bump
+- N/A
 
 ### Added
 
-- Implemented `manage_pages.add_files()` ()
-- Implemented `manage_pages.refresh_page()` ()
-- Implemented `manage_database.force_commit()` ()
-- Implemented `manage_database.lock_on()` and `manage_database.lock_off()` ()
-- Implemented `manage_database.mr_bones()` ()
-- Implemented `manage_database.get_client_options()` ()
+- N/A
+
+### Removed
+
+- N/A
 
 ### Fixed
 
