@@ -1166,7 +1166,29 @@ module.exports = class RawAPI{
         })
     },
 
-    // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-
+    /**
+     * Refresh a page in the main GUI.
+     * 
+     * Like hitting F5 in the client,
+     * this obviously makes file search pages perform their
+     * search again, but for other page types it will force
+     * the currently in-view files to be re-sorted.
+     * 
+     * POST Endpoint: /manage_pages/refresh_page
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-
+     * @param {string} page_key The page key for the page you wish to refresh
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    refresh_page: async(page_key, return_as) => {
+        // region: manage_pages/refresh_page
+        return await this.call({
+            endpoint: '/manage_pages/refresh_page',
+            json: {page_key: page_key},
+            return_as: return_as ?? 'success'
+        })
+    },
 
         }
     }

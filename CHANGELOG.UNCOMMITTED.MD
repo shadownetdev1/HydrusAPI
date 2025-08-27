@@ -19,6 +19,7 @@ _Optional notice_
 ### Added
 
 - Implemented `manage_pages.add_files()` ()
+- Implemented `manage_pages.refresh_page()` ()
 
 ### Removed
 

@@ -124,7 +124,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/manage_pages/get_page_info`
 - [x] `/manage_pages/add_files`
 - [x] `/manage_pages/focus_page`
-- [ ] `/manage_pages/refresh_page`
+- [x] `/manage_pages/refresh_page`
 - [ ] `/manage_popups/get_popups`
 - [ ] `/manage_popups/add_popup`
 - [ ] `/manage_popups/call_user_callable`

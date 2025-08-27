@@ -734,6 +734,24 @@ describe('HydrusAPI', () => {
         })).page_info
         expect(Array.isArray(update.media.hash_ids)).toBe(true)
         expect(update.media.hash_ids.includes(3)).toBe(true)
+        expect(update.media.num_files > 3).toBe(true)
+
+        // test refresh_page
+        const refreshed = await api.manage_pages.refresh_page(page.page_key)
+        expect(refreshed).toBe(true)
+
+        // The /manage_pages/refresh_page endpoint returns before
+        // the page has finished refreshing. Because of this we need
+        // to add a short wait to ensure the page has refreshed.
+        // One second should be more than enough time.
+        await new Promise(resolve => setTimeout(resolve, 1000))
+
+        // validate that the page was refreshed
+        const fresh = (await api.manage_pages.get_page_info({
+            page_key: page.page_key,
+            // simple: false,
+        })).page_info
+        expect(fresh.media.num_files).toBe(3)
     })
 
     test('manage_popups.*', async() => {
