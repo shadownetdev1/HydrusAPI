@@ -7,6 +7,15 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.636.4](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.4) - 2025-7-27
+
+### Added
+
+- Implemented `manage_services.get_pending_counts()`
+- Implemented `manage_services.commit_pending()`
+- Implemented `manage_services.forget_pending()`
+
+
 ## [80.636.3](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.3) - 2025-7-27
 
 _First official release_
