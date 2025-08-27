@@ -245,6 +245,29 @@ interface add_file_response extends api_version_response {
     note: string
 }
 
+interface delete_files_options extends FilesObject {
+    /** A local file domain; Defaults to 'all my files */
+    file_domain?: string
+    /** An optional reason for the file deletion */
+    reason?: string
+}
+
+interface undelete_files_options extends FilesObject {
+    /** A local file domain; Defaults to 'all my files */
+    file_domain?: string
+}
+
+/**
+ * One of file_service_key or file_service_keys must be defined.
+ * One of file_id, hash, or hashes must be defined.
+ */
+interface migrate_files_options extends FilesObject {
+    /** The id of the file service to add to */
+    file_service_key?: string
+    /** The ids of the file services to add to */
+    file_service_keys?: string[]
+}
+
 /** bytes or path must be provided. If path is provided it should be reachable by Hydrus */
 interface generate_hashes_options {
     bytes?: any
@@ -336,9 +359,42 @@ interface URLInfo {
 
 interface get_url_info_response extends api_version_response, URLInfo {}
 
+interface add_url_options {
+    /** The url to add */
+    url: string,
+    /** Optional page identifier for the page to receive the url */
+    destination_page_key?: string
+    /** Optional page name to receive the url */
+    destination_page_name?: string
+    /** Optional, sets where to import the file */
+    file_domain?: string
+    /** Optional, defaulting to false, controls whether the UI will change pages on add */
+    show_destination_page?: boolean
+    /**
+     * Optional, selective, tags to give to any files imported from this url.
+     * keys are service keys and values ar an array of tags.
+     */
+    service_keys_to_additional_tags?: {[key: string]: string[]}
+    /** Optional tags to be filtered by any tag import options that applies to the URL */
+    filterable_tags?: string[]
+}
+
 interface add_url_response extends api_version_response {
     human_result_text: string
     normalised_url: string
+}
+
+interface associate_url_options extends FilesObject {
+    /** A URL to add to the file(s) */
+    url_to_add?: string
+    /** A list of URLs to add to the file(s) */
+    urls_to_add?: string[]
+    /** A URL to remove from the file(s) */
+    url_to_delete?: string
+    /** A list of URLs to remove from the file(s) */
+    urls_to_delete?: string[]
+    /** Optional; Defaults to true */
+    normalise_urls?: boolean
 }
 
 interface clean_tags_response extends api_version_response {
@@ -448,6 +504,17 @@ interface get_siblings_and_parents_response extends api_version_response {
      * and you'll get updated values.
      */
     tags: {[key: string]: SiblingsAndParentsTagObject}
+}
+
+interface search_tags_options {
+    /** The query to search for */
+    search: string
+    /** Optional; Defaults to "all my files" */
+    file_domain?: string
+    /** Optional */
+    tag_service_key?: string
+    /** Optional; Defaults to "storage" */
+    tag_display_type?: "storage" | "display"
 }
 
 interface search_tags_response extends api_version_response {

@@ -322,12 +322,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/delete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesdelete_files--idadd_files_delete_files-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be deleted
-     * @param {string} [options.hash] the SHA256 hash of the file to be deleted
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to be deleted
-     * @param {string} [options.file_domain] a local file domain; defaults to 'all my files'
-     * @param {string} [options.reason] an optional reason for the file deletion
+     * @param {delete_files_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} true if successful
      */
@@ -346,11 +341,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/undelete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesundelete_files--idadd_files_undelete_files-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be undeleted
-     * @param {string} [options.hash] the SHA256 hash of the file to be undeleted
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to be undeleted
-     * @param {string} [options.file_domain] a local file domain; defaults to 'all my files'
+     * @param {undelete_files_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} successful if true
      */
@@ -369,10 +360,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/clear_file_deletion_record
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesclear_file_deletion_record--idadd_files_clear_file_deletion_record-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to have its deletion record removed
-     * @param {string} [options.hash] the SHA256 hash of the file to have its deletion record removed
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to have their deletion records removed
+     * @param {FilesObject} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} successful if true
      */
@@ -391,12 +379,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/migrate_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesmigrate_files--idadd_files_migrate_files-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be added to the given local file service(s)
-     * @param {string} [options.hash] the SHA256 hash of the file to added to the given local file service(s)
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to added to the given local file service(s)
-     * @param {string} [options.file_service_key] The id of the file service to add to
-     * @param {string[]} [options.file_service_keys] The ids of the file services to add to
+     * @param {migrate_files_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} successful if true
      */
@@ -434,10 +417,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_files/unarchive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesunarchive_files--idadd_files_unarchive_files-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to be unarchived
-     * @param {string} [options.hash] the SHA256 hash of the file to unarchived
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to unarchived
+     * @param {FilesObject} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} if true then the file was successfully unarchived, was already unarchived, or doesn't exist
      */
@@ -538,14 +518,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_urls/add_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsadd_url--idadd_urls_add_url-
-     * @param {Object} options
-     * @param {string} options.url url to add
-     * @param {string} [options.destination_page_key] optional page identifier for the page to receive the url
-     * @param {string} [options.destination_page_name] optional page name to receive the url
-     * @param {string} [options.file_domain] optional, sets where to import the file
-     * @param {boolean} [options.show_destination_page] optional, defaulting to false, controls whether the UI will change pages on add
-     * @param {{[key: string]: string[]}} [options.service_keys_to_additional_tags] optional, selective, tags to give to any files imported from this url
-     * @param {string[]} [options.filterable_tags] optional tags to be filtered by any tag import options that applies to the URL
+     * @param {add_url_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {add_url_response}
      */
@@ -564,15 +537,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_urls/associate_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsassociate_url--idadd_urls_associate_url-
-     * @param {Object} options
-     * @param {number} [options.file_id] the id of the file to have URL(s) associated
-     * @param {string} [options.hash] the SHA256 hash of the file to have URL(s) associated
-     * @param {string[]} [options.hashes] the SHA256 hashes of the files to have URL(s) associated
-     * @param {string} [options.url_to_add] a URL to add to the file(s)
-     * @param {string[]} [options.urls_to_add] a list of URLs to add to the file(s)
-     * @param {string} [options.url_to_delete] a URL to remove from the file(s)
-     * @param {string} [options.urls_to_delete] a list of URLs to remove from the file(s)
-     * @param {boolean} [options.normalise_urls=true]
+     * @param {associate_url_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} successful if true
      */
@@ -654,11 +619,7 @@ module.exports = class RawAPI{
      * Endpoint: /add_tags/search_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagssearch_tags--idadd_tags_search_tags-
-     * @param {Object} options
-     * @param {string} options.search The query to search for
-     * @param {string} [options.file_domain="all my files"]
-     * @param {string} [options.tag_service_key]
-     * @param {string} [options.tag_display_type="storage"] "storage" or "display"
+     * @param {search_tags_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {search_tags_response}
      */
