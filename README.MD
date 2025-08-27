@@ -17,7 +17,7 @@
 
 HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
 
-As of currently most Hydrus API endpoints are implemented and all API endpoints from [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at the bottom of this page.
+As of currently most Hydrus API endpoints are implemented and all the API endpoints supported by [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at [the bottom of this page](#endpoints).
 
 ## Installation
 
@@ -47,13 +47,15 @@ Hydrus version badges provided by [Shields.io](https://shields.io/).
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
-[Hummingbird at feeder image](/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder)
+[Hummingbird at feeder image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder)
 
-[Tree image](/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree)
+[Tree image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree)
 
-[Tokyo travel image (used to test url imports)](/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage)
+[Tokyo travel image (used to test url imports)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage)
 
-[Venice traval image (used to test tagging and rating)](/test/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster)
+[Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster)
+
+[Seascape Sunset image (used to test notes)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset)
 
 ## License
 
@@ -92,8 +94,8 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/edit_times/increment_file_viewtime`
 - [ ] `/edit_times/set_file_viewtime`
 - [ ] `/edit_times/set_time`
-- [ ] `/add_notes/set_notes`
-- [ ] `/add_notes/delete_notes`
+- [x] `/add_notes/set_notes`
+- [x] `/add_notes/delete_notes`
 - [x] `/get_files/search_files`
 - [x] `/get_files/file_hashes`
 - [x] `/get_files/file_metadata`

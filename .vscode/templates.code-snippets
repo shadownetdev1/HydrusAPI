@@ -1,0 +1,69 @@
+{
+	// Place your HydrusAPI workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	// "Print to console": {
+	// 	"scope": "javascript,typescript",
+	// 	"prefix": "log",
+	// 	"body": [
+	// 		"console.log('$1');",
+	// 		"$2"
+	// 	],
+	// 	"description": "Log output to console"
+	// }
+
+	"New POST Endpoint": {
+		"prefix": "endpointPOST",
+		"description": "New POST Endpoint",
+		"scope": "javascript",
+		"body": [
+			"/**",
+			" * ${1:one_line_description}",
+			" * ",
+			" * POST Endpoint: /${2:endpoint_group}/${3:endpoint}",
+			" * ",
+			" * ${4:documentation_url}",
+			" * @param {${3:endpoint}_options} options",
+			" * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?",
+			" * @returns {${3:endpoint}_response}",
+			" */",
+			"${3:endpoint}: async(options, return_as) => {",
+			"    // region: ${2:endpoint group}/${3:endpoint}",
+			"    return await this.call({",
+			"        endpoint: '/${2:endpoint_group}/${3:endpoint}',",
+			"        json: options,",
+			"        return_as: return_as$0",
+			"    })",
+			"},"
+		],
+	},
+	"New GET Endpoint": {
+		"prefix": "endpointGET",
+		"description": "New GET Endpoint",
+		"scope": "javascript",
+		"body": [
+			"/**",
+			" * ${1:one_line_description}",
+			" * ",
+			" * GET Endpoint: /${2:endpoint_group}/${3:endpoint}",
+			" * ",
+			" * ${4:documentation_url}",
+			" * @param {${3:endpoint}_options} options",
+			" * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?",
+			" * @returns {${3:endpoint}_response}",
+			" */",
+			"${3:endpoint}: async(options, return_as) => {",
+			"    // region: ${2:endpoint group}/${3:endpoint}",
+			"    return await this.call({",
+			"        endpoint: '/${2:endpoint_group}/${3:endpoint}',",
+			"        queries: optionsToURLSearchParams(options),",
+			"        return_as: return_as$0",
+			"    })",
+			"},"
+		],
+	},
+}

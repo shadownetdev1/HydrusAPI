@@ -1,7 +1,4 @@
 
-// cSpell: ignore booru, IPFS, viewtime, blurhash, colours, imageboard
-// cSpell: ignore favourite, azur lane, multihash, multihashes, exif
-
 type EnumOf<T> = T[keyof T]
 
 type ValueOf<T> = T[keyof T]
@@ -248,6 +245,29 @@ interface add_file_response extends api_version_response {
     note: string
 }
 
+interface delete_files_options extends FilesObject {
+    /** A local file domain; Defaults to 'all my files */
+    file_domain?: string
+    /** An optional reason for the file deletion */
+    reason?: string
+}
+
+interface undelete_files_options extends FilesObject {
+    /** A local file domain; Defaults to 'all my files */
+    file_domain?: string
+}
+
+/**
+ * One of file_service_key or file_service_keys must be defined.
+ * One of file_id, hash, or hashes must be defined.
+ */
+interface migrate_files_options extends FilesObject {
+    /** The id of the file service to add to */
+    file_service_key?: string
+    /** The ids of the file services to add to */
+    file_service_keys?: string[]
+}
+
 /** bytes or path must be provided. If path is provided it should be reachable by Hydrus */
 interface generate_hashes_options {
     bytes?: any
@@ -339,9 +359,42 @@ interface URLInfo {
 
 interface get_url_info_response extends api_version_response, URLInfo {}
 
+interface add_url_options {
+    /** The url to add */
+    url: string,
+    /** Optional page identifier for the page to receive the url */
+    destination_page_key?: string
+    /** Optional page name to receive the url */
+    destination_page_name?: string
+    /** Optional, sets where to import the file */
+    file_domain?: string
+    /** Optional, defaulting to false, controls whether the UI will change pages on add */
+    show_destination_page?: boolean
+    /**
+     * Optional, selective, tags to give to any files imported from this url.
+     * keys are service keys and values ar an array of tags.
+     */
+    service_keys_to_additional_tags?: {[key: string]: string[]}
+    /** Optional tags to be filtered by any tag import options that applies to the URL */
+    filterable_tags?: string[]
+}
+
 interface add_url_response extends api_version_response {
     human_result_text: string
     normalised_url: string
+}
+
+interface associate_url_options extends FilesObject {
+    /** A URL to add to the file(s) */
+    url_to_add?: string
+    /** A list of URLs to add to the file(s) */
+    urls_to_add?: string[]
+    /** A URL to remove from the file(s) */
+    url_to_delete?: string
+    /** A list of URLs to remove from the file(s) */
+    urls_to_delete?: string[]
+    /** Optional; Defaults to true */
+    normalise_urls?: boolean
 }
 
 interface clean_tags_response extends api_version_response {
@@ -453,17 +506,19 @@ interface get_siblings_and_parents_response extends api_version_response {
     tags: {[key: string]: SiblingsAndParentsTagObject}
 }
 
-interface search_tags_response extends api_version_response {
-    tags: {value: string, count:number}[]
+interface search_tags_options {
+    /** The query to search for */
+    search: string
+    /** Optional; Defaults to "all my files" */
+    file_domain?: string
+    /** Optional */
+    tag_service_key?: string
+    /** Optional; Defaults to "storage" */
+    tag_display_type?: "storage" | "display"
 }
 
-interface set_favourite_tags_options {
-    /** (selective A, optional, a list of tags) If set then the existing favourite tags will be overwritten with these */
-    set?: string[]
-    /** (selective B, optional, a list of tags) A list of tags to add to the existing list */
-    add?: string[]
-    /** (selective B, optional, a list of tags) A list of tags to remove from the existing list */
-    remove?: string[]
+interface search_tags_response extends api_version_response {
+    tags: {value: string, count:number}[]
 }
 
 /** At least one of file_id, hash, or hashes must be defined */
@@ -476,6 +531,44 @@ interface FilesObject {
     hashes?: string[]
 }
 
+/** either service_keys_to_tags or service_keys_to_actions_to_tags must be defined */
+interface add_tags_options extends FilesObject{
+    /**
+     * An object where the keys are service keys
+     * and the values are arrays of tags to add
+     */
+    service_keys_to_tags?: {[key: string]: string[]}
+    /** 
+     * An object of objects where the first objects keys
+     * are service keys and its values are objects.
+     * The second objects keys are actions (defined below)
+     * and its values are arrays of tags to act on
+     * 
+     * Permitted Actions:
+     * * '0' - Add to a local tag service.
+     * * '1' - Delete from a local tag service.
+     * * '2' - Pend to a tag repository.
+     * * '3' - Rescind a pend from a tag repository.
+     * * '4' - Petition from a tag repository. (This is special)
+     * * '5' - Rescind a petition from a tag repository.
+     */
+    service_keys_to_actions_to_tags?: {[key: string]: {[key: string]: string[]}}
+    /** Optional; Defaults to true */
+    override_previously_deleted_mappings?: boolean
+    /** Optional; Defaults to true */
+    create_new_deleted_mappings?: boolean
+
+}
+
+interface set_favourite_tags_options {
+    /** (selective A, optional, a list of tags) If set then the existing favourite tags will be overwritten with these */
+    set?: string[]
+    /** (selective B, optional, a list of tags) A list of tags to add to the existing list */
+    add?: string[]
+    /** (selective B, optional, a list of tags) A list of tags to remove from the existing list */
+    remove?: string[]
+}
+
 interface set_rating_options extends FilesObject {
     /** hexadecimal, the rating service you want to edit */
     rating_service_key: string
@@ -484,9 +577,88 @@ interface set_rating_options extends FilesObject {
      * * Like/Dislike Ratings: Send true for 'like', false for 'dislike', or null for 'unset'.
      * * Numerical Ratings: Send an int for the number of stars to set, or null for 'unset'.
      * * Inc/Dec Ratings: Send an int for the number to set. 0 is your minimum.
-     * As with GET /get_files/file_metadata, check The Services Object for the min/max stars on a numerical rating service.
+     *
+     * As with GET /get_files/file_metadata, check The Services Object
+     * for the min/max stars on a numerical rating service.
      */
     rating: RATING_TYPES
+}
+
+/**
+ * hash or file_id must be defined.
+ * 
+ * With `merge_cleverly` left `false`, then this is a simple update operation.
+ * Existing notes will be overwritten exactly as you specify.
+ * Any other notes the file has will be untouched.
+ * 
+ * If you turn on `merge_cleverly`, then the client will merge your new notes
+ * into the file's existing notes using the same logic you have seen
+ * in Note Import Options and the Duplicate Metadata Merge Options.
+ * This navigates conflict resolution, and you should use it if you are
+ * adding potential duplicate content from an 'automatic' source like a parser
+ * and do not want to wade into the logic.
+ * Do not use it for a user-editing experience (a user expects a strict
+ * overwrite/replace experience and will be confused by this mode).
+ * 
+ * To start off, in this mode, if your note text exists under
+ * a different name for the file, your dupe note will not be added
+ * to your new name. `extend_existing_note_if_possible` makes it so
+ * your existing note text will overwrite an existing name
+ * (or a '... (1)' rename of that name) if the existing text is
+ * inside your given text.
+ * `conflict_resolution` is an enum governing what to do in all other conflicts
+ */
+interface set_notes_options {
+    /**
+     * An object where the keys are note names
+     * and the values are the contents of the notes
+     */
+    notes: {[key: string]: string}
+    /** The hash of the file to add notes to */
+    hash?: string
+    /** The file id of the file to add notes to */
+    file_id?: number
+    /**
+     * Optional; Defaults to false
+     */
+    merge_cleverly?: boolean
+    /**
+     * Optional; Defaults to true.
+     */
+    extend_existing_note_if_possible?: boolean
+    /**
+     * Optional; Defaults to 3.
+     * 
+     * If a new note name already exists and its new text differs from what already exists
+     * * 0 - replace - Overwrite the existing conflicting note.
+     * * 1 - ignore - Make no changes.
+     * * 2 - append - Append the new text to the existing text.
+     * * 3 - rename (default) - Add the new text under a 'name (x)'-style rename.
+     */
+    conflict_resolution?: 0 | 1 | 2 | 3
+}
+
+interface set_notes_response extends api_version_response {
+    /**
+     * The note changes actually sent through.
+     *
+     * If `merge_cleverly=false`, this is exactly what you gave,
+     * and this operation is idempotent.
+     * 
+     * If `merge_cleverly=true`, then this may differ, even be empty,
+     * and this operation might not be idempotent.
+     */
+    notes: {[key: string]: string}
+}
+
+/** hash or file_id must be defined. */
+interface delete_notes_options {
+    /** A list of note names to be deleted */
+    note_names: string[]
+    /** The hash of the file to add notes to */
+    hash?: string
+    /** The file id of the file to add notes to */
+    file_id?: number
 }
 
 type RecursiveTagList = string|RecursiveTagList[]
