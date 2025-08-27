@@ -12,6 +12,13 @@
     "hydrus",
     "hydrus-network"
   ],
+  "files": [
+    "types/",
+    "CHANGELOG.MD",
+    "hydrusapi.js",
+    "license.txt",
+    "README.MD"
+  ],
   "license": "SEE LICENSE IN license.txt",
   "type": "commonjs",
   "devDependencies": {
