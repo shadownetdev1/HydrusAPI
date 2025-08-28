@@ -5,6 +5,9 @@
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
 [![Tested with Hydrus version 636](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-636%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v636)
+[![GitHub reported bug count](https://img.shields.io/github/issues-search?query=repo%3Ashadownetdev1%2FHydrusAPI%20is%3Aopen%20label%3Abug&label=Reported%20bugs)](https://github.com/shadownetdev1/HydrusAPI/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/shadownetdev1/HydrusAPI)
+[![npm bundle size](https://img.shields.io/bundlephobia/min/hydrusapi?label=Minified%20Size)](https://github.com/shadownetdev1/HydrusAPI/releases)
 
 [![Line Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/lines.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 [![Statement Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/statements.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
@@ -46,7 +49,7 @@ HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusA
 
 NPM badge provided by [NodeICO](https://nodei.co/npm/hydrusapi/).
 
-Hydrus version badges provided by [Shields.io](https://shields.io/).
+Hydrus version, reported bugs, issue count, and minified size badges provided by [Shields.io](https://shields.io/).
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
