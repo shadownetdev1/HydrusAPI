@@ -52,6 +52,16 @@ module.exports = class API{
         SEE_LOCAL_PATHS: 13,
     })
 
+    /** @type {CANVAS_TYPE} */
+    CANVAS_TYPE = Object.freeze({
+        /** The normal viewer in hydrus that is its own window */
+        MEDIA_VIEWER: 0,
+        /** The box in the bottom-left corner of the Main GUI window */
+        PREVIEW_VIEWER: 1,
+        /** Something to represent your own access, if you wish */
+        API_VIEWER: 4,
+    })
+
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
@@ -753,7 +763,44 @@ module.exports = class API{
      */
     get edit_times() {
         return {
-            // TODO: https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-times
+    /**
+     * Add a file view to the file viewing statistics system.
+     * 
+     * This increments the number of views stored for
+     * the file in the file viewing statistics system.
+     * This system records "last time the file was viewed",
+     * "total number of views", and "total viewtime"
+     * for three different `canvas_types`
+     * 
+     * It doesn't matter much, but in hydrus
+     * the "last time the file was viewed" is considered
+     * to be when the user started viewing the file, not ended,
+     * so if you wish to track that too, you can send it along.
+     * If you do not include a timestamp, the system will use now,
+     * which is close enough, assuming you are sending recent
+     * rather than deferred data.
+     * 
+     * You can send multiple file identifiers,
+     * but I imagine you will just be sending one most of the time.
+     * 
+     * If the user has disabled file viewing statistics tracking
+     * on their client (under the options), this will 403.
+     * 
+     * POST Endpoint: /edit_times/increment_file_viewtime
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesincrement_file_viewtime--idedit_times_increment_file_viewtime-
+     * @param {increment_file_viewtime_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    increment_file_viewtime: async(options, return_as) => {
+        // region: edit_times/increment_file_viewtime
+        return await this.call({
+            endpoint: '/edit_times/increment_file_viewtime',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
         }
     }
 

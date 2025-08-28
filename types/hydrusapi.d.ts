@@ -24,6 +24,17 @@ interface BASIC_PERMS {
 
 type BASIC_PERMS_VALUE = ValueOf<BASIC_PERMS>
 
+interface CANVAS_TYPE {
+    /** The normal viewer in hydrus that is its own window */
+    MEDIA_VIEWER: 0,
+    /** The box in the bottom-left corner of the Main GUI window */
+    PREVIEW_VIEWER: 1,
+    /** Something to represent your own access, if you wish */
+    API_VIEWER: 4,
+}
+
+type CANVAS_TYPE_VALUE = ValueOf<CANVAS_TYPE>
+
 /** Any properties set here will be passed to the fetch call (with the exception of some predefined properties) */
 interface CallOptions {
     [key: string]: any
@@ -586,6 +597,19 @@ interface set_rating_options extends FilesObject {
     rating: RATING_TYPES
 }
 
+/** timestamp or timestamp_ms must be defined */
+interface increment_file_viewtime_options extends FilesObject {
+    canvas_type: CANVAS_TYPE_VALUE
+    /** Optional; Float or int of the "last viewed time" in seconds */
+    timestamp?: number
+    /** Optional; Int of the "last viewed time" in milliseconds */
+    timestamp_ms?: number
+    /** Optional; How many views you are adding, defaults to 1 */
+    views?: number
+    /** Optional; Float; How long the user viewed the file for */
+    viewtime?: number
+}
+
 /**
  * hash or file_id must be defined.
  * 
@@ -768,6 +792,17 @@ interface get_file_metadata_options extends FilesObject {
     hide_service_keys_tags?: boolean
 }
 
+interface FileViewingStatistics {
+    canvas_type: CANVAS_TYPE_VALUE
+    canvas_type_pretty: 'media viewer' | 'preview viewer' | 'client api viewer'
+    /** Number of times this file has been viewed on this canvas */
+    views: number
+    /** Total amount of time spend viewing this file on this canvas */
+    viewtime: number
+    /** a float if `include_milliseconds` is `true`, otherwise an int */
+    last_viewed_timestamp: number
+}
+
 interface FileMetadata {
     /**
      * The file ID.
@@ -921,14 +956,7 @@ interface FileMetadata {
          */
         display_tags: {[key: "0"|"1"|"2"|"3"]: string[]}
     }}
-    file_viewing_statistics?: {
-        canvas_type: CAnVAS_TYPE
-        canvas_type_pretty: string
-        views: number
-        viewtime: number
-        /** a float if `include_milliseconds` is `true`, otherwise an int */
-        last_viewed_timestamp: number
-    }[]
+    file_viewing_statistics?: FileViewingStatistics[]
     /** Only exists if `detailed_url_information` is `true` */
     detailed_known_urls?: URLInfo[]
 }

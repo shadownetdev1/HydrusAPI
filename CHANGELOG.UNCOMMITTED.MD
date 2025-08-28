@@ -14,11 +14,12 @@ _Optional notice_
 
 ### Changed
 
-- N/A
+- Reformatted inline documentation
 
 ### Added
 
-- N/A
+- Implemented `edit_times.increment_file_viewtime()`
+- Added missing inline documentation
 
 ### Removed
 

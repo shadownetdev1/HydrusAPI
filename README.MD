@@ -61,7 +61,7 @@ Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s 
 
 [Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
 
-[Seascape Sunset image (used to test notes)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
+[Seascape Sunset image (used to test notes and timestamps)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
 
 ## License
 
@@ -100,7 +100,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/add_tags/add_tags`
 - [x] `/add_tags/set_favourite_tags`
 - [x] `/edit_ratings/set_rating`
-- [ ] `/edit_times/increment_file_viewtime`
+- [x] `/edit_times/increment_file_viewtime`
 - [ ] `/edit_times/set_file_viewtime`
 - [ ] `/edit_times/set_time`
 - [x] `/add_notes/set_notes`

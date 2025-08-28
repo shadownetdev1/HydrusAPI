@@ -620,7 +620,78 @@ describe('HydrusAPI', () => {
     })
 
     test('edit_times.*', async() => {
-        // TODO
+        const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
+
+        // test: increment_file_viewtime
+        const pre_time = (
+            await api.get_files.file_metadata({hash: f_hash})
+        ).metadata[0].file_viewing_statistics
+        const assign = () => {
+            let media_viewer, preview_viewer, api_viewer
+            for (const viewer of pre_time) {
+                switch (viewer.canvas_type) {
+                    case api.CANVAS_TYPE.MEDIA_VIEWER:
+                        media_viewer = viewer
+                        break;
+                    case api.CANVAS_TYPE.PREVIEW_VIEWER:
+                        preview_viewer = viewer
+                        break;
+                    case api.CANVAS_TYPE.API_VIEWER:
+                        api_viewer = viewer
+                        break;
+                    default:
+                        throw new Error(`Unknown canvas type of '${viewer.canvas_type}' with name '${viewer.canvas_type_pretty}'`)
+                }
+            }
+            if (!media_viewer | !preview_viewer | !api_viewer) {
+                throw new Error(`Failed to get a canvas! media: ${!!media_viewer}, preview: ${!!preview_viewer}, api: ${!!api_viewer}`)
+            }
+            return [media_viewer, preview_viewer, api_viewer]
+        }
+        /** @type {FileViewingStatistics} */
+        const [old_media_viewer, old_preview_viewer, old_api_viewer] = assign()
+        const inc_media_viewer = await api.edit_times.increment_file_viewtime({
+            hash: f_hash,
+            canvas_type: api.CANVAS_TYPE.MEDIA_VIEWER,
+            timestamp: old_media_viewer.last_viewed_timestamp + 100,
+            views: 2,
+            viewtime: 77.2
+        })
+        expect(inc_media_viewer).toBe(true)
+        const inc_preview_viewer = await api.edit_times.increment_file_viewtime({
+            hash: f_hash,
+            canvas_type: api.CANVAS_TYPE.PREVIEW_VIEWER,
+            timestamp: old_preview_viewer.last_viewed_timestamp + 100,
+            views: 2,
+            viewtime: 77.2
+        })
+        expect(inc_preview_viewer).toBe(true)
+        const inc_api_viewer = await api.edit_times.increment_file_viewtime({
+            hash: f_hash,
+            canvas_type: api.CANVAS_TYPE.API_VIEWER,
+            timestamp: old_api_viewer.last_viewed_timestamp + 100,
+            views: 2,
+            viewtime: 77.2
+        })
+        expect(inc_api_viewer).toBe(true)
+        /** @type {FileViewingStatistics} */
+        const [media_viewer, preview_viewer, api_viewer] = assign()
+        for (const viewers of [
+            [old_media_viewer, media_viewer],
+            [old_preview_viewer, preview_viewer],
+            [old_api_viewer, api_viewer]
+        ]) {
+            viewers[0].views += 2
+            viewers[0].viewtime += 77.2
+            viewers[0].last_viewed_timestamp += 100
+            expect(JSON.stringify(viewers[0])).toBe(JSON.stringify(viewers[1]))
+        }
     })
 
     test('add_notes.*', async() => {
