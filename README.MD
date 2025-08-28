@@ -101,7 +101,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/add_tags/set_favourite_tags`
 - [x] `/edit_ratings/set_rating`
 - [x] `/edit_times/increment_file_viewtime`
-- [ ] `/edit_times/set_file_viewtime`
+- [x] `/edit_times/set_file_viewtime`
 - [ ] `/edit_times/set_time`
 - [x] `/add_notes/set_notes`
 - [x] `/add_notes/delete_notes`

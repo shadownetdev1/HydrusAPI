@@ -789,7 +789,7 @@ module.exports = class API{
      * POST Endpoint: /edit_times/increment_file_viewtime
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesincrement_file_viewtime--idedit_times_increment_file_viewtime-
-     * @param {increment_file_viewtime_options} options
+     * @param {increment_and_set_file_viewtime_options} options
      * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
      * @returns {boolean} Successful if true
      */
@@ -797,6 +797,52 @@ module.exports = class API{
         // region: edit_times/increment_file_viewtime
         return await this.call({
             endpoint: '/edit_times/increment_file_viewtime',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Set fixed values in the file viewing statistics system.
+     * 
+     * This is an override to set the number of views stored
+     * for the file in the file viewing statistics system
+     * to fixed values you specify.
+     * 
+     * I recommend you only use this call for unusual maintenance,
+     * migration, or reset situations--stick to the
+     * `edit_times.increment_file_viewtime()` call for normal use.
+     * 
+     * The system records "last time the file was viewed",
+     * "total number of views",
+     * and "total viewtime" for three different `canvas_types`
+     * 
+     * The "Client API" viewer was added so you may record
+     * your views separately if you wish.
+     * Otherwise you might like to fold them into the normal
+     * Media viewer count.
+     * 
+     * If you do not include a timestamp,
+     * the system will either leave what is currently recorded,
+     * or, if the file has no viewing data yet, fill in with now.
+     * 
+     * You can send multiple file identifiers,
+     * but I imagine you will just be sending one.
+     * 
+     * If the user has disabled file viewing statistics tracking
+     * on their client (under the options), this will 403.
+     * 
+     * POST Endpoint: /edit_times/set_file_viewtime
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesset_file_viewtime--idedit_times_set_file_viewtime-
+     * @param {increment_and_set_file_viewtime_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    set_file_viewtime: async(options, return_as) => {
+        // region: edit_times/set_file_viewtime
+        return await this.call({
+            endpoint: '/edit_times/set_file_viewtime',
             json: options,
             return_as: return_as ?? 'success'
         })

@@ -632,6 +632,9 @@ describe('HydrusAPI', () => {
         const pre_time = (
             await api.get_files.file_metadata({hash: f_hash})
         ).metadata[0].file_viewing_statistics
+        /**
+         * @returns {[FileViewingStatistics, FileViewingStatistics, FileViewingStatistics]}
+         */
         const assign = () => {
             let media_viewer, preview_viewer, api_viewer
             for (const viewer of pre_time) {
@@ -655,7 +658,8 @@ describe('HydrusAPI', () => {
             return [media_viewer, preview_viewer, api_viewer]
         }
         /** @type {FileViewingStatistics} */
-        const [old_media_viewer, old_preview_viewer, old_api_viewer] = assign()
+        let old_media_viewer, old_preview_viewer, old_api_viewer
+        [old_media_viewer, old_preview_viewer, old_api_viewer] = assign()
         const inc_media_viewer = await api.edit_times.increment_file_viewtime({
             hash: f_hash,
             canvas_type: api.CANVAS_TYPE.MEDIA_VIEWER,
@@ -681,7 +685,8 @@ describe('HydrusAPI', () => {
         })
         expect(inc_api_viewer).toBe(true)
         /** @type {FileViewingStatistics} */
-        const [media_viewer, preview_viewer, api_viewer] = assign()
+        let media_viewer, preview_viewer, api_viewer
+        [media_viewer, preview_viewer, api_viewer] = assign()
         for (const viewers of [
             [old_media_viewer, media_viewer],
             [old_preview_viewer, preview_viewer],
@@ -692,6 +697,44 @@ describe('HydrusAPI', () => {
             viewers[0].last_viewed_timestamp += 100
             expect(JSON.stringify(viewers[0])).toBe(JSON.stringify(viewers[1]))
         }
+
+        // test set_file_viewtime
+        const set_media_viewer = await api.edit_times.set_file_viewtime({
+            hash: f_hash,
+            canvas_type: old_media_viewer.canvas_type,
+            timestamp: old_media_viewer.last_viewed_timestamp,
+            views: old_media_viewer.views,
+            viewtime: old_media_viewer.viewtime
+        })
+        expect(set_media_viewer).toBe(true)
+        const set_preview_viewer = await api.edit_times.set_file_viewtime({
+            hash: f_hash,
+            canvas_type: old_preview_viewer.canvas_type,
+            timestamp: old_preview_viewer.last_viewed_timestamp,
+            views: old_preview_viewer.views,
+            viewtime: old_preview_viewer.viewtime
+        })
+        expect(set_preview_viewer).toBe(true)
+        const set_api_viewer = await api.edit_times.set_file_viewtime({
+            hash: f_hash,
+            canvas_type: old_api_viewer.canvas_type,
+            timestamp: old_api_viewer.last_viewed_timestamp,
+            views: old_api_viewer.views,
+            viewtime: old_api_viewer.viewtime
+        })
+        expect(set_api_viewer).toBe(true)
+
+        let new_media_viewer, new_preview_viewer, new_api_viewer
+        [new_media_viewer, new_preview_viewer, new_api_viewer] = assign()
+
+        for (const viewers of [
+            [old_media_viewer, new_media_viewer],
+            [old_preview_viewer, new_preview_viewer],
+            [old_api_viewer, new_api_viewer]
+        ]) {
+            expect(JSON.stringify(viewers[0])).toBe(JSON.stringify(viewers[1]))
+        }
+        
     })
 
     test('add_notes.*', async() => {

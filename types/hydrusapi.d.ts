@@ -598,7 +598,7 @@ interface set_rating_options extends FilesObject {
 }
 
 /** timestamp or timestamp_ms must be defined */
-interface increment_file_viewtime_options extends FilesObject {
+interface increment_and_set_file_viewtime_options extends FilesObject {
     canvas_type: CANVAS_TYPE_VALUE
     /** Optional; Float or int of the "last viewed time" in seconds */
     timestamp?: number

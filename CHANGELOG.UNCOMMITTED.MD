@@ -19,6 +19,7 @@ _Optional notice_
 ### Added
 
 - Implemented `edit_times.increment_file_viewtime()`
+- Implemented `edit_times.set_file_viewtime()`
 - Added missing inline documentation
 
 ### Removed
