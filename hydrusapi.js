@@ -1,7 +1,9 @@
 
 /**
- * Takes an options object and convert it to an URLSearchParams instance
- * making sure that all lists and objects are encoded as JSON strings first
+ * Takes an options object and convert it to
+ * an URLSearchParams instance
+ * making sure that all lists and objects are
+ * encoded as JSON strings first
  * @param {{[key: string]: any}} options
  * @returns {URLSearchParams}
  */
@@ -62,13 +64,14 @@ module.exports = class API{
     }
 
     /**
-     * Constructs an API call and then calls it, returning the result
+     * Constructs an API call and then calls it,
+     * returning the result
      * @param {CallOptions} o
      * @returns {Object|boolean|number|ReadableStream}
-     * Object if `return_as` is `raw` or `json`;
-     * boolean if `return_as` is `success`;
-     * number if `return_as` is `status`;
-     * ReadableStream if `return_as` is `readable_stream`;
+     * Object if `o.return_as` is `raw` or `json`;
+     * boolean if `o.return_as` is `success`;
+     * number if `o.return_as` is `status`;
+     * ReadableStream if `o.return_as` is `readable_stream`;
      */
     async call(o) {
         // region: call
@@ -77,7 +80,11 @@ module.exports = class API{
         }
 
         o.headers = o.headers ?? new Headers()
-        o.method = o.method ?? (o.queries ? 'GET' : (o.json ? 'POST' : (o.body ? 'POST' : 'GET')))
+        o.method = o.method ?? (
+            o.queries ? 'GET' : (
+                o.json ? 'POST' : (o.body ? 'POST' : 'GET')
+            )
+        )
         o.return_as = o.return_as ?? 'json'
 
         if (o.json && !o.headers.has('content-type')) {
@@ -105,7 +112,9 @@ module.exports = class API{
             }
         }
 
-        fetch_options.body = fetch_options.body ?? (o.json ? JSON.stringify(o.json) : undefined)
+        fetch_options.body = fetch_options.body ?? (
+            o.json ? JSON.stringify(o.json) : undefined
+        )
         if (this.debug) {
             console.log(fetch_options)
         }
@@ -181,7 +190,8 @@ module.exports = class API{
     /**
      * Register a new external program with Hydrus.
      * This requires the 'add from api request' mini-dialog
-     * under services->review services to be open, otherwise it will 403.
+     * under services->review services to be open,
+     * otherwise it will 403.
      * 
      * GET Endpoint: /request_new_permissions
      * 
@@ -283,6 +293,16 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Import files
+     * * Delete files
+     * * Undelete files
+     * * Clear deletion records for deleted files
+     * * Copy files between file domains
+     * * Archive files
+     * * Unarchive files
+     * * Generate hashes for a file
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#importing-and-deleting-files
      */
     get add_files() {
@@ -464,6 +484,12 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Get files associated with a url
+     * * Associate and dissociate files with a url
+     * * Get info about a url
+     * * Import a url
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#importing-and-editing-urls
      */
     get add_urls() {
@@ -533,7 +559,8 @@ module.exports = class API{
     },
 
     /**
-     * Manage which URLs Hydrus considers to be associated with which files.
+     * Manage which URLs Hydrus considers to be
+     * associated with which files.
      * 
      * POST Endpoint: /add_urls/associate_url
      * 
@@ -555,6 +582,13 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Get clean version of a list of tags
+     * * Get, set, or modify favourite tags
+     * * Get a tags sibling and parent relationships
+     * * Search Hydrus for a tag
+     * * Add or remove tags from files
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-tags
      */
     get add_tags() {
@@ -579,7 +613,11 @@ module.exports = class API{
     },
 
     /**
-     * Fetch Hydrus' favourite tags. This is the list of tags you see beneath an autocomplete input, under the 'favourites' tab. This is not the per-service 'most used' tab you see in manage tags.
+     * Fetch Hydrus' favourite tags.
+     * This is the list of tags you see beneath an
+     * autocomplete input, under the 'favourites' tab.
+     * This is not the per-service 'most used' tab you see
+     * in manage tags.
      * 
      * GET Endpoint: /add_tags/get_favourite_tags
      * 
@@ -676,6 +714,8 @@ module.exports = class API{
     }
 
     /**
+     * Add or remove ratings associated with a file.
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-ratings
      */
     get edit_ratings() {
@@ -703,6 +743,12 @@ module.exports = class API{
     }
 
     /**
+     * Set or modify viewtime
+     * 
+     * Set modified at, imported at,
+     * deleted at, archived at, last viewed,
+     * and original import times
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-times
      */
     get edit_times() {
@@ -712,6 +758,8 @@ module.exports = class API{
     }
 
     /**
+     * Add, modify, and remove notes from files
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#editing-file-notes
      */
     get add_notes() {
@@ -759,6 +807,16 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Search for files
+     * * Get alternative hashes for a given hash
+     * * Get metadata about a file
+     * * Get a file or its thumbnail
+     * * Get the path (from Hydrus's viewpoint)
+     * of a file or its thumbnail
+     * * Get the local file storage locations
+     * * Get a file as rendered by Hydrus
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#searching-and-fetching-files
      */
     get get_files() {
@@ -783,9 +841,13 @@ module.exports = class API{
     },
 
     /**
-     * Takes one or more hashes and asks Hydrus for alternative hash types that match.
-     * Example use case: You have a MD5 hash and want to find a SHA256 hash.
-     * Hydrus will return results for any files it has ever had imported.
+     * Takes one or more hashes and asks Hydrus for
+     * alternative hash types that match.
+     * 
+     * Example use case: You have a MD5 hash
+     * andwant to finda SHA256 hash.
+     * Hydrus will return results for
+     * any files it has ever had imported.
      * 
      * GET Endpoint: /get_files/file_hashes
      * 
@@ -825,10 +887,14 @@ module.exports = class API{
     /**
      * Get a file
      * 
-     * Either `options.file_id` or `options.hash` must be defined, but not both.
-     * By default, this will set the Content-Disposition header to inline,
+     * Either `options.file_id` or `options.hash` must be defined,
+     * but not both.
+     * 
+     * By default, this will set the
+     * Content-Disposition header to inline,
      * which causes a web browser to show the file.
-     * If you set `options.download` to `true`, it will set it to attachment,
+     * If you set `options.download` to `true`,
+     * it will set it to attachment,
      * which triggers the browser to automatically download it
      * (or open the 'save as' dialog) instead.
      * 
@@ -854,14 +920,18 @@ module.exports = class API{
     /**
      * Get a file's thumbnail.
      * 
-     * Either `options.file_id` or `options.hash` must be defined, but not both.
+     * Either `options.file_id` or `options.hash` must be defined,
+     * but not both.
      * 
-     * Response: The thumbnail for the file. Some hydrus thumbs are jpegs,
-     * some are pngs.
-     * It should give you the correct image/jpeg or image/png Content-Type.
+     * Response: The thumbnail for the file.
+     * Some hydrus thumbs are jpegs, some are pngs.
+     * It should give you the correct
+     * `image/jpeg` or `image/png` Content-Type.
      * 
-     * If hydrus keeps no thumbnail for the filetype, for instance with pdfs,
-     * then you will get the same default 'pdf' icon you see in Hydrus.
+     * If hydrus keeps no thumbnail for the filetype,
+     * for instance with pdfs,
+     * then you will get the same
+     * default 'pdf' icon you see in Hydrus.
      * If the file does not exist in Hydrus,
      * or the thumbnail was expected but is missing from storage,
      * you will get the fallback 'hydrus' icon,
@@ -872,20 +942,25 @@ module.exports = class API{
      * to be the correct size! 
      * If a thumbnail has not been loaded in Hydrus in years,
      * it could well have been fitted for older thumbnail settings.
-     * Also, even 'clean' thumbnails will not always fit inside the settings'
-     * bounding box;
-     * they may be boosted due to a high-DPI setting or spill over due to
+     * Also, even 'clean' thumbnails will
+     * not always fit inside the settings' bounding box;
+     * they may be boosted due to a
+     * high-DPI setting or spill over due to
      * a 'fill' vs 'fit' preference.
-     * You cannot easily predict what resolution a thumbnail will or should have!
+     * You cannot easily predict what resolution
+     * a thumbnail will or should have!
      * 
      * In general, thumbnails *are* the correct ratio.
-     * If you are drawing thumbs, you should embed them to fit or fill,
+     * If you are drawing thumbs,
+     * you should embed them to fit or fill,
      * but don't fix them at 100% true size:
      * make sure they can scale to the size you want!
      * 
      * !!! note "Size of Defaults"
-     * If you get a 'default' filetype thumbnail like the pdf or hydrus one,
-     * you will be pulling the pngs straight from the hydrus/static folder.
+     * If you get a 'default' filetype thumbnail
+     * like the pdf or hydrus one,
+     * you will be pulling the pngs straight from
+     * the hydrus/static folder.
      * They will most likely be 200x200 pixels.
      * 
      * GET Endpoint: /get_files/thumbnail
@@ -907,7 +982,8 @@ module.exports = class API{
     /**
      * Get a local file path.
      * 
-     * Either `options.file_id` or `options.hash` must be defined, but not both.
+     * Either `options.file_id` or `options.hash` must be defined,
+     * but not both.
      * 
      * This will give 404 if the file is not stored locally
      * (which includes if it should exist
@@ -932,16 +1008,20 @@ module.exports = class API{
     /**
      * Get a local file path.
      * 
-     * Either `options.file_id` or `options.hash` must be defined, but not both.
+     * Either `options.file_id` or `options.hash` must be defined,
+     * but not both.
      * 
      * All thumbnails in hydrus have the .thumbnail file extension
      * and in content are either jpeg (almost always)
      * or png (to handle transparency).
      * 
-     * This will 400 if the given file type does not have a thumbnail in hydrus,
+     * This will 400 if the given file type
+     * does not have a thumbnail in hydrus,
      * and it will 404 if there should be a thumbnail
-     * but one does not exist and cannot be generated from the source file
-     * (which probably would mean that the source file was itself Not Found).
+     * but one does not exist and cannot
+     * be generated from the source file
+     * (which probably would mean that the source file
+     * was itself Not Found).
      * 
      * GET Endpoint: /get_files/thumbnail_path
      * 
@@ -960,6 +1040,8 @@ module.exports = class API{
     },
 
     /**
+     * Get the local file storage locations,
+     * as you see under database->migrate files.
      * 
      * GET Endpoint: /get_files/local_file_storage_locations
      * 
@@ -976,6 +1058,7 @@ module.exports = class API{
     },
 
     /**
+     * Get an image or Ugoira file as rendered by Hydrus.
      * 
      * GET Endpoint: /get_files/render
      * 
@@ -998,6 +1081,25 @@ module.exports = class API{
     }
 
     /**
+     * This refers to the File Relationships system,
+     * which includes 'potential duplicates', 'duplicates',
+     * and 'alternates'.
+     * 
+     * This system is pending significant rework and expansion,
+     * so please do not get too married to some of the routines here.
+     * I am mostly just exposing my internal commands,
+     * so things are a little ugly/hacked.
+     * I expect duplicate and alternate groups to get some form
+     * of official identifier in future,
+     * which may end up being the way to refer and edit things here.
+     * 
+     * Also, at least for now,
+     * 'Manage File Relationships' permission is not going to
+     * be bound by the search permission restrictions that
+     * normal file search does.
+     * Getting this file relationship management permission
+     * allows you to search anything.
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-file-relationships
      */
     get manage_file_relationships() {
@@ -1007,12 +1109,19 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Get the counts of pending content for each
+     * upload-capable service
+     * * Commit or forget pending content
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-services
      */
     get manage_services() {
         return {
     /**
-     * Get the counts of pending content for each upload-capable service. This basically lets you construct the "pending" menu in the main GUI menubar.
+     * Get the counts of pending content for each
+     * upload-capable service. This basically lets you construct
+     * the "pending" menu in the main GUI menubar.
      * 
      * GET Endpoint: /manage_services/get_pending_counts
      * 
@@ -1033,12 +1142,14 @@ module.exports = class API{
      * 
      * This starts the upload popup,
      * just like if you click 'commit' in the menu.
-     * This upload could ultimately take one second or several minutes
+     * This upload could ultimately
+     * take one second or several minutes
      * to finish, but the response will come back immediately.
      * 
      * If the job is already running, this will return 409.
      * If it cannot start because of a difficult problem,
-     * like all repositories being paused or the service account object
+     * like all repositories being paused
+     * or the service account object
      * being unsynced or something, it gives 422; in this case,
      * please direct the user to check their client manually,
      * since there is probably an error popup on screen.
@@ -1071,7 +1182,8 @@ module.exports = class API{
     /**
      * Forget all pending content for a service.
      * 
-     * This clears all pending content for a service, just like if you click 'forget' in the menu.
+     * This clears all pending content for a service,
+     * just like if you click 'forget' in the menu.
      * 
      * !!! Due to the nature of this endpoint it tested
      * 
@@ -1095,6 +1207,8 @@ module.exports = class API{
     }
 
     /**
+     * Get and modify cookies for a given domain (website)
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-cookies
      */
     get manage_cookies() {
@@ -1106,7 +1220,8 @@ module.exports = class API{
      * The session system in hydrus generally stores cookies
      * according to the second-level domain,
      * so if you request for specific.someoverbooru.net,
-     * you will still get the cookies for someoverbooru.net and all its subdomains.
+     * you will still get the cookies
+     * for someoverbooru.net and all its subdomains.
      * 
      * GET Endpoint: /manage_cookies/get_cookies
      * 
@@ -1126,8 +1241,10 @@ module.exports = class API{
 
     /**
      * Set some new cookies for Hydrus
-     * This makes it easier to 'copy' a login from a web browser or similar
-     * to hydrus if hydrus's login system can't handle the site yet
+     * This makes it easier to 'copy'
+     * a login from a web browser or similar
+     * to hydrus if hydrus's login system
+     * can't handle the site yet
      *
      * POST Endpoint: /manage_cookies/set_cookies
      * 
@@ -1149,6 +1266,8 @@ module.exports = class API{
     }
 
     /**
+     * Get and modify HTTP Headers for a given domain (website)
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-http-headers
      */
     get manage_headers() {
@@ -1158,6 +1277,13 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Get a list of pages
+     * * Get info about a page
+     * * Add files to a page
+     * * Focus (make active) a page
+     * * Refresh a page
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-pages
      */
     get manage_pages() {
@@ -1183,8 +1309,10 @@ module.exports = class API{
      * Get information about a specific page.
      * 
      * !!! warning "Under Construction" This is under construction.
-     * The current call dumps a ton of info for different downloader pages.
-     * Please experiment in IRL situations and give feedback for now!
+     * The current call dumps a ton of info
+     * for different downloader pages.
+     * Please experiment in IRL situations
+     * and give feedback for now!
      * I will flesh out this help with more enumeration info
      * and examples as this gets nailed down.
      * POST commands to alter pages (adding, removing, highlighting),
@@ -1226,7 +1354,9 @@ module.exports = class API{
     },
 
     /**
-     * 'Show' a page in the main GUI, making it the current page in view. If it is already the current page, no change is made.
+     * 'Show' a page in the main GUI,
+     * making it the current page in view.
+     * If it is already the current page, no change is made.
      * 
      * POST Endpoint: /manage_pages/focus_page
      * 
@@ -1274,6 +1404,8 @@ module.exports = class API{
     }
 
     /**
+     * Create, trigger, and remove Hydrus popups
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-popups
      */
     get manage_popups() {
@@ -1283,12 +1415,19 @@ module.exports = class API{
     }
 
     /**
+     * Features:
+     * * Lock and unlock the database
+     * * Force a commit
+     * * Get statistics from Mr. Bones
+     * * Get all of Hydrus Client's settings
+     * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-the-database
      */
     get manage_database() {
         return {
     /**
-     * Force the database to write all pending changes to disk immediately.
+     * Force the database to write all pending changes
+     * to disk immediately.
      * 
      * !!! info:
      * Hydrus holds a constant BEGIN IMMEDIATE transaction
@@ -1329,7 +1468,8 @@ module.exports = class API{
     },
 
     /**
-     * Pause the client's database activity and disconnect the current connection.
+     * Pause the client's database activity and disconnect
+     * the current connection.
      * 
      * This is a hacky prototype.
      * 
