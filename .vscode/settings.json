@@ -1,0 +1,12 @@
+{
+    "editor.rulers": [
+        {
+          "column": 68,
+          "color": "#003163"
+        },
+        {
+          "column": 69,
+          "color": "#003163"
+        },
+    ]
+}
