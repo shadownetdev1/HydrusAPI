@@ -35,6 +35,25 @@ interface CANVAS_TYPE {
 
 type CANVAS_TYPE_VALUE = ValueOf<CANVAS_TYPE>
 
+interface TIMESTAMP_TYPE {
+    /** File modified time (web domain) */
+    MODIFIED_TIME_WEB_DOMAIN: 0,
+    /** File modified time (on the hard drive) */
+    MODIFIED_TIME_DISK: 1,
+    /** File import time */
+    IMPORTED_TIME: 3,
+    /** File delete time */
+    DELETED_TIME: 4,
+    /** Archived time */
+    ARCHIVED_TIME: 5,
+    /** Last viewed */
+    LAST_VIEWED: 6,
+    /** File originally imported time */
+    ORIGINAL_IMPORT_TIME: 7,
+}
+
+type TIMESTAMP_TYPE_VALUE = ValueOf<TIMESTAMP_TYPE>
+
 /** Any properties set here will be passed to the fetch call (with the exception of some predefined properties) */
 interface CallOptions {
     [key: string]: any
@@ -52,29 +71,48 @@ interface CallOptions {
     return_as?: 'success'|'status'|'json'|'raw'|'readable_stream'
 }
 
-/**
- * 
- * * 0 - tag repository
- * * 1 - file repository
- * * 2 - a local file domain like 'my files'
- * * 5 - a local tag domain like 'my tags'
- * * 6 - a 'numerical' rating service with several stars
- * * 7 - a 'like/dislike' rating service with on/off status
- * * 10 - all known tags -- a union of all the tag services
- * * 11 - all known files -- a union of all the file services and files that appear in tag services
- * * 12 - the local booru -- you can ignore this
- * * 13 - IPFS
- * * 14 - trash
- * * 15 - all local files -- all files on hard disk ('all my files' + updates + trash)
- * * 17 - file notes
- * * 18 - Client API
- * * 19 - deleted from anywhere -- you can ignore this
- * * 20 - local updates -- a file domain to store repository update files in
- * * 21 - all my files -- union of all local file domains
- * * 22 - a 'inc/dec' rating service with positive integer rating
- * * 99 - server administration
- */
-type SERVICE_TYPES = 0|1|2|5|6|7|10|11|12|13|14|15|17|18|19|20|21|22|99
+interface SERVICE_TYPE {
+    /** 0 - tag repository */
+    TAG_REPO: 0,
+    /** 1 - file repository */
+    FILE_REPO: 1,
+    /** 2 - a local file domain like 'my files' */
+    LOCAL_FILE_DOMAIN: 2,
+    /** 5 - a local tag domain like 'my tags' */
+    LOCAL_TAG_DOMAIN: 5,
+    /** 6 - a 'numerical' rating service with several stars */
+    RATING_SERVICE_NUMERICAL: 6,
+    /** 7 - a 'like/dislike' rating service with on/off status */
+    RATING_SERVICE_BOOLEAN: 7,
+    /** 10 - all known tags -- a union of all the tag services */
+    ALL_KNOWN_TAGS: 10,
+    /** 11 - all known files -- a union of all the file services and files that appear in tag services */
+    ALL_KNOWN_FILES: 11,
+    /** 12 - the local booru -- you can ignore this */
+    LOCAL_BOORU: 12,
+    /** 13 - IPFS */
+    IPFS: 13,
+    /** 14 - trash */
+    TRASH: 14,
+    /** 15 - all local files -- all files on hard disk ('all my files' + updates + trash) */
+    ALL_LOCAL_FILES: 15,
+    /** 17 - file notes */
+    FILE_NOTES: 17,
+    /** 18 - Client API */
+    CLIENT_API: 18,
+    /** 19 - deleted from anywhere -- you can ignore this */
+    DELETED_FROM_ANYWHERE: 19,
+    /** 20 - local updates -- a file domain to store repository update files in */
+    LOCAL_UPDATES: 20,
+    /** 21 - all my files -- union of all local file domains */
+    ALL_MY_FILES: 21,
+    /** 22 - a 'inc/dec' rating service with positive integer rating */
+    RATING_SERVICE_INC_DEC: 22,
+    /** 99 - server administration */
+    SERVER_ADMIN: 99,
+}
+
+type SERVICE_TYPE_VALUE = ValueOf<SERVICE_TYPE>
 
 /**
  * *   1 - File was successfully imported
@@ -216,34 +254,29 @@ interface verify_access_key_response extends api_version_response {
 
 interface ServiceObject {
     name: string
-    service_key: string
-    type: SERVICE_TYPES
+    type: SERVICE_TYPE_VALUE
     type_pretty: string
 }
 
-interface ServicesObject {
-    local_tags: ServiceObject[]
-    tag_repositories: ServiceObject[]
-    local_files: ServiceObject[]
-    local_updates: ServiceObject[]
-    file_repositories: any[]  // TODO: this seems to be unused. figure out if it is used and if so what its type is
-    all_local_files: ServiceObject[]
-    all_local_media: ServiceObject[]
-    all_known_files: ServiceObject[]
-    all_known_tags: ServiceObject[]
-    trash: ServiceObject[]
-    /**
-     * key is a 'ServiceObject.service_key';
-     * value is a 'ServiceObject' without 'service_key'
-     */
-    services: {[key: string]: Omit<ServiceObject, "service_key">}
+interface ServiceObjectWithKey extends ServiceObject {
+    service_key: string
 }
 
 interface get_service_response extends api_version_response {
-    service: ServiceObject
+    service: ServiceObjectWithKey
 }
 
-interface get_services_response extends api_version_response, ServicesObject {}
+interface get_services_response extends api_version_response {
+    /**
+     * key is a service key;
+     * value is a 'ServiceObject' without 'service_key'
+     * 
+     * You may find
+     * api.tools.get_services_of_type()
+     * and api.tools.get_services_of_name() helpful
+     */
+    services: {[key: string]: ServiceObject}
+}
 
 interface add_file_response extends api_version_response {
     status: ADD_FILE_STATUSES
@@ -610,6 +643,46 @@ interface increment_and_set_file_viewtime_options extends FilesObject {
     viewtime?: number
 }
 
+/** timestamp or timestamp_ms must be defined */
+interface set_time_options extends FilesObject {
+    /**
+     * Optional; Float or int of the time in seconds,
+     * or `null` for deleting web domain times
+     */
+    timestamp?: number | null
+    /**
+     * Optional; Int of the time in milliseconds,
+     * or `null` for deleting web domain times
+     */
+    timestamp_ms?: number | null
+    /** The type of timestamp you are editing */
+    timestamp_type: TIMESTAMP_TYPE_VALUE
+    /**
+     * Dependant; 
+     * If you set `timestamp_type` to
+     * `TIMESTAMP_TYPE.IMPORTED_TIME` (3),
+     * `TIMESTAMP_TYPE.DELETED_TIME` (4),
+     * or `TIMESTAMP_TYPE.ORIGINAL_IMPORT_TIME` (7)
+     * then this must be set to the service key that you want
+     * to modify
+     */
+    file_service_key?: string
+    /** 
+     * Dependant;
+     * If you set `timestamp_type`
+     * to `TIMESTAMP_TYPE.LAST_VIEWED` (6)
+     * then this must be set to a `CANVAS_TYPE`
+     */
+    canvas_type?: CANVAS_TYPE_VALUE
+    /**
+     * Dependant;
+     * If you set `timestamp_type`
+     * to `TIMESTAMP_TYPE.MODIFIED_TIME_WEB_DOMAIN` (0)
+     * then this must be set to the domain you are editing
+     */
+    domain?: string
+}
+
 /**
  * hash or file_id must be defined.
  * 
@@ -962,7 +1035,15 @@ interface FileMetadata {
 }
 
 interface get_file_metadata_response extends api_version_response {
-    services?: ServicesObject
+    /**
+     * key is a service key;
+     * value is a 'ServiceObject' without 'service_key'
+     * 
+     * You may find
+     * api.tools.get_services_of_type()
+     * and api.tools.get_services_of_name() helpful
+     */
+    services?: {[key: string]: ServiceObject}
     /**
      * The metadata list should come back in the same sort order you asked,
      * whether that is in file_ids or hashes!
@@ -1077,7 +1158,15 @@ interface render_options {
 }
 
 interface get_pending_counts_response extends api_version_response {
-    services: ServicesObject
+    /**
+     * key is a service key;
+     * value is a 'ServiceObject' without 'service_key'
+     * 
+     * You may find
+     * api.tools.get_services_of_type()
+     * and api.tools.get_services_of_name() helpful
+     */
+    services: {[key: string]: ServiceObject}
     /** key is a service key */
     pending_counts: {[key: string]: {
         pending_tag_mappings: number

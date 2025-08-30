@@ -62,6 +62,66 @@ module.exports = class API{
         API_VIEWER: 4,
     })
 
+    /** @type {TIMESTAMP_TYPE} */
+    TIMESTAMP_TYPE = Object.freeze({
+        /** File modified time (web domain) */
+        MODIFIED_TIME_WEB_DOMAIN: 0,
+        /** File modified time (on the hard drive) */
+        MODIFIED_TIME_DISK: 1,
+        /** File import time */
+        IMPORTED_TIME: 3,
+        /** File delete time */
+        DELETED_TIME: 4,
+        /** Archived time */
+        ARCHIVED_TIME: 5,
+        /** Last viewed */
+        LAST_VIEWED: 6,
+        /** File originally imported time */
+        ORIGINAL_IMPORT_TIME: 7,
+    })
+
+    /** @type {SERVICE_TYPE} */
+    SERVICE_TYPE = Object.freeze({
+        /** 0 - tag repository */
+        TAG_REPO: 0,
+        /** 1 - file repository */
+        FILE_REPO: 1,
+        /** 2 - a local file domain like 'my files' */
+        LOCAL_FILE_DOMAIN: 2,
+        /** 5 - a local tag domain like 'my tags' */
+        LOCAL_TAG_DOMAIN: 5,
+        /** 6 - a 'numerical' rating service with several stars */
+        RATING_SERVICE_NUMERICAL: 6,
+        /** 7 - a 'like/dislike' rating service with on/off status */
+        RATING_SERVICE_BOOLEAN: 7,
+        /** 10 - all known tags -- a union of all the tag services */
+        ALL_KNOWN_TAGS: 10,
+        /** 11 - all known files -- a union of all the file services and files that appear in tag services */
+        ALL_KNOWN_FILES: 11,
+        /** 12 - the local booru -- you can ignore this */
+        LOCAL_BOORU: 12,
+        /** 13 - IPFS */
+        IPFS: 13,
+        /** 14 - trash */
+        TRASH: 14,
+        /** 15 - all local files -- all files on hard disk ('all my files' + updates + trash) */
+        ALL_LOCAL_FILES: 15,
+        /** 17 - file notes */
+        FILE_NOTES: 17,
+        /** 18 - Client API */
+        CLIENT_API: 18,
+        /** 19 - deleted from anywhere -- you can ignore this */
+        DELETED_FROM_ANYWHERE: 19,
+        /** 20 - local updates -- a file domain to store repository update files in */
+        LOCAL_UPDATES: 20,
+        /** 21 - all my files -- union of all local file domains */
+        ALL_MY_FILES: 21,
+        /** 22 - a 'inc/dec' rating service with positive integer rating */
+        RATING_SERVICE_INC_DEC: 22,
+        /** 99 - server administration */
+        SERVER_ADMIN: 99,
+    })
+
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
@@ -843,6 +903,86 @@ module.exports = class API{
         // region: edit_times/set_file_viewtime
         return await this.call({
             endpoint: '/edit_times/set_file_viewtime',
+            json: options,
+            return_as: return_as ?? 'success'
+        })
+    },
+
+    /**
+     * Add or remove timestamps associated with a file.
+     *
+     * This is a copy of the manage times dialog in the program,
+     * so if you are uncertain about something, check that out.
+     * The client records timestamps up to millisecond accuracy.
+     * 
+     * You have to select some files, obviously.
+     * I'd imagine most uses will be over one file at a time,
+     * but you can spam 100 or 10,000 if you need to.
+     * 
+     * Then choose whether you want to work with
+     * timestamp or timestamp_ms.
+     * timestamp can be an integer or a float,
+     * and in the latter case, the API will suck up the three
+     * most significant digits to be the millisecond data.
+     * timestamp_ms is an integer of milliseconds,
+     * simply the timestamp value multiplied by 1,000.
+     * It doesn't matter which you use--whichever is easiest for you.
+     * 
+     * If you send null timestamp time,
+     * then this will instruct to delete the existing value,
+     * if possible and reasonable.
+     * 
+     * !!! warning "Adding or Deleting"
+     * You can add or delete
+     * `TIMESTAMP_TYPE.MODIFIED_TIME_WEB_DOMAIN` (0) timestamps,
+     * but you can only edit existing instances of all the others.
+     * This is broadly how the manage times dialog works, also.
+     * Stuff like `TIMESTAMP_TYPE.LAST_VIEWED` (6)
+     * is tied up with other numbers
+     * like `viewtime` and `num_views`,
+     * so if that isn't already in the database,
+     * then we can't just add the timestamp on its own.
+     * Same with `TIMESTAMP_TYPE.DELETED_TIME` (4)
+     * for a file that isn't deleted!
+     * So, in general, other than web domain stuff,
+     * you can only edit times you already
+     * see in `get_files.file_metadata()`.
+     * 
+     * If you select `TIMESTAMP_TYPE.MODIFIED_TIME_WEB_DOMAIN` (0),
+     * you have to include a domain,
+     * which will usually be a web domain,
+     * but you can put anything in there.
+     * 
+     * If you select `TIMESTAMP_TYPE.MODIFIED_TIME_DISK` (1),
+     * the client will not alter the modified time on your hard disk,
+     * only the database record. This is unlike the dialog.
+     * Let's let this system breathe a bit before we try
+     * to get too clever.
+     * 
+     * If you select `TIMESTAMP_TYPE.IMPORTED_TIME` (3),
+     * `TIMESTAMP_TYPE.DELETED_TIME` (4),
+     * or `TIMESTAMP_TYPE.ORIGINAL_IMPORT_TIME` (7),
+     * you have to include a file_service_key.
+     * The `TIMESTAMP_TYPE.ORIGINAL_IMPORT_TIME` (7) time
+     * is for deleted files only;
+     * it records when the file was originally imported
+     * so if the user hits 'undo',
+     * the database knows what import time to give back to it.
+     * 
+     * If you select `TIMESTAMP_TYPE.LAST_VIEWED` (6),
+     * you have to include a `CANVAS_TYPE`
+     * 
+     * POST Endpoint: /edit_times/set_time
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesset_time--idedit_times_set_time-
+     * @param {set_time_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {boolean} Successful if true
+     */
+    set_time: async(options, return_as) => {
+        // region: edit_times/set_time
+        return await this.call({
+            endpoint: '/edit_times/set_time',
             json: options,
             return_as: return_as ?? 'success'
         })
@@ -1678,6 +1818,52 @@ module.exports = class API{
         })
     },
 
+        }
+    }
+
+    get tools () {
+        return {
+    /**
+     * calls the `api.get_services()` endpoint,
+     * checks each entry for ones with a matching
+     * SERVICE_TYPE, and then returns a new array
+     * with the results
+     * 
+     * @param {SERVICE_TYPE_VALUE} [service_type=11] Optional; defaults to `all known files`; The service type to get
+     * @returns {ServiceObjectWithKey[]}
+     */
+    get_services_of_type: async(service_type=11) => {
+        const matches = []
+        const services = (await this.get_services()).services
+        for (const [key, value] of Object.entries(services)) {
+            if (value.type === service_type) {
+                value.service_key = key
+                matches.push(value)
+            }
+        }
+        return matches
+    },
+
+    /**
+     * calls the `api.get_services()` endpoint,
+     * checks each entry for ones with a matching
+     * name, and then returns a new array
+     * with the results
+     * 
+     * @param {string} name The name of the service to get
+     * @returns {ServiceObjectWithKey[]}
+     */
+    get_services_of_name: async(name) => {
+        const matches = []
+        const services = (await this.get_services()).services
+        for (const [key, value] of Object.entries(services)) {
+            if (value.name === name) {
+                value.service_key = key
+                matches.push(value)
+            }
+        }
+        return matches
+    },
         }
     }
 }

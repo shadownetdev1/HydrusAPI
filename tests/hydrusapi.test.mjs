@@ -215,30 +215,17 @@ describe('HydrusAPI', () => {
     })
 
     test('get_services and get_service', async() => {
-        const services = await api.get_services()
-        // console.log(services)
-        expect(services.all_known_files.length > 0).toBe(true)
-        expect(services.all_known_files[0].name).toBeTypeOf('string')
-        expect(services.all_known_files[0].service_key).toBeTypeOf('string')
-        expect(services.all_known_files[0].type).toBeTypeOf('number')
-        expect(services.all_known_files[0].type_pretty).toBeTypeOf('string')
-        expect(services.all_known_tags.length > 0).toBe(true)
-        expect(services.all_local_files.length > 0).toBe(true)
-        expect(services.all_local_media.length > 0).toBe(true)
-        expect(services.local_files.length > 0).toBe(true)
-        expect(Array.isArray(services.local_tags)).toBe(true)
-        expect(Array.isArray(services.local_updates)).toBe(true)
-        expect(Array.isArray(services.tag_repositories)).toBe(true)
-        expect(Array.isArray(services.trash)).toBe(true)
-        expect(Object.keys(services.services).length > 0).toBe(true)
+        const services = (await api.get_services()).services
+        expect(Object.keys(services).length > 0).toBe(true)
 
         const service_by_name = await api.get_service({
-            service_name: services.all_known_files[0].name
+            service_name: Object.values(services)[0].name
         })
         const service = await api.get_service({
-            service_key: services.all_known_files[0].service_key
+            service_key: Object.keys(services)[0]
         })
-        const service_str = JSON.stringify(services.all_known_files[0])
+        Object.values(services)[0].service_key = Object.keys(services)[0]
+        const service_str = JSON.stringify(Object.values(services)[0])
         expect(JSON.stringify(service_by_name.service)).toBe(service_str)
         expect(JSON.stringify(service.service)).toBe(service_str)
     })
@@ -629,15 +616,15 @@ describe('HydrusAPI', () => {
         }
 
         // test: increment_file_viewtime
-        const pre_time = (
-            await api.get_files.file_metadata({hash: f_hash})
-        ).metadata[0].file_viewing_statistics
         /**
          * @returns {[FileViewingStatistics, FileViewingStatistics, FileViewingStatistics]}
          */
-        const assign = () => {
+        const assign = async() => {
+            const time = (
+                await api.get_files.file_metadata({hash: f_hash})
+            ).metadata[0].file_viewing_statistics
             let media_viewer, preview_viewer, api_viewer
-            for (const viewer of pre_time) {
+            for (const viewer of time) {
                 switch (viewer.canvas_type) {
                     case api.CANVAS_TYPE.MEDIA_VIEWER:
                         media_viewer = viewer
@@ -659,7 +646,7 @@ describe('HydrusAPI', () => {
         }
         /** @type {FileViewingStatistics} */
         let old_media_viewer, old_preview_viewer, old_api_viewer
-        [old_media_viewer, old_preview_viewer, old_api_viewer] = assign()
+        [old_media_viewer, old_preview_viewer, old_api_viewer] = await assign()
         const inc_media_viewer = await api.edit_times.increment_file_viewtime({
             hash: f_hash,
             canvas_type: api.CANVAS_TYPE.MEDIA_VIEWER,
@@ -686,7 +673,7 @@ describe('HydrusAPI', () => {
         expect(inc_api_viewer).toBe(true)
         /** @type {FileViewingStatistics} */
         let media_viewer, preview_viewer, api_viewer
-        [media_viewer, preview_viewer, api_viewer] = assign()
+        [media_viewer, preview_viewer, api_viewer] = await assign()
         for (const viewers of [
             [old_media_viewer, media_viewer],
             [old_preview_viewer, preview_viewer],
@@ -694,8 +681,13 @@ describe('HydrusAPI', () => {
         ]) {
             viewers[0].views += 2
             viewers[0].viewtime += 77.2
+            viewers[0].viewtime = Number(viewers[0].viewtime.toFixed(3))
             viewers[0].last_viewed_timestamp += 100
-            expect(JSON.stringify(viewers[0])).toBe(JSON.stringify(viewers[1]))
+            expect(viewers[0].canvas_type).toBe(viewers[1].canvas_type)
+            expect(viewers[0].canvas_type_pretty).toBe(viewers[1].canvas_type_pretty)
+            expect(viewers[0].views).toBe(viewers[1].views)
+            expect(viewers[0].last_viewed_timestamp).toBe(viewers[1].last_viewed_timestamp)
+            expect(viewers[0].viewtime).toBe(viewers[1].viewtime)
         }
 
         // test set_file_viewtime
@@ -725,16 +717,40 @@ describe('HydrusAPI', () => {
         expect(set_api_viewer).toBe(true)
 
         let new_media_viewer, new_preview_viewer, new_api_viewer
-        [new_media_viewer, new_preview_viewer, new_api_viewer] = assign()
+        [new_media_viewer, new_preview_viewer, new_api_viewer] = await assign()
 
         for (const viewers of [
             [old_media_viewer, new_media_viewer],
             [old_preview_viewer, new_preview_viewer],
             [old_api_viewer, new_api_viewer]
         ]) {
-            expect(JSON.stringify(viewers[0])).toBe(JSON.stringify(viewers[1]))
+            expect(viewers[0].canvas_type).toBe(viewers[1].canvas_type)
+            expect(viewers[0].canvas_type_pretty).toBe(viewers[1].canvas_type_pretty)
+            expect(viewers[0].views).toBe(viewers[1].views)
+            expect(viewers[0].last_viewed_timestamp).toBe(viewers[1].last_viewed_timestamp)
+            expect(viewers[0].viewtime).toBe(viewers[1].viewtime)
         }
         
+        // test set_time
+        const key = (
+            await api.tools.get_services_of_type(
+                api.SERVICE_TYPE.ALL_LOCAL_FILES
+            )
+        )[0].service_key
+        const meta1 = (await api.get_files.file_metadata({
+            hash: f_hash
+        })).metadata[0]
+        const set = await api.edit_times.set_time({
+            hash: f_hash,
+            timestamp: meta1.time_modified + 500,
+            timestamp_type: api.TIMESTAMP_TYPE.MODIFIED_TIME_DISK,
+            file_service_key: key
+        })
+        expect(set).toBe(true)
+        const meta2 = (await api.get_files.file_metadata({
+            hash: f_hash
+        })).metadata[0]
+        expect(meta1.time_modified + 500).toBe(meta2.time_modified)
     })
 
     test('add_notes.*', async() => {
@@ -965,5 +981,35 @@ describe('HydrusAPI', () => {
                 throw new Error(`The output of 'manage_database.get_client_options()' has changed! See 'comparison.tmp.json' for the differences!`)
             }
         }
+    })
+
+    test('tools', async() => {
+        // test: get_services_of_type
+        const service_type = (await api.tools.get_services_of_type(
+            api.SERVICE_TYPE.ALL_KNOWN_FILES
+        ))
+        expect(service_type.length).toBe(1)
+        expect(service_type[0].name).toBe('all known files')
+        expect(service_type[0].type).toBe(
+            api.SERVICE_TYPE.ALL_KNOWN_FILES
+        )
+        expect(service_type[0].type_pretty).toBe(
+            'virtual combined file service'
+        )
+        expect(service_type[0].service_key).toBeTypeOf('string')
+        // test: get_services_of_name
+        const service_name = (await api.tools.get_services_of_name(
+            service_type[0].name
+        ))
+        expect(service_name.length).toBe(1)
+        expect(service_name[0].name).toBe('all known files')
+        expect(service_name[0].type).toBe(
+            api.SERVICE_TYPE.ALL_KNOWN_FILES
+        )
+        expect(service_name[0].type_pretty).toBe(
+            'virtual combined file service'
+        )
+        expect(service_name[0].service_key).toBeTypeOf('string')
+        expect(service_name[0].service_key).toBe(service_type[0].service_key)
     })
 })
