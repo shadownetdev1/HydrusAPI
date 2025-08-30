@@ -7,6 +7,28 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.636.5](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.5) - 2025-7-30
+
+### Changed
+
+- Reformatted inline documentation
+
+### Added
+
+- Implemented `edit_times.increment_file_viewtime()`
+- Implemented `edit_times.set_file_viewtime()`
+- Implemented `edit_times.set_time()`
+- Added `TIMESTAMP_TYPE` and `SERVICE_TYPE` enums
+- Added `tools.get_services_of_type()`
+- Added `tools.get_services_of_name()`
+- Added missing inline documentation
+
+### Fixed
+
+- The `ServicesObject` and `ServiceObject` type defs were documenting deprecated features causing them to be wrong for some endpoints
+- Test for `edit_times.increment_file_viewtime()`
+
+
 ## [80.636.4](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.4) - 2025-7-27
 
 ### Added
