@@ -122,7 +122,25 @@ module.exports = class API{
         SERVER_ADMIN: 99,
     })
 
-    _first_successful_versioning = false
+    /** @type {POTENTIALS_SEARCH_TYPE} */
+    POTENTIALS_SEARCH_TYPE = Object.freeze({
+        /** 0 - one file matches search 1 */
+        ONE_FILE_MATCHES_SEARCH_ONE: 0,
+        /** 1 - both files match search 1 */
+        BOTH_FILES_MATCH_SEARCH_ONE: 1,
+        /** 2 - one file matches search 1, the other 2 */
+        EACH_FILE_MATCHES_A_SEPARATE_SEARCH: 2,
+    })
+
+    /** @type {PIXEL_DUPLICATES} */
+    PIXEL_DUPLICATES = Object.freeze({
+        /** 0 - must be pixel duplicates */
+        MUST_BE_DUPLICATES: 0,
+        /** 1 - can be pixel duplicates */
+        CAN_BE_DUPLICATES: 1,
+        /** 2 - must not be pixel duplicates */
+        MUST_NOT_BE_DUPLICATES: 2,
+    })
 
     /**
      * @type {number}
@@ -144,6 +162,7 @@ module.exports = class API{
         this.address = options?.address ?? 'http://127.0.0.1:45869'
         this.debug = options?.debug ?? false
         this.api_version_override = options?.api_version_override
+        this._first_successful_versioning = false
     }
 
     /**
@@ -1451,6 +1470,54 @@ module.exports = class API{
         // region: manage_file_relationships/get_file_relationships
         return await this.call({
             endpoint: '/manage_file_relationships/get_file_relationships',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Get the count of remaining potential duplicate pairs
+     * in a particular search domain.
+     * Exactly the same as the counts you see in the duplicate
+     * processing page.
+     * 
+     * The arguments here reflect the same options as you see in
+     * duplicate page sidebar and auto-resolution system that search
+     * for potential duplicate pairs.
+     * tag_service_key_x and tags_x work the same as
+     * `get_files.search_files()`.
+     * The _2 variants are only useful if the
+     * `potentials_search_type` is `2`.
+     * 
+     * `potentials_search_type` is
+     * defined by `POTENTIALS_SEARCH_TYPE`
+     * 
+     * `pixel_duplicates` is
+     * defined by `PIXEL_DUPLICATES`
+     * 
+     * The max_hamming_distance is the same 'search distance'
+     * you see in the Client UI.
+     * A higher number means more speculative 'similar files' search.
+     * If pixel_duplicates is set to
+     * `PIXEL_DUPLICATES.MUST_BE_DUPLICATES` (0),
+     * then max_hamming_distance is obviously ignored.
+     * 
+     * If you confirm that a pair of potentials are duplicates,
+     * this may transitively collapse other potential pairs
+     * and decrease the count by more than 1.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_potentials_count
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potentials_count--idmanage_file_relationships_get_potentials_count-
+     * @param {get_potentials_count_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_potentials_count_response}
+     */
+    get_potentials_count: async(options, return_as) => {
+        options = options ?? {}
+        // region: manage_file_relationships/get_potentials_count
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_potentials_count',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
         })

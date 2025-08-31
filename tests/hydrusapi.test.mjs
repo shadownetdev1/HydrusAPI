@@ -815,7 +815,15 @@ describe('HydrusAPI', () => {
         expect(no_rel_rec.king_is_on_file_domain).toBe(true)
         expect(no_rel_rec.king_is_local).toBe(true)
 
-        // TODO: test get_file_relationships (relations)
+        // test: get_potentials_count (no relations)
+        const no_count = (
+            await api.manage_file_relationships.get_potentials_count()
+        ).potential_duplicates_count
+        expect(no_count).toBe(0)
+
+        // TODO: test get_file_relationships (relations exist)
+
+        // TODO: test: get_potentials_count (relations exist)
     })
 
     test('manage_services.*', async() => {

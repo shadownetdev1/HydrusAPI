@@ -22,6 +22,7 @@ _Optional notice_
 ### Added
 
 - Implemented `manage_file_relationships.get_file_relationships()`
+- Implemented `manage_file_relationships.get_potentials_count()`
 
 ### Removed
 

@@ -115,6 +115,38 @@ interface SERVICE_TYPE {
 type SERVICE_TYPE_VALUE = ValueOf<SERVICE_TYPE>
 
 /**
+ * * 0 - a file matches search 1
+ * * 1 - both files match search 1
+ * * 2 - one file matches search 1, the other 2
+ */
+interface POTENTIALS_SEARCH_TYPE {
+    /** 0 - one file matches search 1 */
+    A_FILE_MATCHES_SEARCH_ONE: 0,
+    /** 1 - both files match search 1 */
+    BOTH_FILES_MATCH_SEARCH_ONE: 1,
+    /** 2 - one file matches search 1, the other 2 */
+    EACH_FILE_MATCHES_A_SEPARATE_SEARCH: 2,
+}
+
+type POTENTIALS_SEARCH_TYPE_VALUE = ValueOf<POTENTIALS_SEARCH_TYPE>
+
+/**
+ * * 0 - must be pixel duplicates
+ * * 1 - can be pixel duplicates
+ * * 2 - must not be pixel duplicates
+ */
+interface PIXEL_DUPLICATES {
+    /** 0 - must be pixel duplicates */
+    MUST_BE_DUPLICATES: 0,
+    /** 1 - can be pixel duplicates */
+    CAN_BE_DUPLICATES: 1,
+    /** 2 - must not be pixel duplicates */
+    MUST_NOT_BE_DUPLICATES: 2,
+}
+
+type PIXEL_DUPLICATES_VALUE = ValueOf<PIXEL_DUPLICATES>
+
+/**
  * *   1 - File was successfully imported
  * *   2 - File already in database
  * *   3 - File previously deleted
@@ -787,7 +819,7 @@ interface search_files_options extends FileDomainObject {
      * OR predicates are supported! Just nest within the tag list, and it'll be treated like an OR.
      * Example: `[ "skirt", [ "samus aran", "lara croft" ], "system:height > 1000" ]`
      */
-    tags: [RecursiveTagList]
+    tags: RecursiveTagList[]
     /** optional, hexadecimal, the tag domain on which to search, defaults to all my files */
     tag_service_key?: string
     /** optional, bool, whether to search 'current' tags, defaults to `true` */
@@ -1218,6 +1250,52 @@ interface FileRelationship {
 interface get_file_relationships_response extends api_version_response {
     /** key is the a file hash */
     file_relationships: {[key: string]: FileRelationship}
+}
+
+interface get_potentials_count_options extends FileDomainObject {
+    /**
+     * Optional; A service key;
+     * Defaults to the `all known tags` service
+     */
+    tag_service_key_1?: string
+    /**
+     * Optional; A list of tags to search for;
+     * Defaults to `system:everything`
+     */
+    tags_1?: RecursiveTagList[]
+    /**
+     * Optional; A service key;
+     * Defaults to the `all known tags` service
+     */
+    tag_service_key_2?: string
+    /**
+     * Optional; A list of tags to search for;
+     * Defaults to `system:everything`
+     */
+    tags_2?: RecursiveTagList[]
+    /**
+     * Optional; Defaults to 0
+     * * 0 - one file matches search 1
+     * * 1 - both files match search 1
+     * * 2 - one file matches search 1, the other 2
+     */
+    potentials_search_type?: POTENTIALS_SEARCH_TYPE_VALUE
+    /**
+     * Optional; Defaults to 1
+     * * 0 - must be pixel duplicates
+     * * 1 - can be pixel duplicates
+     * * 2 - must not be pixel duplicates
+     */
+    pixel_duplicates?: PIXEL_DUPLICATES_VALUE
+    /**
+     * Optional;
+     * The max 'search distance' of the pairs; Defaults to 4
+     */
+    max_hamming_distance?: number
+}
+
+interface get_potentials_count_response extends api_version_response {
+    potential_duplicates_count: number
 }
 
 interface get_pending_counts_response extends api_version_response {
