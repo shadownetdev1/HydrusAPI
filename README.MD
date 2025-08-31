@@ -134,7 +134,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/get_files/render`
 - [x] `/manage_file_relationships/get_file_relationships`
 - [x] `/manage_file_relationships/get_potentials_count`
-- [ ] `/manage_file_relationships/get_potential_pairs`
+- [x] `/manage_file_relationships/get_potential_pairs`
 - [ ] `/manage_file_relationships/get_random_potentials`
 - [ ] `/manage_file_relationships/remove_potentials`
 - [ ] `/manage_file_relationships/set_file_relationships`

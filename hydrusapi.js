@@ -1514,10 +1514,70 @@ module.exports = class API{
      * @returns {get_potentials_count_response}
      */
     get_potentials_count: async(options, return_as) => {
-        options = options ?? {}
         // region: manage_file_relationships/get_potentials_count
+        options = options ?? {}
         return await this.call({
             endpoint: '/manage_file_relationships/get_potentials_count',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Get some potential duplicate pairs for a filtering workflow. Exactly the same as the 'duplicate filter' in the duplicate processing page.
+     * 
+     * The search arguments work the same
+     * as `manage_file_relationships.get_potentials_count()`.
+     * 
+     * `max_num_pairs` is simple and just caps how many pairs you get.
+     * 
+     * Returns a list of file hash pairs.
+     * These file hashes are all kings that are available in
+     * the given file domain.
+     * Treat it as the client filter does,
+     * where you fetch batches to process one after another.
+     * I expect to add grouping/sorting options in the near future.
+     * 
+     * You may see the same file more than once in each batch,
+     * and if you expect to process and commit these as a batch,
+     * just like the filter does,
+     * you would be wise to skip through pairs that are implicated
+     * by a previous decision.
+     * When considering whether to display the 'next' pair,
+     * you should test:
+     * * In the current batch of decisions,
+     * has either file been manually deleted by the user?
+     * * In the current batch of decisions,
+     * has either file been adjudicated as the B in
+     * a 'A is better than B' or 'A is the same as B'?
+     * 
+     * If either is true, you should skip the pair, since,
+     * after your current decisions are committed,
+     * that file is no longer in any potential duplicate pairs
+     * in the search you gave.
+     * The respective file is either no longer in the file domain,
+     * or it has been merged into another group
+     * (that file is no longer a king and either the potential pair
+     * no longer exists via transitive collapse or, rarely,
+     * hydrus can present you with a better comparison pair
+     * if you ask for a new batch).
+     * 
+     * You will see significantly fewer than `max_num_pairs` as you
+     * get close to the last available pairs,
+     * and when there are none left, you will get an empty list.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_potential_pairs
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potential_pairs--idmanage_file_relationships_get_potential_pairs-
+     * @param {get_potential_pairs_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_potential_pairs_response}
+     */
+    get_potential_pairs: async(options, return_as) => {
+        // region: manage_file_relationships/get_potential_pairs
+        options = options ?? {}
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_potential_pairs',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
         })

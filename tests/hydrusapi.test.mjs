@@ -821,9 +821,17 @@ describe('HydrusAPI', () => {
         ).potential_duplicates_count
         expect(no_count).toBe(0)
 
+        // test: get_potential_pairs (no relations)
+        const no_pairs = (
+            await api.manage_file_relationships.get_potential_pairs()
+        ).potential_duplicate_pairs
+        expect(no_pairs).toStrictEqual([])
+
         // TODO: test get_file_relationships (relations exist)
 
         // TODO: test: get_potentials_count (relations exist)
+
+        // TODO: test: get_potential_pairs (relations exist)
     })
 
     test('manage_services.*', async() => {

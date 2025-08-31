@@ -1252,7 +1252,7 @@ interface get_file_relationships_response extends api_version_response {
     file_relationships: {[key: string]: FileRelationship}
 }
 
-interface get_potentials_count_options extends FileDomainObject {
+interface get_potentials_options extends FileDomainObject {
     /**
      * Optional; A service key;
      * Defaults to the `all known tags` service
@@ -1294,8 +1294,34 @@ interface get_potentials_count_options extends FileDomainObject {
     max_hamming_distance?: number
 }
 
+interface get_potentials_count_options extends get_potentials_options {
+    
+}
+
 interface get_potentials_count_response extends api_version_response {
     potential_duplicates_count: number
+}
+
+interface get_potential_pairs_options extends get_potentials_options {
+    /**
+     * Optional; How many pairs to get in a batch;
+     * Defaults to whatever is set in Hydrus' settings
+     */
+    max_num_pairs?: number
+}
+
+interface get_potential_pairs_response extends api_version_response {
+    /**
+     * A list of file hash pairs.
+     * 
+     * These file hashes are all kings that are available in
+     * the given file domain.
+     * Treat it as the client filter does,
+     * where you fetch batches to process one after another.
+     * I expect to add grouping/sorting options in the near future.
+     * 
+     */
+    potential_duplicate_pairs: [[string, string]]
 }
 
 interface get_pending_counts_response extends api_version_response {
