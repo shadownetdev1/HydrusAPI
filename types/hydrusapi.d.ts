@@ -1165,6 +1165,61 @@ interface render_options {
     height?: number
 }
 
+interface get_file_relationships_options extends FilesObject, FileDomainObject {
+
+}
+
+interface FileRelationship {
+    /**
+     * `is_king` is a convenience bool for when a file is king
+     * of its own group.
+     */
+    is_king: boolean
+    /**
+     * `king` refers to which file is set as the best of a duplicate group.
+     * If you are doing potential duplicate comparisons,
+     * the kings of your two groups are usually the
+     * ideal representatives, and the 'get some pairs to filter'-style
+     * commands will always select the kings of the various
+     * to-be-compared duplicate groups.
+     *
+     * **It is possible for the king to not be available.**
+     * 
+     * Every group has a king, but if that file has been deleted,
+     * or if the file domain here is limited and the king
+     * is on a different file service, then it may not be available.
+     */
+    king: string
+    /**
+     * `king_is_on_file_domain` lets you know if the king
+     * is on the file domain you set
+     */
+    king_is_on_file_domain: boolean
+    /**
+     * `king_is_local` lets you know if it is on the
+     * hard disk--if `king_is_local=true`,
+     * you can do a `get_files.file()` request on it.
+     * It is generally rare, but you have to deal with the king
+     * being unavailable--in this situation,
+     * your best bet is to just use the file itself as its
+     * own representative.
+     */
+    king_is_local: boolean
+    /** Potential duplicates; An array of 0 or more hashes */
+    "0": string[]
+    /** False positives; An array of 0 or more hashes */
+    "1": string[]
+    /** Alternates; An array of 0 or more hashes */
+    "3": string[]
+    /** Duplicates; An array of 0 or more hashes */
+    "8": string[]
+}
+
+interface get_file_relationships_response extends api_version_response {
+    /** key is the a file hash */
+    file_relationships: {[key: string]: FileRelationship}
+}
+
 interface get_pending_counts_response extends api_version_response {
     /**
      * key is a service key;

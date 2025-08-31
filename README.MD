@@ -71,15 +71,15 @@ Hydrus version, reported bugs, issue count, and minified size badges provided by
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
-[Hummingbird at feeder image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder).
+[Hummingbird at feeder image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder).
 
-[Tree image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree).
+[Tree image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree).
 
-[Tokyo travel image (used to test url imports)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage).
+[Tokyo travel image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage).
 
-[Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
+[Venice travel image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
 
-[Seascape Sunset image (used to test notes and timestamps)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
+[Seascape Sunset image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
 
 ## License
 
@@ -132,7 +132,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/get_files/thumbnail_path`
 - [x] `/get_files/local_file_storage_locations`
 - [x] `/get_files/render`
-- [ ] `/manage_file_relationships/get_file_relationships`
+- [x] `/manage_file_relationships/get_file_relationships`
 - [ ] `/manage_file_relationships/get_potentials_count`
 - [ ] `/manage_file_relationships/get_potential_pairs`
 - [ ] `/manage_file_relationships/get_random_potentials`

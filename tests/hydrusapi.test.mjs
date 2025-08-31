@@ -791,7 +791,31 @@ describe('HydrusAPI', () => {
     })
 
     test('manage_file_relationships.*', async() => {
-        // TODO
+        const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
+
+        // make sure the file exists for testing
+        if (!await exists(f_hash)) {
+            await upload(f_path, f_hash)
+        }
+
+        // test get_file_relationships (no relations)
+        const no_rel = (await api.manage_file_relationships.get_file_relationships({
+            hash: f_hash
+        })).file_relationships
+        expect(Object.keys(no_rel).length).toBe(1)
+        expect(Object.keys(no_rel)[0]).toBe(f_hash)
+        const no_rel_rec = Object.values(no_rel)[0]
+        expect(no_rel_rec["0"]).toStrictEqual([])
+        expect(no_rel_rec["1"]).toStrictEqual([])
+        expect(no_rel_rec["3"]).toStrictEqual([])
+        expect(no_rel_rec["8"]).toStrictEqual([])
+        expect(no_rel_rec.is_king).toBe(true)
+        expect(no_rel_rec.king).toBe(f_hash)
+        expect(no_rel_rec.king_is_on_file_domain).toBe(true)
+        expect(no_rel_rec.king_is_local).toBe(true)
+
+        // TODO: test get_file_relationships (relations)
     })
 
     test('manage_services.*', async() => {

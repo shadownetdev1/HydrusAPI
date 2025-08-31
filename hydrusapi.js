@@ -1380,7 +1380,81 @@ module.exports = class API{
      */
     get manage_file_relationships() {
         return {
-            // TODO
+    /**
+     * Get the current relationships for one or more files.
+     * 
+     * `king` refers to which file is set as the best of a duplicate
+     * group. If you are doing potential duplicate comparisons,
+     * the kings of your two groups are usually the ideal
+     * representatives, and the 'get some pairs to filter'-style
+     * commands will always select the kings of the various
+     * to-be-compared duplicate groups.
+     * 
+     * `is_king` is a convenience bool for when a file is king
+     * of its own group.
+     * 
+     * **It is possible for the king to not be available.**
+     * 
+     * Every group has a king, but if that file has been deleted,
+     * or if the file domain here is limited and the king
+     * is on a different file service, then it may not be available.
+     * The regular hydrus potential duplicate pair commands always
+     * look at kings, so a group like this will not contribute
+     * to any 'potential duplicate pairs' count or filter fetch
+     * and so on. 
+     * 
+     * If you need to do your own clever manual lookups,
+     * `king_is_on_file_domain` lets you know if the king is on
+     * the file domain you set,
+     * and `king_is_local` lets you know if it is on the
+     * hard disk--if `king_is_local=true`,
+     * you can do a `get_files.file()` request on it.
+     * 
+     * It is generally rare, but you have to deal with the king
+     * being unavailable--in this situation,
+     * your best bet is to just use the file itself as its own
+     * representative.
+     * 
+     * All the relationships you get are filtered by the file domain.
+     * If you set the file domain to 'all known files',
+     * you will get every relationship a file has,
+     * including all deleted files,
+     * which is often less useful than you would think.
+     * The default, 'all my files', is usually most useful.
+     * 
+     * A file that has no duplicates is considered to be in
+     * a duplicate group of size 1 and thus is always its own king.
+     * 
+     * The numbers are from a duplicate status enum, as so:
+     * * 0 - potential duplicates
+     * * 1 - false positives
+     * * 3 - alternates
+     * * 8 - duplicates
+     * 
+     * Note that because of JSON constraints,
+     * these are the string versions of the integers since they
+     * are Object keys.
+     * 
+     * All the hashes given here are in 'all my files',
+     * i.e. not in the trash.
+     * A file may have duplicates that have long been deleted, but,
+     * like the null king above, they will not show here.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_file_relationships
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_file_relationships--idmanage_file_relationships_get_file_relationships-
+     * @param {get_file_relationships_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_file_relationships_response}
+     */
+    get_file_relationships: async(options, return_as) => {
+        // region: manage_file_relationships/get_file_relationships
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_file_relationships',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
         }
     }
 
