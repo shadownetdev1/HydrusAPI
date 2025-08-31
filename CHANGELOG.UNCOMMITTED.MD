@@ -18,11 +18,13 @@ _Optional notice_
   - This can be overridden using the `api_version_override` api option, but support will not be provided for this use case.
   - HydrusAPI now makes sure that a version check happens first even if the first endpoint called is not `api_version()`.
 - Better documentation about version control.
+- GitHub releases now includes a zip file that contain the release
 
 ### Added
 
 - Implemented `manage_file_relationships.get_file_relationships()`
 - Implemented `manage_file_relationships.get_potentials_count()`
+- `types/hydrusapi.d.ts` is now packaged for GitHub releases
 
 ### Removed
 
