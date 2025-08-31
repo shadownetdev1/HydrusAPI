@@ -191,7 +191,7 @@ type PAGE_TYPE = 1|2|3|5|6|7|8|9|10
  */
 type PAGE_STATE = 0|1|2|3
 
-interface RawAPIOptions {
+interface APIOptions {
     /** 
      * If true then we will print out debugging messages;
      * Defaults to false
@@ -204,6 +204,14 @@ interface RawAPIOptions {
      * Defaults to 'http://127.0.0.1:45869'
      */
     address?: string
+    /**
+     * Setting this to a HydrusAPI version will allow usage
+     * when the HydrusAPI API version and Hydrus API version
+     * mismatches.
+     * 
+     * !!! This use case will not be supported
+     */
+    api_version_override?: number
 }
 
 interface api_version_response {

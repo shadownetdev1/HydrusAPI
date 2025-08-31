@@ -129,7 +129,10 @@ if (jetpack.exists(download_dest) === false) {
 try {
     const api_version = await api.api_version()
     console.log(api_version)
-    if (api_version.version !== api.VERSION | api_version.hydrus_version !== api.HYDRUS_TARGET_VERSION) {
+    if (
+        api_version.version !== api.VERSION | 
+        api_version.hydrus_version !== api.HYDRUS_TARGET_VERSION
+    ) {
         await exit_hydrus()
         await get_hydrus()
     }

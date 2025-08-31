@@ -122,15 +122,28 @@ module.exports = class API{
         SERVER_ADMIN: 99,
     })
 
+    _first_successful_versioning = false
+
+    /**
+     * @type {number}
+     * Setting this to a HydrusAPI version will allow usage
+     * when the HydrusAPI API version and Hydrus API version
+     * mismatches.
+     * 
+     * !!! This use case will not be supported
+     */
+    api_version_override
+
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
-     * @param {RawAPIOptions} [options={}] Extra options
+     * @param {APIOptions} [options={}] Extra options
      */
     constructor(options={}) {
         this.access_key = options?.access_key ?? ''
         this.address = options?.address ?? 'http://127.0.0.1:45869'
         this.debug = options?.debug ?? false
+        this.api_version_override = options?.api_version_override
     }
 
     /**
@@ -147,6 +160,10 @@ module.exports = class API{
         // region: call
         if (this.debug) {
             console.log(`ENDPOINT: ${o.endpoint}`)
+        }
+        
+        if (o.endpoint !== '/api_version' && !this._first_successful_versioning) {
+            await this.api_version()
         }
 
         o.headers = o.headers ?? new Headers()
@@ -251,10 +268,36 @@ module.exports = class API{
      */
     async api_version(return_as) {
         // region: api_version
-        return this.call({
-            endpoint: '/api_version',
-            return_as: return_as
-        })
+        if (
+            this._first_successful_versioning ||
+            (return_as && return_as !== 'json')
+        ) {
+            return await this.call({
+                endpoint: '/api_version',
+                return_as: return_as
+            })
+        } else {
+            /** @type {api_version_response} */
+            const json = await this.call({
+                endpoint: '/api_version',
+                return_as: return_as
+            })
+            if (json.hydrus_version !== this.HYDRUS_TARGET_VERSION) {
+                console.warn(`This version of HydrusAPI is targetting Hydrus version '${this.HYDRUS_TARGET_VERSION}', but you are currently connected to version '${json.hydrus_version}'.`)
+            }
+            if (json.version !== this.VERSION) {
+                if (!this.api_version_override || this.api_version_override !== json.version) {
+                    throw new Error(
+                        `This version of HydrusAPI is made for Hydrus API version '${this.VERSION}', but you attempted to connect to version '${json.version}'. This is not officially supported. We suggest finding a version of HydrusAPI that matches your Hydrus API version. If you still want to continue then pass 'api_version_override: ${json.version}' in the api options when initializing. NO support will be provided for this use case.`
+                    )
+                } else {
+                    console.warn(`'api_version_override' is set to '${this.api_version_override}'. No support will be provided for this use case.`)
+                }
+            }
+            this._first_successful_versioning = true
+            return json
+        }
+        
     }
 
     /**
@@ -1821,6 +1864,12 @@ module.exports = class API{
         }
     }
 
+    /**
+     * These are functions that add useful features that don't exist
+     * on any endpoint. This allows us to add functionality while
+     * keeping the usage for the endpoint methods close to the same
+     * as the raw api.
+     */
     get tools () {
         return {
     /**
