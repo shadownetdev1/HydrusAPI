@@ -4,7 +4,7 @@
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
-[![Tested with Hydrus version 636](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-636%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v636)
+[![Tested with Hydrus version 637](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-637%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v637)
 [![GitHub reported bug count](https://img.shields.io/github/issues-search?query=repo%3Ashadownetdev1%2FHydrusAPI%20is%3Aopen%20label%3Abug&label=Reported%20bugs)](https://github.com/shadownetdev1/HydrusAPI/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/shadownetdev1/HydrusAPI)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/hydrusapi?label=Minified%20Size)](https://github.com/shadownetdev1/HydrusAPI/releases)
@@ -27,7 +27,7 @@ As of currently most Hydrus API endpoints are implemented and all the API endpoi
 
 ### Package manager users
 
-If you are using npm (or an alternative) package manager then installation is as simple as `npm install hydrusapi@80.636.*`.
+If you are using npm (or an alternative) package manager then installation is as simple as `npm install hydrusapi@80.637.*`.
 
 You should always pin the version of HydrusAPI that you are using. See [versioning](#versioning) below for more information.
 
@@ -55,7 +55,7 @@ This works well since all our endpoints should match a given Hydrus API/Client v
 
 We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
 
-When using a package manager you should pin the HydrusAPI version. Here is an example using NPM for Hydrus version 636: `npm install hydrusapi@80.636.*`. When downloading you should download the version that best matches your Hydrus version.
+When using a package manager you should pin the HydrusAPI version. Here is an example using NPM for Hydrus version 637: `npm install hydrusapi@80.637.*`. When downloading you should download the version that best matches your Hydrus version.
 
 Below is a list of Hydrus versions supported under a given API version. Use this list to construct your version string for version pinning.
 

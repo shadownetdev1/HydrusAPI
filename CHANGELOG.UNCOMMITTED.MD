@@ -17,6 +17,7 @@ _Optional notice_
 - HydrusAPI now throws an error on an API version mismatch.
   - This can be overridden using the `api_version_override` api option, but support will not be provided for this use case.
   - HydrusAPI now makes sure that a version check happens first even if the first endpoint called is not `api_version()`.
+- Bumped target Hydrus version to 637
 - GitHub releases now includes a zip file that contain the release
 - Better documentation about version control.
 
