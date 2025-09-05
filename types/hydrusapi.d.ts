@@ -115,6 +115,38 @@ interface SERVICE_TYPE {
 type SERVICE_TYPE_VALUE = ValueOf<SERVICE_TYPE>
 
 /**
+ * * 0 - a file matches search 1
+ * * 1 - both files match search 1
+ * * 2 - one file matches search 1, the other 2
+ */
+interface POTENTIALS_SEARCH_TYPE {
+    /** 0 - one file matches search 1 */
+    A_FILE_MATCHES_SEARCH_ONE: 0,
+    /** 1 - both files match search 1 */
+    BOTH_FILES_MATCH_SEARCH_ONE: 1,
+    /** 2 - one file matches search 1, the other 2 */
+    EACH_FILE_MATCHES_A_SEPARATE_SEARCH: 2,
+}
+
+type POTENTIALS_SEARCH_TYPE_VALUE = ValueOf<POTENTIALS_SEARCH_TYPE>
+
+/**
+ * * 0 - must be pixel duplicates
+ * * 1 - can be pixel duplicates
+ * * 2 - must not be pixel duplicates
+ */
+interface PIXEL_DUPLICATES {
+    /** 0 - must be pixel duplicates */
+    MUST_BE_DUPLICATES: 0,
+    /** 1 - can be pixel duplicates */
+    CAN_BE_DUPLICATES: 1,
+    /** 2 - must not be pixel duplicates */
+    MUST_NOT_BE_DUPLICATES: 2,
+}
+
+type PIXEL_DUPLICATES_VALUE = ValueOf<PIXEL_DUPLICATES>
+
+/**
  * *   1 - File was successfully imported
  * *   2 - File already in database
  * *   3 - File previously deleted
@@ -191,7 +223,7 @@ type PAGE_TYPE = 1|2|3|5|6|7|8|9|10
  */
 type PAGE_STATE = 0|1|2|3
 
-interface RawAPIOptions {
+interface APIOptions {
     /** 
      * If true then we will print out debugging messages;
      * Defaults to false
@@ -204,6 +236,14 @@ interface RawAPIOptions {
      * Defaults to 'http://127.0.0.1:45869'
      */
     address?: string
+    /**
+     * Setting this to a HydrusAPI version will allow usage
+     * when the HydrusAPI API version and Hydrus API version
+     * mismatches.
+     * 
+     * !!! This use case will not be supported
+     */
+    api_version_override?: number
 }
 
 interface api_version_response {
@@ -779,7 +819,7 @@ interface search_files_options extends FileDomainObject {
      * OR predicates are supported! Just nest within the tag list, and it'll be treated like an OR.
      * Example: `[ "skirt", [ "samus aran", "lara croft" ], "system:height > 1000" ]`
      */
-    tags: [RecursiveTagList]
+    tags: RecursiveTagList[]
     /** optional, hexadecimal, the tag domain on which to search, defaults to all my files */
     tag_service_key?: string
     /** optional, bool, whether to search 'current' tags, defaults to `true` */
@@ -1155,6 +1195,133 @@ interface render_options {
     width?: number
     /** Optional; if provided width must also be provided. The height to scale the image to. Doesn't apply to Ugoiras */
     height?: number
+}
+
+interface get_file_relationships_options extends FilesObject, FileDomainObject {
+
+}
+
+interface FileRelationship {
+    /**
+     * `is_king` is a convenience bool for when a file is king
+     * of its own group.
+     */
+    is_king: boolean
+    /**
+     * `king` refers to which file is set as the best of a duplicate group.
+     * If you are doing potential duplicate comparisons,
+     * the kings of your two groups are usually the
+     * ideal representatives, and the 'get some pairs to filter'-style
+     * commands will always select the kings of the various
+     * to-be-compared duplicate groups.
+     *
+     * **It is possible for the king to not be available.**
+     * 
+     * Every group has a king, but if that file has been deleted,
+     * or if the file domain here is limited and the king
+     * is on a different file service, then it may not be available.
+     */
+    king: string
+    /**
+     * `king_is_on_file_domain` lets you know if the king
+     * is on the file domain you set
+     */
+    king_is_on_file_domain: boolean
+    /**
+     * `king_is_local` lets you know if it is on the
+     * hard disk--if `king_is_local=true`,
+     * you can do a `get_files.file()` request on it.
+     * It is generally rare, but you have to deal with the king
+     * being unavailable--in this situation,
+     * your best bet is to just use the file itself as its
+     * own representative.
+     */
+    king_is_local: boolean
+    /** Potential duplicates; An array of 0 or more hashes */
+    "0": string[]
+    /** False positives; An array of 0 or more hashes */
+    "1": string[]
+    /** Alternates; An array of 0 or more hashes */
+    "3": string[]
+    /** Duplicates; An array of 0 or more hashes */
+    "8": string[]
+}
+
+interface get_file_relationships_response extends api_version_response {
+    /** key is the a file hash */
+    file_relationships: {[key: string]: FileRelationship}
+}
+
+interface get_potentials_options extends FileDomainObject {
+    /**
+     * Optional; A service key;
+     * Defaults to the `all known tags` service
+     */
+    tag_service_key_1?: string
+    /**
+     * Optional; A list of tags to search for;
+     * Defaults to `system:everything`
+     */
+    tags_1?: RecursiveTagList[]
+    /**
+     * Optional; A service key;
+     * Defaults to the `all known tags` service
+     */
+    tag_service_key_2?: string
+    /**
+     * Optional; A list of tags to search for;
+     * Defaults to `system:everything`
+     */
+    tags_2?: RecursiveTagList[]
+    /**
+     * Optional; Defaults to 0
+     * * 0 - one file matches search 1
+     * * 1 - both files match search 1
+     * * 2 - one file matches search 1, the other 2
+     */
+    potentials_search_type?: POTENTIALS_SEARCH_TYPE_VALUE
+    /**
+     * Optional; Defaults to 1
+     * * 0 - must be pixel duplicates
+     * * 1 - can be pixel duplicates
+     * * 2 - must not be pixel duplicates
+     */
+    pixel_duplicates?: PIXEL_DUPLICATES_VALUE
+    /**
+     * Optional;
+     * The max 'search distance' of the pairs; Defaults to 4
+     */
+    max_hamming_distance?: number
+}
+
+interface get_potentials_count_options extends get_potentials_options {
+    
+}
+
+interface get_potentials_count_response extends api_version_response {
+    potential_duplicates_count: number
+}
+
+interface get_potential_pairs_options extends get_potentials_options {
+    /**
+     * Optional; How many pairs to get in a batch;
+     * Defaults to whatever is set in Hydrus' settings
+     */
+    max_num_pairs?: number
+}
+
+interface get_potential_pairs_response extends api_version_response {
+    /**
+     * A list of file hash pairs.
+     * 
+     * These file hashes are all kings that are available in
+     * the given file domain.
+     * Treat it as the client filter does,
+     * where you fetch batches to process one after another.
+     * I expect to add grouping/sorting options in the near future.
+     * 
+     */
+    potential_duplicate_pairs: [[string, string]]
 }
 
 interface get_pending_counts_response extends api_version_response {

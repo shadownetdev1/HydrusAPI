@@ -29,7 +29,7 @@ module.exports = class API{
     /** What API version do we support */
     VERSION = 80
     /** What version of Hydrus are we testing against */
-    HYDRUS_TARGET_VERSION = 636
+    HYDRUS_TARGET_VERSION = 637
 
     /**
      * These are the permissions that the client can have
@@ -122,15 +122,47 @@ module.exports = class API{
         SERVER_ADMIN: 99,
     })
 
+    /** @type {POTENTIALS_SEARCH_TYPE} */
+    POTENTIALS_SEARCH_TYPE = Object.freeze({
+        /** 0 - one file matches search 1 */
+        ONE_FILE_MATCHES_SEARCH_ONE: 0,
+        /** 1 - both files match search 1 */
+        BOTH_FILES_MATCH_SEARCH_ONE: 1,
+        /** 2 - one file matches search 1, the other 2 */
+        EACH_FILE_MATCHES_A_SEPARATE_SEARCH: 2,
+    })
+
+    /** @type {PIXEL_DUPLICATES} */
+    PIXEL_DUPLICATES = Object.freeze({
+        /** 0 - must be pixel duplicates */
+        MUST_BE_DUPLICATES: 0,
+        /** 1 - can be pixel duplicates */
+        CAN_BE_DUPLICATES: 1,
+        /** 2 - must not be pixel duplicates */
+        MUST_NOT_BE_DUPLICATES: 2,
+    })
+
+    /**
+     * @type {number}
+     * Setting this to a HydrusAPI version will allow usage
+     * when the HydrusAPI API version and Hydrus API version
+     * mismatches.
+     * 
+     * !!! This use case will not be supported
+     */
+    api_version_override
+
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
-     * @param {RawAPIOptions} [options={}] Extra options
+     * @param {APIOptions} [options={}] Extra options
      */
     constructor(options={}) {
         this.access_key = options?.access_key ?? ''
         this.address = options?.address ?? 'http://127.0.0.1:45869'
         this.debug = options?.debug ?? false
+        this.api_version_override = options?.api_version_override
+        this._first_successful_versioning = false
     }
 
     /**
@@ -147,6 +179,10 @@ module.exports = class API{
         // region: call
         if (this.debug) {
             console.log(`ENDPOINT: ${o.endpoint}`)
+        }
+        
+        if (o.endpoint !== '/api_version' && !this._first_successful_versioning) {
+            await this.api_version()
         }
 
         o.headers = o.headers ?? new Headers()
@@ -251,10 +287,36 @@ module.exports = class API{
      */
     async api_version(return_as) {
         // region: api_version
-        return this.call({
-            endpoint: '/api_version',
-            return_as: return_as
-        })
+        if (
+            this._first_successful_versioning ||
+            (return_as && return_as !== 'json')
+        ) {
+            return await this.call({
+                endpoint: '/api_version',
+                return_as: return_as
+            })
+        } else {
+            /** @type {api_version_response} */
+            const json = await this.call({
+                endpoint: '/api_version',
+                return_as: return_as
+            })
+            if (json.hydrus_version !== this.HYDRUS_TARGET_VERSION) {
+                console.warn(`This version of HydrusAPI is targetting Hydrus version '${this.HYDRUS_TARGET_VERSION}', but you are currently connected to version '${json.hydrus_version}'.`)
+            }
+            if (json.version !== this.VERSION) {
+                if (!this.api_version_override || this.api_version_override !== json.version) {
+                    throw new Error(
+                        `This version of HydrusAPI is made for Hydrus API version '${this.VERSION}', but you attempted to connect to version '${json.version}'. This is not officially supported. We suggest finding a version of HydrusAPI that matches your Hydrus API version. If you still want to continue then pass 'api_version_override: ${json.version}' in the api options when initializing. NO support will be provided for this use case.`
+                    )
+                } else {
+                    console.warn(`'api_version_override' is set to '${this.api_version_override}'. No support will be provided for this use case.`)
+                }
+            }
+            this._first_successful_versioning = true
+            return json
+        }
+        
     }
 
     /**
@@ -1337,7 +1399,189 @@ module.exports = class API{
      */
     get manage_file_relationships() {
         return {
-            // TODO
+    /**
+     * Get the current relationships for one or more files.
+     * 
+     * `king` refers to which file is set as the best of a duplicate
+     * group. If you are doing potential duplicate comparisons,
+     * the kings of your two groups are usually the ideal
+     * representatives, and the 'get some pairs to filter'-style
+     * commands will always select the kings of the various
+     * to-be-compared duplicate groups.
+     * 
+     * `is_king` is a convenience bool for when a file is king
+     * of its own group.
+     * 
+     * **It is possible for the king to not be available.**
+     * 
+     * Every group has a king, but if that file has been deleted,
+     * or if the file domain here is limited and the king
+     * is on a different file service, then it may not be available.
+     * The regular hydrus potential duplicate pair commands always
+     * look at kings, so a group like this will not contribute
+     * to any 'potential duplicate pairs' count or filter fetch
+     * and so on. 
+     * 
+     * If you need to do your own clever manual lookups,
+     * `king_is_on_file_domain` lets you know if the king is on
+     * the file domain you set,
+     * and `king_is_local` lets you know if it is on the
+     * hard disk--if `king_is_local=true`,
+     * you can do a `get_files.file()` request on it.
+     * 
+     * It is generally rare, but you have to deal with the king
+     * being unavailable--in this situation,
+     * your best bet is to just use the file itself as its own
+     * representative.
+     * 
+     * All the relationships you get are filtered by the file domain.
+     * If you set the file domain to 'all known files',
+     * you will get every relationship a file has,
+     * including all deleted files,
+     * which is often less useful than you would think.
+     * The default, 'all my files', is usually most useful.
+     * 
+     * A file that has no duplicates is considered to be in
+     * a duplicate group of size 1 and thus is always its own king.
+     * 
+     * The numbers are from a duplicate status enum, as so:
+     * * 0 - potential duplicates
+     * * 1 - false positives
+     * * 3 - alternates
+     * * 8 - duplicates
+     * 
+     * Note that because of JSON constraints,
+     * these are the string versions of the integers since they
+     * are Object keys.
+     * 
+     * All the hashes given here are in 'all my files',
+     * i.e. not in the trash.
+     * A file may have duplicates that have long been deleted, but,
+     * like the null king above, they will not show here.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_file_relationships
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_file_relationships--idmanage_file_relationships_get_file_relationships-
+     * @param {get_file_relationships_options} options
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_file_relationships_response}
+     */
+    get_file_relationships: async(options, return_as) => {
+        // region: manage_file_relationships/get_file_relationships
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_file_relationships',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Get the count of remaining potential duplicate pairs
+     * in a particular search domain.
+     * Exactly the same as the counts you see in the duplicate
+     * processing page.
+     * 
+     * The arguments here reflect the same options as you see in
+     * duplicate page sidebar and auto-resolution system that search
+     * for potential duplicate pairs.
+     * tag_service_key_x and tags_x work the same as
+     * `get_files.search_files()`.
+     * The _2 variants are only useful if the
+     * `potentials_search_type` is `2`.
+     * 
+     * `potentials_search_type` is
+     * defined by `POTENTIALS_SEARCH_TYPE`
+     * 
+     * `pixel_duplicates` is
+     * defined by `PIXEL_DUPLICATES`
+     * 
+     * The max_hamming_distance is the same 'search distance'
+     * you see in the Client UI.
+     * A higher number means more speculative 'similar files' search.
+     * If pixel_duplicates is set to
+     * `PIXEL_DUPLICATES.MUST_BE_DUPLICATES` (0),
+     * then max_hamming_distance is obviously ignored.
+     * 
+     * If you confirm that a pair of potentials are duplicates,
+     * this may transitively collapse other potential pairs
+     * and decrease the count by more than 1.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_potentials_count
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potentials_count--idmanage_file_relationships_get_potentials_count-
+     * @param {get_potentials_count_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_potentials_count_response}
+     */
+    get_potentials_count: async(options, return_as) => {
+        // region: manage_file_relationships/get_potentials_count
+        options = options ?? {}
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_potentials_count',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
+
+    /**
+     * Get some potential duplicate pairs for a filtering workflow. Exactly the same as the 'duplicate filter' in the duplicate processing page.
+     * 
+     * The search arguments work the same
+     * as `manage_file_relationships.get_potentials_count()`.
+     * 
+     * `max_num_pairs` is simple and just caps how many pairs you get.
+     * 
+     * Returns a list of file hash pairs.
+     * These file hashes are all kings that are available in
+     * the given file domain.
+     * Treat it as the client filter does,
+     * where you fetch batches to process one after another.
+     * I expect to add grouping/sorting options in the near future.
+     * 
+     * You may see the same file more than once in each batch,
+     * and if you expect to process and commit these as a batch,
+     * just like the filter does,
+     * you would be wise to skip through pairs that are implicated
+     * by a previous decision.
+     * When considering whether to display the 'next' pair,
+     * you should test:
+     * * In the current batch of decisions,
+     * has either file been manually deleted by the user?
+     * * In the current batch of decisions,
+     * has either file been adjudicated as the B in
+     * a 'A is better than B' or 'A is the same as B'?
+     * 
+     * If either is true, you should skip the pair, since,
+     * after your current decisions are committed,
+     * that file is no longer in any potential duplicate pairs
+     * in the search you gave.
+     * The respective file is either no longer in the file domain,
+     * or it has been merged into another group
+     * (that file is no longer a king and either the potential pair
+     * no longer exists via transitive collapse or, rarely,
+     * hydrus can present you with a better comparison pair
+     * if you ask for a new batch).
+     * 
+     * You will see significantly fewer than `max_num_pairs` as you
+     * get close to the last available pairs,
+     * and when there are none left, you will get an empty list.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_potential_pairs
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potential_pairs--idmanage_file_relationships_get_potential_pairs-
+     * @param {get_potential_pairs_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_potential_pairs_response}
+     */
+    get_potential_pairs: async(options, return_as) => {
+        // region: manage_file_relationships/get_potential_pairs
+        options = options ?? {}
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_potential_pairs',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
         }
     }
 
@@ -1394,7 +1638,7 @@ module.exports = class API{
      * that the user may pend more just after the upload is complete,
      * so do not wait forever for it to fall back down to 0.
      * 
-     * !!! Due to the nature of this endpoint it tested
+     * !!! Due to the nature of this endpoint it is not tested
      * 
      * POST Endpoint: /manage_services/commit_pending
      * 
@@ -1418,7 +1662,7 @@ module.exports = class API{
      * This clears all pending content for a service,
      * just like if you click 'forget' in the menu.
      * 
-     * !!! Due to the nature of this endpoint it tested
+     * !!! Due to the nature of this endpoint it is not tested
      * 
      * POST Endpoint: /manage_services/forget_pending
      * 
@@ -1821,6 +2065,12 @@ module.exports = class API{
         }
     }
 
+    /**
+     * These are functions that add useful features that don't exist
+     * on any endpoint. This allows us to add functionality while
+     * keeping the usage for the endpoint methods close to the same
+     * as the raw api.
+     */
     get tools () {
         return {
     /**

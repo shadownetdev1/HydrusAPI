@@ -84,6 +84,10 @@ jobs:
       # copy hydrusapi.js to hydrusapi.${{ github.ref_name }}.js
       - run: cp -f hydrusapi.js hydrusapi.${{ github.ref_name }}.js
 
+      # copy types/hydrusapi.d.ts to hydrusapi.${{ github.ref_name }}.d.ts
+      - run: cp -f types/hydrusapi.d.ts hydrusapi.${{ github.ref_name }}.d.ts
+      # zip release files
+      - run: zip hydrusapi.${{ github.ref_name }}.all.zip hydrusapi.${{ github.ref_name }}.js hydrusapi.${{ github.ref_name }}.min.js hydrusapi.${{ github.ref_name }}.d.ts
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
@@ -95,6 +99,8 @@ jobs:
           files: |
             hydrusapi.${{ github.ref_name }}.js
             hydrusapi.${{ github.ref_name }}.min.js
+            hydrusapi.${{ github.ref_name }}.d.ts
+            hydrusapi.${{ github.ref_name }}.all.zip
 
       # Publish to NPM
       - name: Publish to NPM

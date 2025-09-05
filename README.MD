@@ -4,7 +4,7 @@
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
-[![Tested with Hydrus version 636](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-636%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v636)
+[![Tested with Hydrus version 637](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-637%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v637)
 [![GitHub reported bug count](https://img.shields.io/github/issues-search?query=repo%3Ashadownetdev1%2FHydrusAPI%20is%3Aopen%20label%3Abug&label=Reported%20bugs)](https://github.com/shadownetdev1/HydrusAPI/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/shadownetdev1/HydrusAPI)
 [![npm bundle size](https://img.shields.io/bundlephobia/min/hydrusapi?label=Minified%20Size)](https://github.com/shadownetdev1/HydrusAPI/releases)
@@ -25,13 +25,19 @@ As of currently most Hydrus API endpoints are implemented and all the API endpoi
 
 ## Installation
 
-If you are using npm or an alternative package manager then installation is as simple as `npm install hydrusapi` or `[package manager] install hydrusapi`.
+### Package manager users
+
+If you are using npm (or an alternative) package manager then installation is as simple as `npm install hydrusapi@80.637.*`.
+
+You should always pin the version of HydrusAPI that you are using. See [versioning](#versioning) below for more information.
+
+If using an alternative package manager you should replace `npm install` with your package mangagers install command.
+
+### Other users
 
 For other users you can download from the [releases page](https://github.com/shadownetdev1/HydrusAPI/releases).
 
 ## Documentation and Usage
-
-We highly suggest making sure that at least the Hydrus API version if not the Hydrus Client version matches the version of HydrusAPI that you are using.
 
 HydrusAPI currently doesn't have any documentation or usage instructions. Your best option at the moment is to look at how the [tests](tests/api.test.mjs) are implemented.
 
@@ -43,7 +49,19 @@ We do not provide a way support us monetarily (at this time). We suggest support
 
 ## Versioning
 
-HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusAPI version\]. This works well since all our endpoints should match a given Hydrus API/Client version pair. We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
+HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusAPI version\].
+
+This works well since all our endpoints should match a given Hydrus API/Client version pair.
+
+We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
+
+When using a package manager you should pin the HydrusAPI version. Here is an example using NPM for Hydrus version 637: `npm install hydrusapi@80.637.*`. When downloading you should download the version that best matches your Hydrus version.
+
+Below is a list of Hydrus versions supported under a given API version. Use this list to construct your version string for version pinning.
+
+- API Version: 80
+  - Hydrus versions: 636+
+    - API version 80 should be valid as far back as Hydrus version 622, but HydrusAPI only officially supports (and has been tested with) 636 and newer. If you want to use an older client then you will have to use HydrusAPI version 80.636.* with it.
 
 ## Thanks and Attribution
 
@@ -53,15 +71,15 @@ Hydrus version, reported bugs, issue count, and minified size badges provided by
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
-[Hummingbird at feeder image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder).
+[Hummingbird at feeder image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/hummingbird-at-feeder-1754669486LJt.jpg) provided by [Paul Brennan](https://www.zazzle.com/store/paul68) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=711307&picture=hummingbird-at-feeder).
 
-[Tree image](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree).
+[Tree image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/tree-1332664495LMO.jpg) provided by [George Hodan](https://www.facebook.com/hodanpictures) on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=20740&picture=tree).
 
-[Tokyo travel image (used to test url imports)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage).
+[Tokyo travel image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/japan-travel-poster-vintage-1590660773y1R.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=339146&picture=japan-travel-poster-vintage).
 
-[Venice travel image (used to test tagging and rating)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
+[Venice travel image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/venice-italy-travel-poster-15626778587Sq.jpg) provided by Karen Arnold on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=298999&picture=venice-italy-travel-poster).
 
-[Seascape Sunset image (used to test notes and timestamps)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
+[Seascape Sunset image (used in testing)](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/main/tests/files/seascape-sunset-1500478633cRS.jpg) provided by Jean Beaufort on [PublicDomainPictures.net](https://www.publicdomainpictures.net/en/view-image.php?image=222856&picture=seascape-sunset).
 
 ## License
 
@@ -114,9 +132,9 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/get_files/thumbnail_path`
 - [x] `/get_files/local_file_storage_locations`
 - [x] `/get_files/render`
-- [ ] `/manage_file_relationships/get_file_relationships`
-- [ ] `/manage_file_relationships/get_potentials_count`
-- [ ] `/manage_file_relationships/get_potential_pairs`
+- [x] `/manage_file_relationships/get_file_relationships`
+- [x] `/manage_file_relationships/get_potentials_count`
+- [x] `/manage_file_relationships/get_potential_pairs`
 - [ ] `/manage_file_relationships/get_random_potentials`
 - [ ] `/manage_file_relationships/remove_potentials`
 - [ ] `/manage_file_relationships/set_file_relationships`
