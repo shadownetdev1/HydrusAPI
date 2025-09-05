@@ -1638,7 +1638,7 @@ module.exports = class API{
      * that the user may pend more just after the upload is complete,
      * so do not wait forever for it to fall back down to 0.
      * 
-     * !!! Due to the nature of this endpoint it tested
+     * !!! Due to the nature of this endpoint it is not tested
      * 
      * POST Endpoint: /manage_services/commit_pending
      * 
@@ -1662,7 +1662,7 @@ module.exports = class API{
      * This clears all pending content for a service,
      * just like if you click 'forget' in the menu.
      * 
-     * !!! Due to the nature of this endpoint it tested
+     * !!! Due to the nature of this endpoint it is not tested
      * 
      * POST Endpoint: /manage_services/forget_pending
      * 
