@@ -18,7 +18,7 @@ _Optional notice_
 
 ### Added
 
-- N/A
+- Implemented `manage_file_relationships.get_random_potentials()`
 
 ### Removed
 

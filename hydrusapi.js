@@ -1582,6 +1582,45 @@ module.exports = class API{
             return_as: return_as
         })
     },
+
+    /**
+     * Get some random potentially duplicate file hashes.
+     * Exactly the same as the 'show some random potential dupes'
+     * button in the duplicate processing page.
+     * 
+     * The arguments work the same as
+     * `manage_file_relationships.get_potentials_count()`,
+     * with the caveat that `potentials_search_type`
+     * has special logic:
+     *
+     * * 0 - first file matches search 1
+     * * 1 - all files match search 1
+     * * 2 - first file matches search 1, the others 2
+     *
+     * Essentially, the first hash is the 'master' to which the
+     * others are paired.
+     * The other files will include every matching file.
+     * 
+     * These returned hashes will all be kings.
+     * If there are no potential duplicate groups in the search,
+     * this returns an empty list.
+     * 
+     * GET Endpoint: /manage_file_relationships/get_random_potentials
+     * 
+     * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_random_potentials--idmanage_file_relationships_get_random_potentials-
+     * @param {get_random_potentials_options} [options] Optional
+     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {get_random_potentials_response}
+     */
+    get_random_potentials: async(options, return_as) => {
+        // region: manage_file_relationships/get_random_potentials
+        options = options ?? {}
+        return await this.call({
+            endpoint: '/manage_file_relationships/get_random_potentials',
+            queries: optionsToURLSearchParams(options),
+            return_as: return_as
+        })
+    },
         }
     }
 
