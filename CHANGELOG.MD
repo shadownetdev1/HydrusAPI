@@ -7,6 +7,17 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.638.7](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.638.7) - 2025-8-11
+
+### Changed
+
+- Bumped target Hydrus version to 638
+
+### Added
+
+- Implemented `manage_file_relationships.get_random_potentials()`
+
+
 ## [80.637.6](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.637.6) - 2025-8-5
 
 ### Changed
