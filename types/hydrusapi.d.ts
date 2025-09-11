@@ -1324,6 +1324,15 @@ interface get_potential_pairs_response extends api_version_response {
     potential_duplicate_pairs: [[string, string]]
 }
 
+interface get_random_potentials_options extends get_potentials_options {
+
+}
+
+interface get_random_potentials_response extends api_version_response {
+    /** A list of zero or more hashes */
+    random_potential_duplicate_hashes: string[]
+}
+
 interface get_pending_counts_response extends api_version_response {
     /**
      * key is a service key;

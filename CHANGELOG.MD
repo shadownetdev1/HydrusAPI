@@ -9,16 +9,6 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 ## [80.637.6](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.637.6) - 2025-8-5
 
-<!--
-    DO NOT change the insert_point and version lines above.
-    This note, "_Optional notice_" (if unchanged), and any unused groups should be removed before release.
-    Reference https://common-changelog.org/ for formatting.
-    Make sure to attribute all authors. Ideally by linking to their GitHub profile with their name as the text.
-    [shadownetdev1](https://github.com/shadownetdev1) for example.
--->
-
-_Optional notice_
-
 ### Changed
 
 - HydrusAPI now throws an error on an API version mismatch.
@@ -34,14 +24,6 @@ _Optional notice_
 - Implemented `manage_file_relationships.get_potentials_count()`
 - Implemented `manage_file_relationships.get_potential_pairs()`
 - `types/hydrusapi.d.ts` is now packaged for GitHub releases
-
-### Removed
-
-- N/A
-
-### Fixed
-
-- N/A
 
 
 ## [80.636.5](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.636.5) - 2025-7-30
@@ -92,10 +74,6 @@ _First official release_
 - Implemented `manage_database.lock_on()` and `manage_database.lock_off()`
 - Implemented `manage_database.mr_bones()`
 - Implemented `manage_database.get_client_options()`
-
-### Fixed
-
-- N/A
 
 
 ## [80.635.2-alpha](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.635.2-alpha) - 2025-7-27
