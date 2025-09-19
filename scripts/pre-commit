@@ -12,6 +12,9 @@ git reset —-hard
 npx vitest run --coverage
 status=$?
 
+# build type defs
+npm run type-defs
+
 # Stage updated coverage report files
 git add docs/coverage
 

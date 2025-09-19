@@ -25,7 +25,7 @@ jobs:
       # set version in package.json
       - run: npm version --no-git-tag-version --allow-same-version ${{ github.ref_name }}
       # Handle changelogs
-      - run: npm install --save-dev fs-jetpack
+      - run: npm install --save-dev fs-jetpack@5.1.0
       - run: node scripts/update_changelog.mjs ${{ github.ref_name }}
 
       - name: Publish Statements Badge
@@ -78,16 +78,23 @@ jobs:
           branch: main
           commit_message: Updated changelogs for release
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD package.json'
+      # create type def files
+      - run: npm install --save-dev typescript@5.9.2
+      - run: npm run type-defs
       # minify index.js and save as hydrusapi.${{ github.ref_name }}.min.js
-      - run: npm install --save-dev @node-minify/cli @node-minify/uglify-js
+      - run: npm install --save-dev @node-minify/cli@9.0.2 @node-minify/uglify-js@9.0.1
       - run: npx node-minify --compressor uglify-js --input 'index.js' --output 'hydrusapi.${{ github.ref_name }}.min.js'
       # copy index.js to hydrusapi.${{ github.ref_name }}.js
       - run: cp -f index.js hydrusapi.${{ github.ref_name }}.js
 
       # copy types/index.d.ts to hydrusapi.${{ github.ref_name }}.d.ts
       - run: cp -f types/index.d.ts hydrusapi.${{ github.ref_name }}.d.ts
+      # TODO: edit the first line of hydrusapi.${{ github.ref_name }}.d.ts to point to hydrusapi.types.${{ github.ref_name }}.d.ts
+      # copy types/types.d.ts to hydrusapi.types.${{ github.ref_name }}.d.ts
+      - run: cp -f types/types.d.ts hydrusapi.types.${{ github.ref_name }}.d.ts
       # zip release files
-      - run: zip hydrusapi.${{ github.ref_name }}.all.zip hydrusapi.${{ github.ref_name }}.js hydrusapi.${{ github.ref_name }}.min.js hydrusapi.${{ github.ref_name }}.d.ts
+      # The files in this zip should mirror the files property in `package.json`
+      - run: zip hydrusapi.${{ github.ref_name }}.zip types CHANGELOG.MD index.js liscense.txt tsconfig.json README.MD
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
@@ -100,7 +107,8 @@ jobs:
             hydrusapi.${{ github.ref_name }}.js
             hydrusapi.${{ github.ref_name }}.min.js
             hydrusapi.${{ github.ref_name }}.d.ts
-            hydrusapi.${{ github.ref_name }}.all.zip
+            hydrusapi.types.${{ github.ref_name }}.d.ts
+            hydrusapi.${{ github.ref_name }}.zip
 
       # Publish to NPM
       - name: Publish to NPM
