@@ -1,4 +1,8 @@
 
+/**
+ * @import HydrusAPI from './../types/types.d.ts'
+ */
+
 const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567'
 // WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
 // WARNING: Some of these tests are destructive and will cause data loss.

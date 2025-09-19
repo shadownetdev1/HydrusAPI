@@ -1,5 +1,9 @@
 
 /**
+ * @import HydrusAPI from './types/types.d.ts'
+ */
+
+/**
  * Takes an options object and convert it to
  * an URLSearchParams instance
  * making sure that all lists and objects are

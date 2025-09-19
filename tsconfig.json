@@ -63,6 +63,6 @@
     "./scripts/",
     "./node_modules/",
     "./tests/hydrus/",
-    "./tests/deep-object-diff-fixed/"
+    "./tests/deep-object-diff-fixed/" // Sadly we cannot actually exclude this folder due to us importing it in `index.test.mjs`
   ],
 }
