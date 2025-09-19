@@ -1,0 +1,4 @@
+[submodule "tests/deep-object-diff-fixed"]
+	path = tests/deep-object-diff-fixed
+	url = https://github.com/AlMaVizca/deep-object-diff.git
+	branch = deleted-91
