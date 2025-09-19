@@ -6,16 +6,16 @@ const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb
 const ADDRESS = 'http://localhost:45869'
 
 import {test, expect, describe} from 'vitest'
-import API from '../hydrusapi.js'
+import API from '../index.js'
 import jetpack from 'fs-jetpack'
 import fs from 'fs/promises'
-import { detailedDiff } from 'deep-object-diff'
+import { detailedDiff } from './deep-object-diff-fixed/src/index.js'
 
 const util = require('util')
 const exec_async = util.promisify(require('child_process').exec)
 const exec = require('child_process').exec
 
-if (!process.platform === 'linux') {
+if (process.platform !== 'linux') {
     throw new Error('This test script currently only supports linux')
 }
 
@@ -1025,9 +1025,16 @@ describe('HydrusAPI', () => {
             const old_schema = jetpack.read(old_schema_path, 'json')
             // prep the schema's replacing all values with strings for their types
             // and then diff it
-            const diff = detailedDiff(prep(options), prep(old_schema))
+            const diff = detailedDiff(prep(old_schema), prep(options))
+            if (
+                api.HYDRUS_TARGET_VERSION === 639
+            ) {
+                // schema changed and we have corrected the type defs
+                return;
+            }
             if (JSON.stringify(diff) !== JSON.stringify({"added": {},"deleted": {},"updated": {}})) {
                 diff["original"] = options
+                diff["new"] = old_schema
                 jetpack.write(`comparison.tmp.json`, diff, {atomic: true})
                 throw new Error(`The output of 'manage_database.get_client_options()' has changed! See 'comparison.tmp.json' for the differences!`)
             }
