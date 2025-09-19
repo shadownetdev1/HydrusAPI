@@ -20,6 +20,7 @@
     "declaration": true,
     "declarationMap": false,
     "emitDeclarationOnly": true,
+    "noEmitOnError": false,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,

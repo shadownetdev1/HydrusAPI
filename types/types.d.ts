@@ -937,7 +937,7 @@ declare namespace HydrusAPI {
          */
         original_mime?: string
         filetype_human?: string
-        filetype_enum?: FILETYPE_ENUM  // TODO: create this type
+        filetype_enum?: "FILETYPE_ENUM"  // TODO: create this type
         ext?: string
         width?: number
         height?: number
@@ -1056,7 +1056,7 @@ declare namespace HydrusAPI {
              * 
              * values are a list of tags
              */
-            storage_tags: {[key: "0"|"1"|"2"|"3"]: string[]}
+            storage_tags: {"0": string[], "1": string[], "2": string[], "3": string[]}
             /**
              * keys are "0", "1", "2", or "3" where:
              * * "0" - current
@@ -1066,7 +1066,7 @@ declare namespace HydrusAPI {
              * 
              * values are a list of tags
              */
-            display_tags: {[key: "0"|"1"|"2"|"3"]: string[]}
+            display_tags: {"0": string[], "1": string[], "2": string[], "3": string[]}
         }}
         file_viewing_statistics?: FileViewingStatistics[]
         /** Only exists if `detailed_url_information` is `true` */
