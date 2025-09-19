@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.32% </span>
+                <span class="strong">96.34% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1993/2069</span>
+                <span class='fraction'>2003/2079</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.32% </span>
+                <span class="strong">96.34% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1993/2069</span>
+                <span class='fraction'>2003/2079</span>
             </div>
         
             
@@ -2222,7 +2222,17 @@
 <a name='L2157'></a><a href='#L2157'>2157</a>
 <a name='L2158'></a><a href='#L2158'>2158</a>
 <a name='L2159'></a><a href='#L2159'>2159</a>
-<a name='L2160'></a><a href='#L2160'>2160</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L2160'></a><a href='#L2160'>2160</a>
+<a name='L2161'></a><a href='#L2161'>2161</a>
+<a name='L2162'></a><a href='#L2162'>2162</a>
+<a name='L2163'></a><a href='#L2163'>2163</a>
+<a name='L2164'></a><a href='#L2164'>2164</a>
+<a name='L2165'></a><a href='#L2165'>2165</a>
+<a name='L2166'></a><a href='#L2166'>2166</a>
+<a name='L2167'></a><a href='#L2167'>2167</a>
+<a name='L2168'></a><a href='#L2168'>2168</a>
+<a name='L2169'></a><a href='#L2169'>2169</a>
+<a name='L2170'></a><a href='#L2170'>2170</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -4350,6 +4360,11 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
@@ -4368,6 +4383,11 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -6450,7 +6470,7 @@ module.exports = class API{
      */
     mr_bones: async(options = {}, return_as) =&gt; {
         // region: manage_database/mr_bones
-        return /** @type {Promise&lt;boolean&gt;} */ (await this.call({
+        return /** @type {Promise&lt;HydrusAPI.mr_bones_response&gt;} */ (await this.call({
             endpoint: '/manage_database/mr_bones',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
@@ -6506,12 +6526,17 @@ module.exports = class API{
      * @returns {Promise&lt;HydrusAPI.ServiceObjectWithKey[]&gt;}
      */
     get_services_of_type: async(service_type=11) =&gt; {
+        /** @type {HydrusAPI.ServiceObjectWithKey[]} */
         const matches = []
         const services = (await this.get_services()).services
-        for (const [key, value] of Object.entries(services)) {
+        /** @type {string} */
+        let key
+        /** @type {HydrusAPI.ServiceObject &amp; {service_key?: string}} */
+        let value
+        for ([key, value] of Object.entries(services)) {
             if (value.type === service_type) {
                 value.service_key = key
-                matches.push(value)
+                matches.push(/** @type {HydrusAPI.ServiceObjectWithKey} */ (value))
             }
         }
         return matches
@@ -6527,12 +6552,17 @@ module.exports = class API{
      * @returns {Promise&lt;HydrusAPI.ServiceObjectWithKey[]&gt;}
      */
     get_services_of_name: async(name) =&gt; {
+        /** @type {HydrusAPI.ServiceObjectWithKey[]} */
         const matches = []
         const services = (await this.get_services()).services
-        for (const [key, value] of Object.entries(services)) {
+        /** @type {string} */
+        let key
+        /** @type {HydrusAPI.ServiceObject &amp; {service_key?: string}} */
+        let value
+        for ([key, value] of Object.entries(services)) {
             if (value.name === name) {
                 value.service_key = key
-                matches.push(value)
+                matches.push(/** @type {HydrusAPI.ServiceObjectWithKey} */ (value))
             }
         }
         return matches
@@ -6547,7 +6577,7 @@ module.exports = class API{
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-09-19T16:13:42.654Z
+                at 2025-09-19T17:20:47.104Z
             </div>
         <script src="prettify.js"></script>
         <script>

@@ -329,9 +329,7 @@ declare namespace HydrusAPI {
         note: string
     }
 
-    interface delete_files_options extends FilesObject {
-        /** A local file domain; Defaults to 'all my files */
-        file_domain?: string
+    interface delete_files_options extends FilesObject, FileDomainObject {
         /** An optional reason for the file deletion */
         reason?: string
     }
@@ -961,7 +959,7 @@ declare namespace HydrusAPI {
         /** Duration is in milliseconds. Can be an int or a float */
         duration?: number
         /** float if `include_milliseconds` is `true`, otherwise an int */
-        time_modified?: number
+        time_modified: number
         /**
          * key is a domain or "local"
          * value is a float if `include_milliseconds` is `true`, otherwise an int
