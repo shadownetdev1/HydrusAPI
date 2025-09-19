@@ -89,9 +89,9 @@ jobs:
 
       # copy types/index.d.ts to hydrusapi.${{ github.ref_name }}.d.ts
       - run: cp -f types/index.d.ts hydrusapi.${{ github.ref_name }}.d.ts
-      # TODO: edit the first line of hydrusapi.${{ github.ref_name }}.d.ts to point to hydrusapi.types.${{ github.ref_name }}.d.ts
-      # copy types/types.d.ts to hydrusapi.types.${{ github.ref_name }}.d.ts
-      - run: cp -f types/types.d.ts hydrusapi.types.${{ github.ref_name }}.d.ts
+      # TODO: edit the last line of hydrusapi.${{ github.ref_name }}.d.ts to point to hydrusapi.${{ github.ref_name }}.types.d.ts
+      # copy types/types.d.ts to hydrusapi.${{ github.ref_name }}.types.d.ts
+      - run: cp -f types/types.d.ts hydrusapi.${{ github.ref_name }}.types.d.ts
       # zip release files
       # The files in this zip should mirror the files property in `package.json`
       - run: zip hydrusapi.${{ github.ref_name }}.zip types CHANGELOG.MD index.js liscense.txt README.MD
@@ -107,7 +107,7 @@ jobs:
             hydrusapi.${{ github.ref_name }}.js
             hydrusapi.${{ github.ref_name }}.min.js
             hydrusapi.${{ github.ref_name }}.d.ts
-            hydrusapi.types.${{ github.ref_name }}.d.ts
+            hydrusapi.${{ github.ref_name }}.types.d.ts
             hydrusapi.${{ github.ref_name }}.zip
 
       # Publish to NPM
