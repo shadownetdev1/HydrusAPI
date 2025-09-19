@@ -7,6 +7,20 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.639.8](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.8) - 2025-8-19
+
+__Type definitions should actually work now__
+
+### Changed
+
+- Bumped target Hydrus Network version to 639
+- Filesystem structure
+
+### Fixed
+
+- Type definitions should work now
+
+
 ## [80.638.7](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.638.7) - 2025-8-11
 
 ### Changed
