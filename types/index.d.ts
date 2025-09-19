@@ -1,4 +1,4 @@
-import HydrusAPI from "./types.d.ts";
+import type HydrusAPI from "./types.d.ts";
 export = API;
 declare class API {
     /**
