@@ -1936,7 +1936,7 @@ module.exports = class API{
      * * Lock and unlock the database
      * * Force a commit
      * * Get statistics from Mr. Bones
-     * * Get all of Hydrus Client's settings
+     * * Get all of Hydrus Network's client settings
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-the-database
      */

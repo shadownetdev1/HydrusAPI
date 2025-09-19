@@ -249,7 +249,7 @@ declare namespace HydrusAPI {
     interface api_version_response {
         /** The Hydrus API version */
         version: number
-        /** The Hydrus client/server's version */
+        /** The Hydrus Network's client version */
         hydrus_version: number
     }
 

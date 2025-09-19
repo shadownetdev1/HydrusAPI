@@ -993,8 +993,8 @@ describe('HydrusAPI', () => {
         expect(bones.total_duplicate_files).toBeTypeOf('number')
 
         // test get_client_options
-        // !!! While this endpoint's response will be type defined it will not be documented or tested due to its unstable nature
-        // !!! Expect the results of this endpoint to change with each Hydrus client version
+        // !!! While this endpoint's response will be type defined it will not be documented or tested due to its UNSTABLE nature!
+        // !!! Expect the results of this endpoint TO CHANGE between different Hydrus Network client versions!
         const options = await api.manage_database.get_client_options()
         expect(options).toBeTypeOf('object')
         expect(options === null).toBe(false)
