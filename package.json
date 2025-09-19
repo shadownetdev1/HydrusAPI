@@ -1,16 +1,19 @@
 {
   "name": "hydrusapi",
-  "version": "80.639.8",
-  "description": "A JavaScript based asynchronous implementation of the Hydrus client API with documentation, tests, and type definitions.",
+  "version": "80.639.9",
+  "description": "A JavaScript based asynchronous implementation of the Hydrus Network client API with documentation, tests, and type definitions.",
   "homepage": "https://github.com/shadownetdev1/HydrusAPI",
   "bugs": {
     "url": "https://github.com/shadownetdev1/HydrusAPI/issues"
   },
   "repository": "github:shadownetdev1/HydrusAPI",
   "main": "index.js",
+  "types": "./types/index.d.ts",
   "scripts": {
-    "test": "cp scripts/pre-commit .git/hooks/pre-commit && vitest run --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage",
-    "test:watch": "cp scripts/pre-commit .git/hooks/pre-commit && vitest --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage"
+    "test": "npm run hook && vitest run --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage",
+    "test:watch": "npm run hook && vitest --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage",
+    "type-defs": "npx tsc -p ./tsconfig.json && cp defs/index.d.ts types/index.d.ts && sed -i '1iimport HydrusAPI from \"./types.d.ts\";' types/index.d.ts",
+    "hook": "cp scripts/pre-commit .git/hooks/pre-commit"
   },
   "keywords": [
     "hydrusnetwork",
@@ -27,7 +30,6 @@
   ],
   "license": "SEE LICENSE IN license.txt",
   "type": "commonjs",
-  "types": "./types/index.d.ts",
   "cspell": {
     "version": "0.2",
     "language": "en",
@@ -62,14 +64,14 @@
     ]
   },
   "devDependencies": {
-    "@eslint/js": "^9.32.0",
-    "@types/node": "^24.2.0",
-    "@vitest/coverage-v8": "^3.2.4",
-    "eslint": "^9.32.0",
-    "fs-jetpack": "^5.1.0",
-    "globals": "^16.3.0",
-    "typescript": "^5.9.2",
-    "vitest": "^3.2.4"
+    "@eslint/js": "9.32.0",
+    "@types/node": "24.2.0",
+    "@vitest/coverage-v8": "3.2.4",
+    "eslint": "9.32.0",
+    "fs-jetpack": "5.1.0",
+    "globals": "16.3.0",
+    "typescript": "5.9.2",
+    "vitest": "3.2.4"
   },
   "devEngines": {
     "os": {

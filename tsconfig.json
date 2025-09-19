@@ -3,7 +3,7 @@
   "compilerOptions": {
     // File Layout
     // "rootDir": "./src",
-    // "outDir": "./dist",
+    "outDir": "./defs",
 
     // Environment Settings
     // See also https://aka.ms/tsconfig/module
@@ -26,7 +26,6 @@
     "exactOptionalPropertyTypes": false,
     "allowJs": true,
     "checkJs": true,
-    "noEmit": true,
 
     // Style Options
     // "noImplicitReturns": true,
@@ -44,11 +43,22 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": false,
+    "useUnknownInCatchVariables": false,
   },
 
+  "files": [
+    "./types/types.d.ts"
+  ],
+
   "exclude": [
-    "node_modules",
-    "tests/hydrus",
-    "tests/deep-object-diff-fixed"
+    "./eslint.config.mjs",
+    "./vite.config.mjs",
+    "./types/index.d.ts",
+    "./docs/",
+    "./defs/",
+    "./scripts/",
+    "./node_modules/",
+    "./tests/hydrus/",
+    "./tests/deep-object-diff-fixed/"
   ],
 }

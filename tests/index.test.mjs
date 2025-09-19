@@ -59,18 +59,19 @@ const get_hydrus = async() => {
     jetpack.remove(run_path)
     jetpack.dir(run_path)
     const extract_command = `tar --use-compress-program=unzstd -xvf '${jetpack.cwd()}/${download_dest}' --strip-components=1 -C '${jetpack.cwd()}/tests/hydrus'`
-    let { stdout2, stderr2 } = await exec_async(extract_command)
+    let { stdout: stdout2, stderr: stderr2 } = await exec_async(extract_command)
     console.log('stdout:', stdout2)
     console.log('stderr:', stderr2)
 }
 
 const hydrus_running = async() => {
     const path = `${jetpack.cwd()}/tests/hydrus/hydrus_client`.replaceAll('/', '\\/')
+    
     let { stdout, stderr } = await exec_async(`ps ax -ww -o pid,args | sed -n '/${path}/p'`)
     if (stderr || stdout.trim().length === 0) {
         return false
     } else {
-        return stdout.trim().split(` `)[0].trim()
+        return Number((stdout.trim().split(` `)[0] ?? '').trim())
     }
 }
 
@@ -130,7 +131,7 @@ try {
     const api_version = await api.api_version()
     console.log(api_version)
     if (
-        api_version.version !== api.VERSION | 
+        api_version.version !== api.VERSION || 
         api_version.hydrus_version !== api.HYDRUS_TARGET_VERSION
     ) {
         await exit_hydrus()
@@ -147,6 +148,11 @@ try {
     await start_hydrus()
 }
 
+/**
+ * 
+ * @param {string} hash a sha256 hash
+ * @returns {Promise<boolean>}
+ */
 const exists = async(hash) => {
     try {
         const res = (await api.get_files.file_path({
@@ -163,7 +169,13 @@ const exists = async(hash) => {
     
 }
 
+/**
+ * 
+ * @param {string} path the path to the file
+ * @param {string} [hash] an optional sha256 hash of the file. If not provided then it will be generated 
+ */
 const upload = async(path, hash) => {
+    hash = hash ?? jetpack.inspect(path, {checksum: "sha256"})?.sha256
     // clear deletion record
     await api.add_files.clear_file_deletion_record({
         hash: hash
@@ -202,7 +214,7 @@ describe('HydrusAPI', () => {
         expect(api_version?.hydrus_version).toBeTypeOf('number')
         console.log(`Connected to Hydrus v${api_version.hydrus_version} with api version ${api_version.version}`)
 
-        const api_version_raw = await api.api_version('raw')
+        const api_version_raw = /** @type {{status: number}} */ (/** @type {unknown} */ (await api.api_version('raw')))
         expect(api_version_raw.status).toBe(200)
 
         const session_key = await api.session_key()
@@ -222,11 +234,13 @@ describe('HydrusAPI', () => {
         expect(Object.keys(services).length > 0).toBe(true)
 
         const service_by_name = await api.get_service({
+            //@ts-expect-error
             service_name: Object.values(services)[0].name
         })
         const service = await api.get_service({
             service_key: Object.keys(services)[0]
         })
+        //@ts-expect-error
         Object.values(services)[0].service_key = Object.keys(services)[0]
         const service_str = JSON.stringify(Object.values(services)[0])
         expect(JSON.stringify(service_by_name.service)).toBe(service_str)
@@ -235,9 +249,11 @@ describe('HydrusAPI', () => {
 
     test('get_files.* and add_files.*', async() => {
         const f_path = 'tests/files/hummingbird-at-feeder-1754669486LJt.jpg'
+        //@ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -252,7 +268,7 @@ describe('HydrusAPI', () => {
         // check to see if the file is in the trash
         const is_trashed = (await api.get_files.file_metadata({
             hash: f_hash
-        })).metadata[0].is_trashed
+        })).metadata[0]?.is_trashed
         expect(is_trashed).toBe(true)
 
         // un trash the file
@@ -285,7 +301,9 @@ describe('HydrusAPI', () => {
         const meta = (await api.get_files.file_metadata({
             hash: f_hash
         })).metadata[0]
-        const is_deleted = meta.is_trashed === false && meta.is_deleted === true
+        expect(meta?.is_trashed).toBeTypeOf('boolean')
+        expect(meta?.is_deleted).toBeTypeOf('boolean')
+        const is_deleted = meta?.is_trashed === false && meta?.is_deleted === true
         expect(is_deleted).toBe(true)
 
         // attempt to import file (should fail)
@@ -323,16 +341,16 @@ describe('HydrusAPI', () => {
         jetpack.remove('./hydrusapi_test_thumb.jpeg')
 
         // test file
-        const file = await api.get_files.file({
+        const file = /** @type {ReadableStream<Uint8Array<ArrayBufferLike>>} */ (await api.get_files.file({
             hash: f_hash
-        })
+        }))
         await fs.writeFile('./hydrusapi_test_file.jpeg', file)
-        expect(jetpack.inspect(f_path, {checksum: 'sha256'}).sha256).toBe(f_hash)
+        expect(jetpack.inspect(f_path, {checksum: 'sha256'})?.sha256).toBe(f_hash)
 
         // test thumbnail
-        const thumbnail = await api.get_files.thumbnail({
+        const thumbnail = /** @type {ReadableStream<Uint8Array<ArrayBufferLike>>} */ (await api.get_files.thumbnail({
             hash: f_hash
-        })
+        }))
         await fs.writeFile('./hydrusapi_test_thumb.jpeg', thumbnail)
         // TODO: validate that test_thumb.jpeg is a thumbnail of the image (PHash?)
         // cleanup from file and thumbnail testing
@@ -345,10 +363,12 @@ describe('HydrusAPI', () => {
             tags: [`system:hash is ${f_hash}`],
             return_hashes: true,
         })
-        expect(results.file_ids.length).toBe(1)
-        expect(results.file_ids[0]).toBe(meta.file_id)
-        expect(results.hashes.length).toBe(1)
-        expect(results.hashes[0]).toBe(f_hash)
+        expect(results?.file_ids?.length).toBe(1)
+        //@ts-expect-error
+        expect(results?.file_ids[0]).toBe(meta.file_id)
+        expect(results?.hashes?.length).toBe(1)
+        //@ts-expect-error
+        expect(results?.hashes[0]).toBe(f_hash)
 
         // test file_hashes
         const hashes = await api.get_files.file_hashes({
@@ -357,18 +377,18 @@ describe('HydrusAPI', () => {
             desired_hash_type: 'md5',
         })
         expect(Object.keys(hashes.hashes).includes(f_hash)).toBe(true)
-        expect(hashes.hashes[f_hash]).toBe(jetpack.inspect(f_path, {checksum: 'md5'}).md5)
+        expect(hashes.hashes[f_hash]).toBe(jetpack.inspect(f_path, {checksum: 'md5'})?.md5)
 
         // test local_file_storage_locations
         const locs = await api.get_files.local_file_storage_locations()
         expect(locs.locations.length === 0).toBe(false)
-        expect(typeof locs.locations[0].ideal_weight).toBe('number')
-        expect(typeof locs.locations[0].path).toBe('string')
-        expect(locs.locations[0].prefixes.length === 0).toBe(false)
+        expect(typeof locs?.locations[0]?.ideal_weight).toBe('number')
+        expect(typeof locs?.locations[0]?.path).toBe('string')
+        expect(locs?.locations[0]?.prefixes.length === 0).toBe(false)
 
         // test: render
         jetpack.remove('./hydrusapi_test_render.png')
-        const render = await api.get_files.render({hash: f_hash})
+        const render = /** @type {ReadableStream} */ (await api.get_files.render({hash: f_hash}))
         await fs.writeFile('./hydrusapi_test_render.png', render)
         // TODO: validate that hydrusapi_test_render.png is a render of the image (PHash?)
         jetpack.remove('./hydrusapi_test_render.png')
@@ -403,24 +423,29 @@ describe('HydrusAPI', () => {
         expect(migrate).toBe(true)
         // validate
         const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        //@ts-expect-error
         expect(Object.keys(meta2.metadata[0].file_services.current).includes(other_service_key)).toBe(true)
         // remove from `my other files`
         const un_migrate = await api.add_files.delete_files({
             hash: f_hash,
-            file_domain: other_service_key,
+            file_service_key: other_service_key,
         })
         expect(un_migrate).toBe(true)
         // validate
         const meta3 = await api.get_files.file_metadata({hash: f_hash})
+        //@ts-expect-error
         expect(Object.keys(meta3.metadata[0].file_services.current).includes(other_service_key)).toBe(false)
+        //@ts-expect-error
         expect(Object.keys(meta3.metadata[0].file_services.deleted).includes(other_service_key)).toBe(true)
     }, 120000)
 
     test('add_urls.*', async() => {
         const f_path = 'tests/files/tree-1332664495LMO.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -446,9 +471,9 @@ describe('HydrusAPI', () => {
         })
         expect(files.normalised_url).toBe('https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/tests/files/tree-1332664495LMO.jpg')
         expect(files.url_file_statuses.length).toBe(1)
-        expect(files.url_file_statuses[0].status).toBe(2)
-        expect(files.url_file_statuses[0].hash).toBe(f_hash)
-        expect(files.url_file_statuses[0].note.startsWith('url recognised')).toBe(true)
+        expect(files.url_file_statuses[0]?.status).toBe(2)
+        expect(files.url_file_statuses[0]?.hash).toBe(f_hash)
+        expect(files.url_file_statuses[0]?.note.startsWith('url recognised')).toBe(true)
 
         // test: associate_url (removal)
         const removal = await api.add_urls.associate_url({
@@ -484,9 +509,11 @@ describe('HydrusAPI', () => {
 
     test('add_tags.*', async() => {
         const f_path = 'tests/files/venice-italy-travel-poster-15626778587Sq.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -500,10 +527,10 @@ describe('HydrusAPI', () => {
         // test set_favourite_tags
         const fav_options = ['hi', 'happy', 'cat', 'dog']
         // cSpell: ignore favs
-        const favs = [...new Set([
+        const favs = /** @type {string[]} */ ([...new Set([
             fav_options[Math.floor(Math.random() * fav_options.length)],
             fav_options[Math.floor(Math.random() * fav_options.length)],
-        ])]
+        ])])
         favs.sort()
         const set_fav = await api.add_tags.set_favourite_tags({set: favs})
         expect(JSON.stringify(set_fav.favourite_tags)).toBe(JSON.stringify(favs))
@@ -518,16 +545,20 @@ describe('HydrusAPI', () => {
         // test get_siblings_and_parents
         const sib_parent_data = await api.add_tags.get_siblings_and_parents(['stream'])
         expect(Object.keys(sib_parent_data.tags).includes('stream')).toBe(true)
+        //@ts-expect-error
         expect(Object.keys(sib_parent_data.tags.stream).includes(tags_service_key)).toBe(true)
-        sib_parent_data.tags.stream[tags_service_key].siblings.sort()
+        //@ts-expect-error
+        const ts = /** @type {HydrusAPI.SiblingsAndParentsServiceObject} */ ( /** @type {unknown} */ (sib_parent_data.tags.stream[tags_service_key]))
+        ts.siblings.sort()
         const tags = ['river', 'stream']
         tags.sort()
-        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].siblings)).toBe(JSON.stringify(tags))
-        expect(sib_parent_data.tags.stream[tags_service_key].ideal_tag).toBe('river')
-        expect(sib_parent_data.tags.stream[tags_service_key].descendants.length).toBe(0)
-        expect(JSON.stringify(sib_parent_data.tags.stream[tags_service_key].ancestors)).toBe(JSON.stringify(['water']))
+        expect(JSON.stringify(ts.siblings)).toBe(JSON.stringify(tags))
+        expect(ts.ideal_tag).toBe('river')
+        expect(ts.descendants.length).toBe(0)
+        expect(JSON.stringify(ts.ancestors)).toBe(JSON.stringify(['water']))
 
         // test: add_tags (add)
+        /** @type {{[key: string]: string[]}} */
         const service_keys_to_tags = {}
         service_keys_to_tags[tags_service_key] = ['boat', 'bridge', 'stream', 'tower']
         const add_tags = await api.add_tags.add_tags({
@@ -538,9 +569,11 @@ describe('HydrusAPI', () => {
 
         // validate
         const meta = await api.get_files.file_metadata({hash: f_hash})
+        // @ts-expect-error
         expect(JSON.stringify(meta.metadata[0].tags[tags_service_key].storage_tags['0'])).toBe(JSON.stringify(
             ['boat', 'bridge', 'stream', 'tower']
         ))
+        // @ts-expect-error
         expect(JSON.stringify(meta.metadata[0].tags[tags_service_key].display_tags['0'])).toBe(JSON.stringify(
             ['boat', 'bridge', 'river', 'tower', 'water']
         ))
@@ -550,10 +583,11 @@ describe('HydrusAPI', () => {
             search: 'stream'
         })
         expect(search.tags.length).toBe(1)
-        expect(search.tags[0].value).toBe('stream')
-        expect(search.tags[0].count).toBe(1)
+        expect(search.tags[0]?.value).toBe('stream')
+        expect(search.tags[0]?.count).toBe(1)
 
         // test: add_tags (remove)
+        /** @type {{[key: string]: {[key: string]: string[]}}} */
         const service_keys_to_actions_to_tags = {}
         service_keys_to_actions_to_tags[tags_service_key] = {
             '1': ['boat', 'bridge', 'stream', 'tower']
@@ -566,9 +600,11 @@ describe('HydrusAPI', () => {
 
         // validate
         const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        //@ts-expect-error
         expect(JSON.stringify(meta2.metadata[0].tags[tags_service_key].storage_tags['2'])).toBe(JSON.stringify(
             ['boat', 'bridge', 'stream', 'tower']
         ))
+        //@ts-expect-error
         expect(JSON.stringify(meta2.metadata[0].tags[tags_service_key].display_tags['2'])).toBe(JSON.stringify(
             ['boat', 'bridge', 'stream', 'tower']
         ))
@@ -576,9 +612,11 @@ describe('HydrusAPI', () => {
 
     test('edit_ratings.*', async() => {
         const f_path = 'tests/files/venice-italy-travel-poster-15626778587Sq.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -595,6 +633,7 @@ describe('HydrusAPI', () => {
         expect(rating_false).toBe(true)
 
         const meta = await api.get_files.file_metadata({hash: f_hash})
+        //@ts-expect-error
         expect(meta.metadata[0].ratings[service_key]).toBe(false)
 
         // test set_rating (true)
@@ -606,26 +645,32 @@ describe('HydrusAPI', () => {
         expect(rating_true).toBe(true)
 
         const meta2 = await api.get_files.file_metadata({hash: f_hash})
+        //@ts-expect-error
         expect(meta2.metadata[0].ratings[service_key]).toBe(true)
     })
 
     test('edit_times.*', async() => {
         const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
 
         // test: increment_file_viewtime
         /**
-         * @returns {[FileViewingStatistics, FileViewingStatistics, FileViewingStatistics]}
+         * @returns {Promise<[HydrusAPI.FileViewingStatistics, HydrusAPI.FileViewingStatistics, HydrusAPI.FileViewingStatistics]>}
          */
         const assign = async() => {
             const time = (
                 await api.get_files.file_metadata({hash: f_hash})
-            ).metadata[0].file_viewing_statistics
+            ).metadata[0]?.file_viewing_statistics
+            if (!time) {
+                throw new Error(`api.get_files.file_metadata({hash: '${f_hash}'}) did not return statistics like expected!`)
+            }
             let media_viewer, preview_viewer, api_viewer
             for (const viewer of time) {
                 switch (viewer.canvas_type) {
@@ -642,13 +687,17 @@ describe('HydrusAPI', () => {
                         throw new Error(`Unknown canvas type of '${viewer.canvas_type}' with name '${viewer.canvas_type_pretty}'`)
                 }
             }
-            if (!media_viewer | !preview_viewer | !api_viewer) {
+            if (!media_viewer || !preview_viewer || !api_viewer) {
                 throw new Error(`Failed to get a canvas! media: ${!!media_viewer}, preview: ${!!preview_viewer}, api: ${!!api_viewer}`)
             }
             return [media_viewer, preview_viewer, api_viewer]
         }
-        /** @type {FileViewingStatistics} */
-        let old_media_viewer, old_preview_viewer, old_api_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let old_media_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let old_preview_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let old_api_viewer
         [old_media_viewer, old_preview_viewer, old_api_viewer] = await assign()
         const inc_media_viewer = await api.edit_times.increment_file_viewtime({
             hash: f_hash,
@@ -674,14 +723,22 @@ describe('HydrusAPI', () => {
             viewtime: 77.2
         })
         expect(inc_api_viewer).toBe(true)
-        /** @type {FileViewingStatistics} */
-        let media_viewer, preview_viewer, api_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let media_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let preview_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let api_viewer
         [media_viewer, preview_viewer, api_viewer] = await assign()
         for (const viewers of [
             [old_media_viewer, media_viewer],
             [old_preview_viewer, preview_viewer],
             [old_api_viewer, api_viewer]
         ]) {
+            if (!viewers || !viewers[0] || !viewers[1]) {
+                console.error(viewers)
+                throw new Error(`Statistics are missing!`)
+            }
             viewers[0].views += 2
             viewers[0].viewtime += 77.2
             viewers[0].viewtime = Number(viewers[0].viewtime.toFixed(3))
@@ -719,7 +776,12 @@ describe('HydrusAPI', () => {
         })
         expect(set_api_viewer).toBe(true)
 
-        let new_media_viewer, new_preview_viewer, new_api_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let new_media_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let new_preview_viewer
+        /** @type {HydrusAPI.FileViewingStatistics} */
+        let new_api_viewer
         [new_media_viewer, new_preview_viewer, new_api_viewer] = await assign()
 
         for (const viewers of [
@@ -727,6 +789,10 @@ describe('HydrusAPI', () => {
             [old_preview_viewer, new_preview_viewer],
             [old_api_viewer, new_api_viewer]
         ]) {
+            if (!viewers || !viewers[0] || !viewers[1]) {
+                console.error(viewers)
+                throw new Error(`Statistics are missing!`)
+            }
             expect(viewers[0].canvas_type).toBe(viewers[1].canvas_type)
             expect(viewers[0].canvas_type_pretty).toBe(viewers[1].canvas_type_pretty)
             expect(viewers[0].views).toBe(viewers[1].views)
@@ -739,10 +805,10 @@ describe('HydrusAPI', () => {
             await api.tools.get_services_of_type(
                 api.SERVICE_TYPE.ALL_LOCAL_FILES
             )
-        )[0].service_key
-        const meta1 = (await api.get_files.file_metadata({
+        )[0]?.service_key
+        const meta1 = /** @type {HydrusAPI.FileMetadata} */ ((await api.get_files.file_metadata({
             hash: f_hash
-        })).metadata[0]
+        })).metadata[0])
         const set = await api.edit_times.set_time({
             hash: f_hash,
             timestamp: meta1.time_modified + 500,
@@ -750,17 +816,19 @@ describe('HydrusAPI', () => {
             file_service_key: key
         })
         expect(set).toBe(true)
-        const meta2 = (await api.get_files.file_metadata({
+        const meta2 = /** @type {HydrusAPI.FileMetadata} */ ((await api.get_files.file_metadata({
             hash: f_hash
-        })).metadata[0]
+        })).metadata[0])
         expect(meta1.time_modified + 500).toBe(meta2.time_modified)
     })
 
     test('add_notes.*', async() => {
         const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -792,9 +860,11 @@ describe('HydrusAPI', () => {
 
     test('manage_file_relationships.*', async() => {
         const f_path = 'tests/files/seascape-sunset-1500478633cRS.jpg'
+        // @ts-expect-error
         const f_hash = jetpack.inspect(f_path, {checksum: 'sha256'}).sha256
 
         // make sure the file exists for testing
+        if (!f_hash) { throw new Error(`hash for ${f_path} returned undefined!`) }
         if (!await exists(f_hash)) {
             await upload(f_path, f_hash)
         }
@@ -806,14 +876,18 @@ describe('HydrusAPI', () => {
         expect(Object.keys(no_rel).length).toBe(1)
         expect(Object.keys(no_rel)[0]).toBe(f_hash)
         const no_rel_rec = Object.values(no_rel)[0]
+        //@ts-expect-error
         expect(no_rel_rec["0"]).toStrictEqual([])
+        //@ts-expect-error
         expect(no_rel_rec["1"]).toStrictEqual([])
+        //@ts-expect-error
         expect(no_rel_rec["3"]).toStrictEqual([])
+        //@ts-expect-error
         expect(no_rel_rec["8"]).toStrictEqual([])
-        expect(no_rel_rec.is_king).toBe(true)
-        expect(no_rel_rec.king).toBe(f_hash)
-        expect(no_rel_rec.king_is_on_file_domain).toBe(true)
-        expect(no_rel_rec.king_is_local).toBe(true)
+        expect(no_rel_rec?.is_king).toBe(true)
+        expect(no_rel_rec?.king).toBe(f_hash)
+        expect(no_rel_rec?.king_is_on_file_domain).toBe(true)
+        expect(no_rel_rec?.king_is_local).toBe(true)
 
         // test: get_potentials_count (no relations)
         const no_count = (
@@ -874,10 +948,15 @@ describe('HydrusAPI', () => {
         // test get_cookies
         const get = await api.manage_cookies.get_cookies('example.com')
         expect(get.cookies.length).toBe(1)
+        //@ts-expect-error
         expect(get.cookies[0][0]).toBe('name')
+        //@ts-expect-error
         expect(get.cookies[0][1]).toBe('value')
+        //@ts-expect-error
         expect(get.cookies[0][2]).toBe('.example.com')
+        //@ts-expect-error
         expect(get.cookies[0][3]).toBe('/')
+        //@ts-expect-error
         expect(get.cookies[0][4]).toBe(expires)
     })
 
@@ -890,9 +969,11 @@ describe('HydrusAPI', () => {
         let pages = (await api.manage_pages.get_pages()).pages
 
         // test focus_page
+        //@ts-expect-error
         const focus1 = await api.manage_pages.focus_page(pages.pages[1].page_key)
         expect(focus1).toBe(true)
 
+        //@ts-expect-error
         const focus2 = await api.manage_pages.focus_page(pages.pages[0].page_key)
         expect(focus2).toBe(true)
 
@@ -904,22 +985,23 @@ describe('HydrusAPI', () => {
         expect(pages.is_media_page).toBe(false)
         expect(pages.selected).toBe(true)
         const page = pages.pages[0]
-        expect(page.name).toBe('files')
-        expect(page.page_state).toBe(0)
-        expect(page.page_type).toBe(6)
-        expect(page.is_media_page).toBe(true)
-        expect(page.selected).toBe(true)
+        expect(page?.name).toBe('files')
+        expect(page?.page_state).toBe(0)
+        expect(page?.page_type).toBe(6)
+        expect(page?.is_media_page).toBe(true)
+        expect(page?.selected).toBe(true)
 
         // test get_page_info
         const info = (await api.manage_pages.get_page_info({
+            //@ts-expect-error
             page_key: page.page_key,
             // simple: false,
         })).page_info
-        expect(info.name).toBe(page.name)
-        expect(info.page_key).toBe(page.page_key)
-        expect(info.page_state).toBe(page.page_state)
-        expect(info.page_type).toBe(page.page_type)
-        expect(info.is_media_page).toBe(page.is_media_page)
+        expect(info.name).toBe(page?.name)
+        expect(info.page_key).toBe(page?.page_key)
+        expect(info.page_state).toBe(page?.page_state)
+        expect(info.page_type).toBe(page?.page_type)
+        expect(info.is_media_page).toBe(page?.is_media_page)
         expect(typeof info.media.num_files).toBe('number')
         expect(Array.isArray(info.media.hash_ids)).toBe(true)
         if (info.media.hash_ids.length !== 0) {
@@ -928,6 +1010,7 @@ describe('HydrusAPI', () => {
 
         // test add_files
         const added = await api.manage_pages.add_files({
+            //@ts-expect-error
             page_key: page.page_key,
             file_id: 3
         })
@@ -935,14 +1018,16 @@ describe('HydrusAPI', () => {
 
         // validate that the page has file 3
         const update = (await api.manage_pages.get_page_info({
+            //@ts-expect-error
             page_key: page.page_key,
             // simple: false,
         })).page_info
         expect(Array.isArray(update.media.hash_ids)).toBe(true)
         expect(update.media.hash_ids.includes(3)).toBe(true)
-        expect(update.media.num_files > 3).toBe(true)
+        expect(update.media.num_files).toBeGreaterThanOrEqual(3)
 
         // test refresh_page
+        //@ts-expect-error
         const refreshed = await api.manage_pages.refresh_page(page.page_key)
         expect(refreshed).toBe(true)
 
@@ -954,6 +1039,7 @@ describe('HydrusAPI', () => {
 
         // validate that the page was refreshed
         const fresh = (await api.manage_pages.get_page_info({
+            //@ts-expect-error
             page_key: page.page_key,
             // simple: false,
         })).page_info
@@ -993,8 +1079,8 @@ describe('HydrusAPI', () => {
         expect(bones.total_duplicate_files).toBeTypeOf('number')
 
         // test get_client_options
-        // !!! While this endpoint's response will be type defined it will not be documented or tested due to its unstable nature
-        // !!! Expect the results of this endpoint to change with each Hydrus client version
+        // !!! While this endpoint's response will be type defined it will not be documented or tested due to its UNSTABLE nature!
+        // !!! Expect the results of this endpoint TO CHANGE between different Hydrus Network client versions!
         const options = await api.manage_database.get_client_options()
         expect(options).toBeTypeOf('object')
         expect(options === null).toBe(false)
@@ -1005,6 +1091,7 @@ describe('HydrusAPI', () => {
             jetpack.write(schema_path, options)
         }
         // compare new and old schemas. Throw error with difference
+        //@ts-expect-error
         const prep = (data) => {
             if (typeof data === 'object' && data !== null) {
                 for (const [key, value] of Object.entries(data)) {
@@ -1033,7 +1120,9 @@ describe('HydrusAPI', () => {
                 return;
             }
             if (JSON.stringify(diff) !== JSON.stringify({"added": {},"deleted": {},"updated": {}})) {
+                //@ts-expect-error
                 diff["original"] = options
+                //@ts-expect-error
                 diff["new"] = old_schema
                 jetpack.write(`comparison.tmp.json`, diff, {atomic: true})
                 throw new Error(`The output of 'manage_database.get_client_options()' has changed! See 'comparison.tmp.json' for the differences!`)
@@ -1047,27 +1136,28 @@ describe('HydrusAPI', () => {
             api.SERVICE_TYPE.ALL_KNOWN_FILES
         ))
         expect(service_type.length).toBe(1)
-        expect(service_type[0].name).toBe('all known files')
-        expect(service_type[0].type).toBe(
+        expect(service_type[0]?.name).toBe('all known files')
+        expect(service_type[0]?.type).toBe(
             api.SERVICE_TYPE.ALL_KNOWN_FILES
         )
-        expect(service_type[0].type_pretty).toBe(
+        expect(service_type[0]?.type_pretty).toBe(
             'virtual combined file service'
         )
-        expect(service_type[0].service_key).toBeTypeOf('string')
+        expect(service_type[0]?.service_key).toBeTypeOf('string')
         // test: get_services_of_name
         const service_name = (await api.tools.get_services_of_name(
+            //@ts-expect-error
             service_type[0].name
         ))
         expect(service_name.length).toBe(1)
-        expect(service_name[0].name).toBe('all known files')
-        expect(service_name[0].type).toBe(
+        expect(service_name[0]?.name).toBe('all known files')
+        expect(service_name[0]?.type).toBe(
             api.SERVICE_TYPE.ALL_KNOWN_FILES
         )
-        expect(service_name[0].type_pretty).toBe(
+        expect(service_name[0]?.type_pretty).toBe(
             'virtual combined file service'
         )
-        expect(service_name[0].service_key).toBeTypeOf('string')
-        expect(service_name[0].service_key).toBe(service_type[0].service_key)
+        expect(service_name[0]?.service_key).toBeTypeOf('string')
+        expect(service_name[0]?.service_key).toBe(service_type[0]?.service_key)
     })
 })

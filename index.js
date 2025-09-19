@@ -1936,7 +1936,7 @@ module.exports = class API{
      * * Lock and unlock the database
      * * Force a commit
      * * Get statistics from Mr. Bones
-     * * Get all of Hydrus Client's settings
+     * * Get all of Hydrus Network's client settings
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#managing-the-database
      */
@@ -2067,7 +2067,7 @@ module.exports = class API{
      */
     mr_bones: async(options = {}, return_as) => {
         // region: manage_database/mr_bones
-        return /** @type {Promise<boolean>} */ (await this.call({
+        return /** @type {Promise<HydrusAPI.mr_bones_response>} */ (await this.call({
             endpoint: '/manage_database/mr_bones',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
@@ -2123,12 +2123,17 @@ module.exports = class API{
      * @returns {Promise<HydrusAPI.ServiceObjectWithKey[]>}
      */
     get_services_of_type: async(service_type=11) => {
+        /** @type {HydrusAPI.ServiceObjectWithKey[]} */
         const matches = []
         const services = (await this.get_services()).services
-        for (const [key, value] of Object.entries(services)) {
+        /** @type {string} */
+        let key
+        /** @type {HydrusAPI.ServiceObject & {service_key?: string}} */
+        let value
+        for ([key, value] of Object.entries(services)) {
             if (value.type === service_type) {
                 value.service_key = key
-                matches.push(value)
+                matches.push(/** @type {HydrusAPI.ServiceObjectWithKey} */ (value))
             }
         }
         return matches
@@ -2144,12 +2149,17 @@ module.exports = class API{
      * @returns {Promise<HydrusAPI.ServiceObjectWithKey[]>}
      */
     get_services_of_name: async(name) => {
+        /** @type {HydrusAPI.ServiceObjectWithKey[]} */
         const matches = []
         const services = (await this.get_services()).services
-        for (const [key, value] of Object.entries(services)) {
+        /** @type {string} */
+        let key
+        /** @type {HydrusAPI.ServiceObject & {service_key?: string}} */
+        let value
+        for ([key, value] of Object.entries(services)) {
             if (value.name === name) {
                 value.service_key = key
-                matches.push(value)
+                matches.push(/** @type {HydrusAPI.ServiceObjectWithKey} */ (value))
             }
         }
         return matches

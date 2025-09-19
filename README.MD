@@ -3,7 +3,7 @@
 
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
-[![Hydrus API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/docs/developer_api.md)
+[![Hydrus Network API Version: 80 (Partial support)](https://img.shields.io/badge/Hydrus%20Network%20API%20Version-80%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/c3cb88c9e71616678b4c398d54ea2b4d3dd7b0f3/docs/developer_api.md)
 [![Tested with Hydrus version 639](https://img.shields.io/badge/Tested%20with%20Hydrus%20Version-639%20-blue)](https://github.com/hydrusnetwork/hydrus/releases/tag/v639)
 [![GitHub reported bug count](https://img.shields.io/github/issues-search?query=repo%3Ashadownetdev1%2FHydrusAPI%20is%3Aopen%20label%3Abug&label=Reported%20bugs)](https://github.com/shadownetdev1/HydrusAPI/issues?q=is%3Aissue%20state%3Aopen%20label%3Abug)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/shadownetdev1/HydrusAPI)
@@ -15,13 +15,13 @@
 [![Branch Test Coverage Badge](https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/branches.svg)](https://shadownetdev1.github.io/HydrusAPI/coverage/)
 
 <p align="center">
-  <img width="100%" alt="Warning: This API implementation is provided as is (just like Hydrus). You should be regularly backing up your Hydrus database regardless of any external libraries (like this one) that you are or aren't using." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
+  <img width="100%" alt="Warning: This API implementation is provided as is (just like Hydrus Network). You should be regularly backing up your Hydrus Network database regardless of any external libraries (like this one) that you are or aren't using." src="https://raw.githubusercontent.com/shadownetdev1/HydrusAPI/refs/heads/main/badges/warning.svg">
   <!-- The above text is also defined in `badges/warning.svg`. It only exists here to assist screen readers. When updating this text make sure change the text in `badges/warning.svg` to match -->
 </p>
 
-HydrusAPI is an implementation of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus client](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
+HydrusAPI is an implementation of the [Hydrus Network](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in JavaScript. The goal is to fully support the most recent version of the [Hydrus Network](https://github.com/hydrusnetwork/hydrus/) [API](https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md) in a typed, tested, and documented implementation. It was original based off of [hydrus.js](https://www.npmjs.com/package/hydrus.js), but it has drastically deviated from that project and should not be used as a drop in replacement.
 
-As of currently most Hydrus API endpoints are implemented and all the API endpoints supported by [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at [the bottom of this page](#endpoints).
+As of currently most Hydrus Network API endpoints are implemented and all the API endpoints supported by [hydrus.js](https://www.npmjs.com/package/hydrus.js) are implemented. A list of implemented endpoints are provided at [the bottom of this page](#endpoints).
 
 ## Installation
 
@@ -49,13 +49,13 @@ We do not provide a way support us monetarily (at this time). We suggest support
 
 ## Versioning
 
-HydrusAPI is versioned using \[Hydrus API version\].\[Hydrus version\].\[HydrusAPI version\].
+HydrusAPI is versioned using \[Hydrus Network API version\].\[Hydrus Network client version\].\[HydrusAPI version\].
 
-This works well since all our endpoints should match a given Hydrus API/Client version pair.
+This works well since all our endpoints should match a given Hydrus Network API/Client version pair.
 
-We suggest matching `Hydrus API version` and `Hydrus version` as closely as possible. Mismatched `Hydrus version`s should be okay, but mismatched `Hydrus API version`s could cause serious issues.
+We suggest matching `Hydrus Network API version` and `Hydrus Network client version` as closely as possible. Mismatched `Hydrus Network client version`s should be okay, but mismatched `Hydrus Network API version`s could cause serious issues.
 
-When using a package manager you should pin the HydrusAPI version. Here is an example using NPM for Hydrus version 639: `npm install hydrusapi@80.639.*`. When downloading you should download the version that best matches your Hydrus version.
+When using a package manager you should pin the HydrusAPI version. Here is an example using NPM for Hydrus version 639: `npm install hydrusapi@80.639.*`. When downloading you should download the version that best matches your Hydrus Network version.
 
 Below is a list of Hydrus versions supported under a given API version. Use this list to construct your version string for version pinning.
 
@@ -67,7 +67,7 @@ Below is a list of Hydrus versions supported under a given API version. Use this
 
 NPM badge provided by [NodeICO](https://nodei.co/npm/hydrusapi/).
 
-Hydrus version, reported bugs, issue count, and minified size badges provided by [Shields.io](https://shields.io/).
+Hydrus Network API version, reported bugs, issue count, and minified size badges provided by [Shields.io](https://shields.io/).
 
 Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s [Vitest Badge Action](https://github.com/marketplace/actions/vitest-badge-action).
 
@@ -83,11 +83,11 @@ Code coverage badges provided by [Warren Jervis](https://github.com/wjervis7)'s 
 
 ## License
 
-HydrusAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
+HydrusAPI is licensed under the same [DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE](license.txt) as Hydrus Network is [as of August 23rd 2025](https://github.com/hydrusnetwork/hydrus/blob/3dfc84dec9166ecec0dcf874e5ad0cb2b64d0bc4/license.txt).
 
 ## Endpoints
 
-This is all the endpoints that exist as of Hydrus API version 80. Checked endpoints have been implemented or are no longer available.
+This is all the endpoints that exist as of Hydrus Network API version 80. Checked endpoints have been implemented or are no longer available.
 
 - [x] `/api_version`
 - [x] `/request_new_permissions`
@@ -149,7 +149,7 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [ ] `/manage_headers/get_headers`
 - [ ] `/manage_headers/set_headers`
 - [x] `/manage_headers/set_user_agent`
-  - Will NOT BE implemented due to it being deprecated.
+  - This will NOT BE implemented due to it being deprecated.
   - Use `/manage_headers/set_headers` instead.
 - [x] `/manage_pages/get_pages`
 - [x] `/manage_pages/get_page_info`
@@ -169,5 +169,5 @@ This is all the endpoints that exist as of Hydrus API version 80. Checked endpoi
 - [x] `/manage_database/lock_off`
 - [x] `/manage_database/mr_bones`
 - [x] `/manage_database/get_client_options`
-  - While this is implemented it will not be documented or tested due to its UNSTABLE nature!
-  - Expect the results of this endpoint to change with each Hydrus Client version!
+  - While this endpoint's response will be type defined it will not be documented or tested due to its UNSTABLE nature!
+  - Expect the results of this endpoint TO CHANGE between different Hydrus Network client versions!
