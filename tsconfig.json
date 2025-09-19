@@ -48,6 +48,7 @@
 
   "exclude": [
     "node_modules",
-    "tests/hydrus"
+    "tests/hydrus",
+    "tests/deep-object-diff-fixed"
   ],
 }
