@@ -1,6 +1,6 @@
 {
   "name": "hydrusapi",
-  "version": "80.639.11",
+  "version": "80.639.12",
   "description": "A JavaScript based asynchronous implementation of the Hydrus Network client API with documentation, tests, and type definitions.",
   "homepage": "https://github.com/shadownetdev1/HydrusAPI",
   "bugs": {
