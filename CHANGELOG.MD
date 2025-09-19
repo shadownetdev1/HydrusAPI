@@ -7,6 +7,11 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.639.10](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.10) - 2025-8-19
+
+_Second attempt to fix GitHub actions_
+
+
 ## [80.639.9](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.9) - 2025-8-19
 
 _Attempting to fix GitHub actions_
