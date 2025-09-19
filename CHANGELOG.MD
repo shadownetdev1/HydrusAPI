@@ -7,6 +7,18 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.639.9](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.9) - 2025-8-19
+
+## Changed
+
+- All node package versions are now pinned
+
+### Fixed
+
+- Type defs should now work when used as a node module
+- Minor bugs in the test file
+
+
 ## [80.639.8](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.8) - 2025-8-19
 
 __Type definitions should actually work now__
