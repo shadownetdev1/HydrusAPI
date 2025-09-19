@@ -25,7 +25,7 @@ jobs:
       # set version in package.json
       - run: npm version --no-git-tag-version --allow-same-version ${{ github.ref_name }}
       # Handle changelogs
-      - run: npm install --save-dev fs-jetpack@5.1.0
+      - run: npm install
       - run: node scripts/update_changelog.mjs ${{ github.ref_name }}
 
       - name: Publish Statements Badge
@@ -79,7 +79,7 @@ jobs:
           commit_message: Updated changelogs for release
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD package.json'
       # create type def files
-      - run: npm install --save-dev typescript@5.9.2
+      - run: npm install
       - run: npm run type-defs
       # minify index.js and save as hydrusapi.${{ github.ref_name }}.min.js
       - run: npm install --save-dev @node-minify/cli@9.0.2 @node-minify/uglify-js@9.0.1
