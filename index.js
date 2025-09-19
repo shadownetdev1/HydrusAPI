@@ -33,7 +33,7 @@ module.exports = class API{
 
     /**
      * These are the permissions that the client can have
-     * @type {BASIC_PERMS}
+     * @type {HydrusAPI.BASIC_PERMS}
      */
     BASIC_PERM = Object.freeze({
         MODIFY_URLS: 0,
@@ -52,7 +52,7 @@ module.exports = class API{
         SEE_LOCAL_PATHS: 13,
     })
 
-    /** @type {CANVAS_TYPE} */
+    /** @type {HydrusAPI.CANVAS_TYPE} */
     CANVAS_TYPE = Object.freeze({
         /** The normal viewer in hydrus that is its own window */
         MEDIA_VIEWER: 0,
@@ -62,7 +62,7 @@ module.exports = class API{
         API_VIEWER: 4,
     })
 
-    /** @type {TIMESTAMP_TYPE} */
+    /** @type {HydrusAPI.TIMESTAMP_TYPE} */
     TIMESTAMP_TYPE = Object.freeze({
         /** File modified time (web domain) */
         MODIFIED_TIME_WEB_DOMAIN: 0,
@@ -80,7 +80,7 @@ module.exports = class API{
         ORIGINAL_IMPORT_TIME: 7,
     })
 
-    /** @type {SERVICE_TYPE} */
+    /** @type {HydrusAPI.SERVICE_TYPE} */
     SERVICE_TYPE = Object.freeze({
         /** 0 - tag repository */
         TAG_REPO: 0,
@@ -122,17 +122,17 @@ module.exports = class API{
         SERVER_ADMIN: 99,
     })
 
-    /** @type {POTENTIALS_SEARCH_TYPE} */
+    /** @type {HydrusAPI.POTENTIALS_SEARCH_TYPE} */
     POTENTIALS_SEARCH_TYPE = Object.freeze({
         /** 0 - one file matches search 1 */
-        ONE_FILE_MATCHES_SEARCH_ONE: 0,
+        A_FILE_MATCHES_SEARCH_ONE: 0,
         /** 1 - both files match search 1 */
         BOTH_FILES_MATCH_SEARCH_ONE: 1,
         /** 2 - one file matches search 1, the other 2 */
         EACH_FILE_MATCHES_A_SEPARATE_SEARCH: 2,
     })
 
-    /** @type {PIXEL_DUPLICATES} */
+    /** @type {HydrusAPI.PIXEL_DUPLICATES} */
     PIXEL_DUPLICATES = Object.freeze({
         /** 0 - must be pixel duplicates */
         MUST_BE_DUPLICATES: 0,
@@ -143,7 +143,7 @@ module.exports = class API{
     })
 
     /**
-     * @type {number}
+     * @type {number|undefined}
      * Setting this to a HydrusAPI version will allow usage
      * when the HydrusAPI API version and Hydrus API version
      * mismatches.
@@ -155,7 +155,7 @@ module.exports = class API{
     /**
      * We highly suggest wrapping this class' methods
      * in functions over using them directly.
-     * @param {APIOptions} [options={}] Extra options
+     * @param {HydrusAPI.APIOptions} [options={}] Extra options
      */
     constructor(options={}) {
         this.access_key = options?.access_key ?? ''
@@ -168,8 +168,8 @@ module.exports = class API{
     /**
      * Constructs an API call and then calls it,
      * returning the result
-     * @param {CallOptions} o
-     * @returns {Object|boolean|number|ReadableStream}
+     * @param {HydrusAPI.CallOptions} o
+     * @returns {Promise<Object|boolean|number|ReadableStream>}
      * Object if `o.return_as` is `raw` or `json`;
      * boolean if `o.return_as` is `success`;
      * number if `o.return_as` is `status`;
@@ -210,6 +210,7 @@ module.exports = class API{
             }
         }
 
+        /** @type {{[key: string]: any}} */
         const fetch_options = {}
 
         for (const key of Object.keys(o)) {
@@ -282,8 +283,8 @@ module.exports = class API{
      * GET Endpoint: /api_version
      *
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-api_version--idapi_version-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {api_version_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.api_version_response>}
      */
     async api_version(return_as) {
         // region: api_version
@@ -291,16 +292,15 @@ module.exports = class API{
             this._first_successful_versioning ||
             (return_as && return_as !== 'json')
         ) {
-            return await this.call({
+            return /** @type {Promise<HydrusAPI.api_version_response>} */ (await this.call({
                 endpoint: '/api_version',
                 return_as: return_as
-            })
+            }))
         } else {
-            /** @type {api_version_response} */
-            const json = await this.call({
+            const json = /** @type {HydrusAPI.api_version_response} */ (await this.call({
                 endpoint: '/api_version',
                 return_as: return_as
-            })
+            }))
             if (json.hydrus_version !== this.HYDRUS_TARGET_VERSION) {
                 console.warn(`This version of HydrusAPI is targetting Hydrus version '${this.HYDRUS_TARGET_VERSION}', but you are currently connected to version '${json.hydrus_version}'.`)
             }
@@ -328,20 +328,20 @@ module.exports = class API{
      * GET Endpoint: /request_new_permissions
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-request_new_permissions--idrequest_new_permissions-
-     * @param {request_new_permissions_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {request_new_permissions_response}
+     * @param {HydrusAPI.request_new_permissions_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.request_new_permissions_response>}
      */
     async request_new_permissions(options, return_as) {
         // region: request_new_permissions
         if (options?.permissions === 'all') {
             options.permissions = Object.values(this.BASIC_PERM)
         }
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.request_new_permissions_response>} */ (await this.call({
             endpoint: '/request_new_permissions',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     }
 
     /**
@@ -355,15 +355,15 @@ module.exports = class API{
      * GET Endpoint: /session_key
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-session_key--idsession_key-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {session_key_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.session_key_response>}
      */
     async session_key(return_as) {
         // region: session_key
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.session_key_response>} */ (await this.call({
             endpoint: '/session_key',
             return_as: return_as
-        })
+        }))
     }
 
     /**
@@ -373,15 +373,15 @@ module.exports = class API{
      * GET Endpoint: /verify_access_key
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-verify_access_key--idverify_access_key-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {verify_access_key_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.verify_access_key_response>}
      */
     async verify_access_key(return_as) {
         // region: verify_access_key
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.verify_access_key_response>} */ (await this.call({
             endpoint: '/verify_access_key',
             return_as: return_as
-        })
+        }))
     }
 
     /**
@@ -395,16 +395,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_service--idget_service-
      * @param {{service_name?: string, service_key?: string}} service either service_name or service_key must be provided
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_service_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_service_response>}
      */
     async get_service(service, return_as) {
         // region: get_service
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_service_response>} */ (await this.call({
             endpoint: '/get_service',
             queries: optionsToURLSearchParams(service),
             return_as: return_as
-        })
+        }))
     }
 
     /**
@@ -413,15 +413,15 @@ module.exports = class API{
      * GET Endpoint: /get_services
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_services--idget_services-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_services_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_services_response>}
      */
     async get_services(return_as) {
         // region: get_services
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_services_response>} */ (await this.call({
             endpoint: '/get_services',
             return_as: return_as
-        })
+        }))
     }
 
     /**
@@ -448,12 +448,12 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesadd_file--idadd_files_add_file-
      * @param {{bytes: *}|{path: string, delete_after_successful_import?: boolean}} options path to the file or the file data
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {add_file_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.add_file_response>}
      */
     add_file: async(options, return_as) => {
         // region: add_files/add_file
-        /** @type {CallOptions} */
+        /** @type {HydrusAPI.CallOptions} */
         const o = {
             endpoint: '/add_files/add_file',
             return_as: return_as
@@ -466,7 +466,7 @@ module.exports = class API{
         } else {
             throw new Error('path or bytes must be defined in options')
         }
-        return await this.call(o)
+        return /** @type {Promise<HydrusAPI.add_file_response>} */ (await this.call(o))
     },
 
     /**
@@ -475,17 +475,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/delete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesdelete_files--idadd_files_delete_files-
-     * @param {delete_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} true if successful
+     * @param {HydrusAPI.delete_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} true if successful
      */
     delete_files: async(options, return_as) => {
         // region: add_files/delete_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/delete_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -494,17 +494,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/undelete_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesundelete_files--idadd_files_undelete_files-
-     * @param {undelete_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.undelete_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     undelete_files: async (options, return_as) => {
         // region: add_files/undelete_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/undelete_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -513,17 +513,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/clear_file_deletion_record
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesclear_file_deletion_record--idadd_files_clear_file_deletion_record-
-     * @param {FilesObject} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.FilesObject} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     clear_file_deletion_record: async(options, return_as) => {
         // region: add_files/clear_file_deletion_record
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/clear_file_deletion_record',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -532,17 +532,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/migrate_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesmigrate_files--idadd_files_migrate_files-
-     * @param {migrate_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.migrate_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     migrate_files: async(options, return_as) => {
         // region: add_files/migrate_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/migrate_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -551,17 +551,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/archive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesarchive_files--idadd_files_archive_files-
-     * @param {FilesObject} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} if true then the file was successfully archived, was already archived, or doesn't exist
+     * @param {HydrusAPI.FilesObject} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} if true then the file was successfully archived, was already archived, or doesn't exist
      */
     archive_files: async(options, return_as) => {
         // region: add_files/archive_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/archive_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -570,17 +570,17 @@ module.exports = class API{
      * POST Endpoint: /add_files/unarchive_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesunarchive_files--idadd_files_unarchive_files-
-     * @param {FilesObject} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} if true then the file was successfully unarchived, was already unarchived, or doesn't exist
+     * @param {HydrusAPI.FilesObject} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} if true then the file was successfully unarchived, was already unarchived, or doesn't exist
      */
     unarchive_files: async(options, return_as) => {
         // region: add_files/unarchive_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_files/unarchive_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -591,12 +591,13 @@ module.exports = class API{
      * POST Endpoint: /add_files/generate_hashes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_filesgenerate_hashes--idadd_files_generate_hashes-
-     * @param {generate_hashes_options} options path to the file or the file data
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {generate_hashes_response}
+     * @param {HydrusAPI.generate_hashes_options} options path to the file or the file data
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.generate_hashes_response>}
      */
     generate_hashes: async(options, return_as) => {
         // region: add_files/generate_hashes
+        /** @type {HydrusAPI.CallOptions} */
         const o = {
             endpoint: '/add_files/generate_hashes',
             return_as: return_as
@@ -609,7 +610,7 @@ module.exports = class API{
         } else {
             throw new Error('path or bytes must be defined in options')
         }
-        return await this.call(o)
+        return /** @type {Promise<HydrusAPI.generate_hashes_response>} */ (await this.call(o))
     },
 
         }
@@ -632,22 +633,22 @@ module.exports = class API{
      * GET Endpoint: /add_urls/get_url_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_urlsget_url_files--idadd_urls_get_url_files-
-     * @param {get_url_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_url_files_response}
+     * @param {HydrusAPI.get_url_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_url_files_response>}
      */
     get_url_files: async(options, return_as) => {
         // region: add_urls/get_url_files
         const q = new URLSearchParams()
         if (options.doublecheck_file_system) {
-            q.append('doublecheck_file_system', options.doublecheck_file_system)
+            q.append('doublecheck_file_system', `${options.doublecheck_file_system}`)
         }
         q.append('url', options.url)
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_url_files_response>} */ (await this.call({
             endpoint: '/add_urls/get_url_files',
             queries: q,
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -657,16 +658,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_urlsget_url_info--idadd_urls_get_url_info-
      * @param {string} url url you want to check
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_url_info_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_url_info_response>}
      */
     get_url_info: async(url, return_as) => {
         // region: add_urls/get_url_info
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_url_info_response>} */ (await this.call({
             endpoint: '/add_urls/get_url_info',
             queries: optionsToURLSearchParams({url: url}),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -677,17 +678,17 @@ module.exports = class API{
      * POST Endpoint: /add_urls/add_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsadd_url--idadd_urls_add_url-
-     * @param {add_url_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {add_url_response}
+     * @param {HydrusAPI.add_url_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.add_url_response>}
      */
     add_url: async(options, return_as) => {
         // region: add_urls/add_url
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.add_url_response>} */ (await this.call({
             endpoint: '/add_urls/add_url',
             json: options,
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -697,17 +698,17 @@ module.exports = class API{
      * POST Endpoint: /add_urls/associate_url
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_urlsassociate_url--idadd_urls_associate_url-
-     * @param {associate_url_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.associate_url_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     associate_url: async(options, return_as) => {
         // region: add_urls/associate_url
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_urls/associate_url',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     }
 
         }
@@ -732,16 +733,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsclean_tags--idadd_tags_clean_tags-
      * @param {string[]} tags
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {clean_tags_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.clean_tags_response>}
      */
     clean_tags: async(tags, return_as) => {
         // region: add_tags/clean_tags
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.clean_tags_response>} */ (await this.call({
             endpoint: '/add_tags/clean_tags',
             queries: optionsToURLSearchParams({tags: tags}),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -754,15 +755,15 @@ module.exports = class API{
      * GET Endpoint: /add_tags/get_favourite_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsget_favourite_tags--idadd_tags_get_favourite_tags-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_favourite_tags_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_favourite_tags_response>}
      */
     get_favourite_tags: async(return_as) => {
         // region add_tags/get_favourite_tags
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_favourite_tags_response>} */ (await this.call({
             endpoint: '/add_tags/get_favourite_tags',
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -772,16 +773,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagsget_siblings_and_parents--idadd_tags_get_siblings_and_parents-
      * @param {string[]} tags
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_siblings_and_parents_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_siblings_and_parents_response>}
      */
     get_siblings_and_parents: async(tags, return_as) => {
         // region add_tags/get_siblings_and_parents
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_siblings_and_parents_response>} */ (await this.call({
             endpoint: '/add_tags/get_siblings_and_parents',
             queries: optionsToURLSearchParams({tags: tags}),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -790,17 +791,17 @@ module.exports = class API{
      * GET Endpoint: /add_tags/search_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-add_tagssearch_tags--idadd_tags_search_tags-
-     * @param {search_tags_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {search_tags_response}
+     * @param {HydrusAPI.search_tags_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.search_tags_response>}
      */
     search_tags: async(options, return_as) => {
         // region add_tags/search_tags
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.search_tags_response>} */ (await this.call({
             endpoint: '/add_tags/search_tags',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -809,17 +810,17 @@ module.exports = class API{
      * POST Endpoint: /add_tags/add_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsadd_tags--idadd_tags_add_tags-
-     * @param {add_tags_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.add_tags_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     add_tags: async(options, return_as) => {
         // region: add_tags/add_tags
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_tags/add_tags',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -829,17 +830,17 @@ module.exports = class API{
      * POST Endpoint: set_favourite_tags
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_tagsset_favourite_tags--idadd_tags_set_favourite_tags-
-     * @param {set_favourite_tags_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_favourite_tags_response}
+     * @param {HydrusAPI.set_favourite_tags_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_favourite_tags_response>}
      */
     set_favourite_tags: async(options, return_as) => {
         // region: add_tags/set_favourite_tags
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_favourite_tags_response>} */ (await this.call({
             endpoint: '/add_tags/set_favourite_tags',
             json: options,
             return_as: return_as
-        })
+        }))
     },
     
         }
@@ -858,17 +859,17 @@ module.exports = class API{
      * POST Endpoint: /edit_ratings/set_rating
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_ratingsset_rating--idedit_ratings_set_rating-
-     * @param {set_rating_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.set_rating_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     set_rating: async(options, return_as) => {
         // region: edit_ratings/set_rating
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/edit_ratings/set_rating',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
     
         }
@@ -911,17 +912,17 @@ module.exports = class API{
      * POST Endpoint: /edit_times/increment_file_viewtime
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesincrement_file_viewtime--idedit_times_increment_file_viewtime-
-     * @param {increment_and_set_file_viewtime_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.increment_and_set_file_viewtime_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     increment_file_viewtime: async(options, return_as) => {
         // region: edit_times/increment_file_viewtime
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/edit_times/increment_file_viewtime',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -957,17 +958,17 @@ module.exports = class API{
      * POST Endpoint: /edit_times/set_file_viewtime
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesset_file_viewtime--idedit_times_set_file_viewtime-
-     * @param {increment_and_set_file_viewtime_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.increment_and_set_file_viewtime_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     set_file_viewtime: async(options, return_as) => {
         // region: edit_times/set_file_viewtime
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/edit_times/set_file_viewtime',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -1037,17 +1038,17 @@ module.exports = class API{
      * POST Endpoint: /edit_times/set_time
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-edit_timesset_time--idedit_times_set_time-
-     * @param {set_time_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.set_time_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     set_time: async(options, return_as) => {
         // region: edit_times/set_time
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/edit_times/set_time',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
         }
     }
@@ -1065,17 +1066,17 @@ module.exports = class API{
      * POST Endpoint: /add_notes/set_notes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_notesset_notes--idadd_notes_set_notes-
-     * @param {set_notes_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {set_notes_response}
+     * @param {HydrusAPI.set_notes_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.set_notes_response>}
      */
     set_notes: async(options, return_as) => {
         // region: add_notes/set_notes
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.set_notes_response>} */ (await this.call({
             endpoint: '/add_notes/set_notes',
             json: options,
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1086,17 +1087,17 @@ module.exports = class API{
      * POST Endpoint: /add_notes/delete_notes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-add_notesdelete_notes--idadd_notes_delete_notes-
-     * @param {delete_notes_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.delete_notes_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     delete_notes: async(options, return_as) => {
         // region: add_notes/delete_notes
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/add_notes/delete_notes',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
         }
     }
@@ -1122,17 +1123,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/search_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filessearch_files--idget_files_search_files-
-     * @param {search_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {search_files_response}
+     * @param {HydrusAPI.search_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.search_files_response>}
      */
     search_files: async(options, return_as) => {
         // region: get_files/search_files
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.search_files_response>} */ (await this.call({
             endpoint: '/get_files/search_files',
             queries: optionsToURLSearchParams(options),
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -1147,17 +1148,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/file_hashes
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_hashes--idget_files_file_hashes-
-     * @param {file_hashes_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {file_hashes_response}
+     * @param {HydrusAPI.file_hashes_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.file_hashes_response>}
      */
     file_hashes: async(options, return_as) => {
         // region: get_files/file_hashes
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.file_hashes_response>} */ (await this.call({
             endpoint: '/get_files/file_hashes',
             queries: optionsToURLSearchParams(options),
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -1166,17 +1167,17 @@ module.exports = class API{
      * GET Endpoint: get_files/file_metadata
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_metadata--idget_files_file_metadata-
-     * @param {get_file_metadata_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_file_metadata_response}
+     * @param {HydrusAPI.get_file_metadata_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_file_metadata_response>}
      */
     file_metadata: async(options, return_as) => {
         // region: get_files/file_metadata
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_file_metadata_response>} */ (await this.call({
             endpoint: '/get_files/file_metadata',
             queries: optionsToURLSearchParams(options),
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -1199,17 +1200,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/file
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile--idget_files_file-
-     * @param {file_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number} the raw readableStream if return_as is the default
+     * @param {HydrusAPI.file_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number>} the raw readableStream if return_as is the default
      */
     file: async(options, return_as='readable_stream') => {
         // region: get_files/file
-        return await this.call({
+        return (await this.call({
             endpoint: '/get_files/file',
             queries: optionsToURLSearchParams(options),
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -1261,17 +1262,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/thumbnail
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesthumbnail--idget_files_thumbnail-
-     * @param {thumbnail_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number} the raw readableStream if return_as is the default
+     * @param {HydrusAPI.thumbnail_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<ReadableStream<Uint8Array<ArrayBufferLike>>|Object|number>} the raw readableStream if return_as is the default
      */
     thumbnail: async(options, return_as='readable_stream') => {
         // region: get_files/thumbnail
-        return await this.call({
+        return (await this.call({
             endpoint: '/get_files/thumbnail',
             queries: optionsToURLSearchParams(options),
             return_as: return_as,
-        })
+        }))
     },
 
     /**
@@ -1287,17 +1288,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/file_path
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesfile_path--idget_files_file_path-
-     * @param {file_path_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {file_path_response}
+     * @param {HydrusAPI.file_path_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.file_path_response>}
      */
     file_path: async(options, return_as) => {
         // region: get_files/file_path
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.file_path_response>} */ (await this.call({
             endpoint: '/get_files/file_path',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1321,17 +1322,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/thumbnail_path
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesthumbnail_path--idget_files_thumbnail_path-
-     * @param {thumbnail_path_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {thumbnail_path_response}
+     * @param {HydrusAPI.thumbnail_path_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.thumbnail_path_response>}
      */
     thumbnail_path: async(options, return_as) => {
         // region: get_files/thumbnail_path
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.thumbnail_path_response>} */ (await this.call({
             endpoint: '/get_files/thumbnail_path',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1341,15 +1342,15 @@ module.exports = class API{
      * GET Endpoint: /get_files/local_file_storage_locations
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_fileslocal_file_storage_locations--idget_local_file_storage_locations-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {local_file_storage_locations_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.local_file_storage_locations_response>}
      */
     local_file_storage_locations: async(return_as) => {
         // region: get_files/local_file_storage_locations
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.local_file_storage_locations_response>} */ (await this.call({
             endpoint: '/get_files/local_file_storage_locations',
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1358,17 +1359,17 @@ module.exports = class API{
      * GET Endpoint: /get_files/render
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-get_filesrender--idget_files_render-
-     * @param {render_options} options
+     * @param {HydrusAPI.render_options} options
      * @param {'readable_stream'|'raw'} [return_as] Optional; returns a ReadableStream by default; How do you want the result returned?
-     * @returns {ReadableStream|Response}
+     * @returns {Promise<ReadableStream|Response>}
      */
     render: async(options, return_as='readable_stream') => {
         // region: get_files/render
-        return await this.call({
+        return /** @type {Promise<ReadableStream|Response>} */ (await this.call({
             endpoint: '/get_files/render',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
 
@@ -1462,17 +1463,17 @@ module.exports = class API{
      * GET Endpoint: /manage_file_relationships/get_file_relationships
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_file_relationships--idmanage_file_relationships_get_file_relationships-
-     * @param {get_file_relationships_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_file_relationships_response}
+     * @param {HydrusAPI.get_file_relationships_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_file_relationships_response>}
      */
     get_file_relationships: async(options, return_as) => {
         // region: manage_file_relationships/get_file_relationships
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_file_relationships_response>} */ (await this.call({
             endpoint: '/manage_file_relationships/get_file_relationships',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1509,18 +1510,18 @@ module.exports = class API{
      * GET Endpoint: /manage_file_relationships/get_potentials_count
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potentials_count--idmanage_file_relationships_get_potentials_count-
-     * @param {get_potentials_count_options} [options] Optional
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_potentials_count_response}
+     * @param {HydrusAPI.get_potentials_count_options} [options] Optional
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_potentials_count_response>}
      */
     get_potentials_count: async(options, return_as) => {
         // region: manage_file_relationships/get_potentials_count
         options = options ?? {}
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_potentials_count_response>} */ (await this.call({
             endpoint: '/manage_file_relationships/get_potentials_count',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1569,18 +1570,18 @@ module.exports = class API{
      * GET Endpoint: /manage_file_relationships/get_potential_pairs
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_potential_pairs--idmanage_file_relationships_get_potential_pairs-
-     * @param {get_potential_pairs_options} [options] Optional
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_potential_pairs_response}
+     * @param {HydrusAPI.get_potential_pairs_options} [options] Optional
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_potential_pairs_response>}
      */
     get_potential_pairs: async(options, return_as) => {
         // region: manage_file_relationships/get_potential_pairs
         options = options ?? {}
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_potential_pairs_response>} */ (await this.call({
             endpoint: '/manage_file_relationships/get_potential_pairs',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1608,18 +1609,18 @@ module.exports = class API{
      * GET Endpoint: /manage_file_relationships/get_random_potentials
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_file_relationshipsget_random_potentials--idmanage_file_relationships_get_random_potentials-
-     * @param {get_random_potentials_options} [options] Optional
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_random_potentials_response}
+     * @param {HydrusAPI.get_random_potentials_options} [options] Optional
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_random_potentials_response>}
      */
     get_random_potentials: async(options, return_as) => {
         // region: manage_file_relationships/get_random_potentials
         options = options ?? {}
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_random_potentials_response>} */ (await this.call({
             endpoint: '/manage_file_relationships/get_random_potentials',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
         }
     }
@@ -1642,15 +1643,15 @@ module.exports = class API{
      * GET Endpoint: /manage_services/get_pending_counts
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_servicesget_pending_counts--idmanage_services_get_pending_counts-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_pending_counts_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_pending_counts_response>}
      */
     get_pending_counts: async(return_as) => {
         // region: manage_services/get_pending_counts
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_pending_counts_response>} */ (await this.call({
             endpoint: '/manage_services/get_pending_counts',
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1683,16 +1684,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_servicescommit_pending--idmanage_services_commit_pending-
      * @param {string} service_key The service to commit
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     commit_pending: async(service_key, return_as) => {
         // region: manage_services/commit_pending
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_services/commit_pending',
             json: {service_key: service_key},
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -1707,16 +1708,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_servicesforget_pending--idmanage_services_forget_pending-
      * @param {string} service_key The service to forget for
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     forget_pending: async(service_key, return_as) => {
         // region: manage_services/forget_pending
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_services/forget_pending',
             json: {service_key: service_key},
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
         }
@@ -1743,16 +1744,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_cookiesget_cookies--idmanage_cookies_get_cookies-
      * @param {string} domain the domain to get cookies for
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_cookies_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_cookies_response>}
      */
     get_cookies: async(domain, return_as) => {
         // region: manage_cookies/get_cookies
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_cookies_response>} */ (await this.call({
             endpoint: '/manage_cookies/get_cookies',
             queries: optionsToURLSearchParams({domain: domain}),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1765,17 +1766,17 @@ module.exports = class API{
      * POST Endpoint: /manage_cookies/set_cookies
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_cookiesset_cookies--idmanage_cookies_set_cookies-
-     * @param {set_cookies_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.set_cookies_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     set_cookies: async(options, return_as) => {
         // region: manage_cookies/set_cookies
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_cookies/set_cookies',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
         }
@@ -1810,15 +1811,15 @@ module.exports = class API{
      * GET Endpoint: /manage_pages/get_pages
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_pages--idmanage_pages_get_pages-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_pages_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_pages_response>}
      */
     get_pages: async(return_as) => {
         // region: manage_pages/get_pages
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_pages_response>} */ (await this.call({
             endpoint: '/manage_pages/get_pages',
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1838,16 +1839,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_pagesget_page_info--idmanage_pages_get_page_info-
      * @param {{page_key: string,  simple?: boolean}} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_page_info_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_page_info_response>}
      */
     get_page_info: async(options, return_as) => {
         // region: manage_pages/get_page_info
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_page_info_response>} */ (await this.call({
             endpoint: `/manage_pages/get_page_info`,
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -1856,17 +1857,17 @@ module.exports = class API{
      * POST Endpoint: /manage_pages/add_files
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesadd_files--idmanage_pages_add_files-
-     * @param {add_files_options} options
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.add_files_options} options
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     add_files: async(options, return_as) => {
         // region: manage_pages/add_files
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_pages/add_files',
             json: options,
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -1878,18 +1879,18 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesfocus_page--idmanage_pages_focus_page-
      * @param {string} page_key
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} successful if true
      */
     focus_page: async(page_key, return_as) => {
         // region: manage_pages/focus_page
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: `/manage_pages/focus_page`,
             json: {
                 page_key: page_key
             },
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -1904,16 +1905,16 @@ module.exports = class API{
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_pagesrefresh_page--idmanage_pages_refresh_page-
      * @param {string} page_key The page key for the page you wish to refresh
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     refresh_page: async(page_key, return_as) => {
         // region: manage_pages/refresh_page
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_pages/refresh_page',
             json: {page_key: page_key},
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
         }
@@ -1971,16 +1972,16 @@ module.exports = class API{
      * POST Endpoint: /manage_database/force_commit
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaseforce_commit--idmanage_database_force_commit-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     force_commit: async(return_as) => {
         // region: manage_database/force_commit
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_database/force_commit',
             method: 'POST',
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -2013,16 +2014,16 @@ module.exports = class API{
      * POST Endpoint: /manage_database/lock_on
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_on--idmanage_database_lock_on-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     lock_on: async(return_as) => {
         // region: manage_database/lock_on
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_database/lock_on',
             method: 'POST',
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -2037,16 +2038,16 @@ module.exports = class API{
      * POST Endpoint: /manage_database/lock_off
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#post-manage_databaselock_off--idmanage_database_lock_off-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {boolean} Successful if true
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<boolean>} Successful if true
      */
     lock_off: async(return_as) => {
         // region: manage_database/lock_off
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_database/lock_off',
             method: 'POST',
             return_as: return_as ?? 'success'
-        })
+        }))
     },
 
     /**
@@ -2060,17 +2061,17 @@ module.exports = class API{
      * GET Endpoint: /manage_database/mr_bones
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databasemr_bones--idmanage_database_mr_bones-
-     * @param {mr_bones_options} [options] Optional
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {mr_bones_response}
+     * @param {HydrusAPI.mr_bones_options} [options] Optional
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.mr_bones_response>}
      */
     mr_bones: async(options = {}, return_as) => {
         // region: manage_database/mr_bones
-        return await this.call({
+        return /** @type {Promise<boolean>} */ (await this.call({
             endpoint: '/manage_database/mr_bones',
             queries: optionsToURLSearchParams(options),
             return_as: return_as
-        })
+        }))
     },
 
     /**
@@ -2086,8 +2087,8 @@ module.exports = class API{
      * GET Endpoint: /manage_database/get_client_options
      * 
      * https://github.com/hydrusnetwork/hydrus/blob/master/docs/developer_api.md#get-manage_databaseget_client_options--idmanage_database_get_client_options-
-     * @param {CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
-     * @returns {get_client_options_response}
+     * @param {HydrusAPI.CallOptions['return_as']} [return_as] Optional; Sane default; How do you want the result returned?
+     * @returns {Promise<HydrusAPI.get_client_options_response>}
      */
     get_client_options: async(return_as) => {
         const ver = await this.api_version()
@@ -2095,10 +2096,10 @@ module.exports = class API{
             throw new Error(`This endpoint is currently experimental. Please use a version of HydrusAPI that matches '${this.VERSION}.${this.HYDRUS_TARGET_VERSION}.*'!`)
         }
         // region: manage_database/get_client_options
-        return await this.call({
+        return /** @type {Promise<HydrusAPI.get_client_options_response>} */ (await this.call({
             endpoint: '/manage_database/get_client_options',
             return_as: return_as
-        })
+        }))
     },
 
         }
@@ -2118,8 +2119,8 @@ module.exports = class API{
      * SERVICE_TYPE, and then returns a new array
      * with the results
      * 
-     * @param {SERVICE_TYPE_VALUE} [service_type=11] Optional; defaults to `all known files`; The service type to get
-     * @returns {ServiceObjectWithKey[]}
+     * @param {HydrusAPI.SERVICE_TYPE_VALUE} [service_type=11] Optional; defaults to `all known files`; The service type to get
+     * @returns {Promise<HydrusAPI.ServiceObjectWithKey[]>}
      */
     get_services_of_type: async(service_type=11) => {
         const matches = []
@@ -2140,7 +2141,7 @@ module.exports = class API{
      * with the results
      * 
      * @param {string} name The name of the service to get
-     * @returns {ServiceObjectWithKey[]}
+     * @returns {Promise<HydrusAPI.ServiceObjectWithKey[]>}
      */
     get_services_of_name: async(name) => {
         const matches = []

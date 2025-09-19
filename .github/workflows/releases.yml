@@ -78,14 +78,14 @@ jobs:
           branch: main
           commit_message: Updated changelogs for release
           file_pattern: 'badges/* CHANGELOG.MD CHANGELOG.UNCOMMITTED.MD package.json'
-      # minify hydrusapi.js and save as hydrusapi.${{ github.ref_name }}.min.js
+      # minify index.js and save as hydrusapi.${{ github.ref_name }}.min.js
       - run: npm install --save-dev @node-minify/cli @node-minify/uglify-js
-      - run: npx node-minify --compressor uglify-js --input 'hydrusapi.js' --output 'hydrusapi.${{ github.ref_name }}.min.js'
-      # copy hydrusapi.js to hydrusapi.${{ github.ref_name }}.js
-      - run: cp -f hydrusapi.js hydrusapi.${{ github.ref_name }}.js
+      - run: npx node-minify --compressor uglify-js --input 'index.js' --output 'hydrusapi.${{ github.ref_name }}.min.js'
+      # copy index.js to hydrusapi.${{ github.ref_name }}.js
+      - run: cp -f index.js hydrusapi.${{ github.ref_name }}.js
 
-      # copy types/hydrusapi.d.ts to hydrusapi.${{ github.ref_name }}.d.ts
-      - run: cp -f types/hydrusapi.d.ts hydrusapi.${{ github.ref_name }}.d.ts
+      # copy types/index.d.ts to hydrusapi.${{ github.ref_name }}.d.ts
+      - run: cp -f types/index.d.ts hydrusapi.${{ github.ref_name }}.d.ts
       # zip release files
       - run: zip hydrusapi.${{ github.ref_name }}.all.zip hydrusapi.${{ github.ref_name }}.js hydrusapi.${{ github.ref_name }}.min.js hydrusapi.${{ github.ref_name }}.d.ts
       - name: Release

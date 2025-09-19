@@ -7,7 +7,7 @@
     "url": "https://github.com/shadownetdev1/HydrusAPI/issues"
   },
   "repository": "github:shadownetdev1/HydrusAPI",
-  "main": "hydrusapi.js",
+  "main": "index.js",
   "scripts": {
     "test": "cp scripts/pre-commit .git/hooks/pre-commit && vitest run --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage",
     "test:watch": "cp scripts/pre-commit .git/hooks/pre-commit && vitest --coverage --coverage.reporter=text --coverage.reportsDirectory=/tmp/hydrusapi_coverage"
@@ -20,12 +20,14 @@
   "files": [
     "types/",
     "CHANGELOG.MD",
-    "hydrusapi.js",
+    "index.js",
     "license.txt",
+    "tsconfig.json",
     "README.MD"
   ],
   "license": "SEE LICENSE IN license.txt",
   "type": "commonjs",
+  "types": "./types/index.d.ts",
   "cspell": {
     "version": "0.2",
     "language": "en",

@@ -2,11 +2,11 @@
 import jetpack from 'fs-jetpack'
 
 const u_path = 'CHANGELOG.UNCOMMITTED.MD'
-let u_text = jetpack.read(u_path)
+let u_text = jetpack.read(u_path) ?? ""
 const c_path = 'CHANGELOG.MD'
-let c_text = jetpack.read(c_path)
+let c_text = jetpack.read(c_path) ?? ""
 const t_path = 'CHANGELOG.TEMPLATE.MD'
-let t_text = jetpack.read(t_path)
+let t_text = jetpack.read(t_path) ?? ""
 const p_path = 'TEMP_LOG.MD'
 
 const version = process.argv[2]

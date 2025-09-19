@@ -6,7 +6,7 @@ const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb
 const ADDRESS = 'http://localhost:45869'
 
 import {test, expect, describe} from 'vitest'
-import API from '../hydrusapi.js'
+import API from '../index.js'
 import jetpack from 'fs-jetpack'
 import fs from 'fs/promises'
 import { detailedDiff } from 'deep-object-diff'
@@ -15,7 +15,7 @@ const util = require('util')
 const exec_async = util.promisify(require('child_process').exec)
 const exec = require('child_process').exec
 
-if (!process.platform === 'linux') {
+if (process.platform !== 'linux') {
     throw new Error('This test script currently only supports linux')
 }
 

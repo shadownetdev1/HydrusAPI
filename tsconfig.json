@@ -16,14 +16,16 @@
     // and npm install -D @types/node
 
     // Other Outputs
-    "sourceMap": true,
+    "sourceMap": false,
     "declaration": true,
-    "declarationMap": true,
+    "declarationMap": false,
+    "emitDeclarationOnly": true,
 
     // Stricter Typechecking Options
     "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
+    "exactOptionalPropertyTypes": false,
     "allowJs": true,
+    "checkJs": true,
     "noEmit": true,
 
     // Style Options
@@ -41,6 +43,11 @@
     "isolatedModules": true,
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
-    "skipLibCheck": true,
-  }
+    "skipLibCheck": false,
+  },
+
+  "exclude": [
+    "node_modules",
+    "tests/hydrus"
+  ],
 }
