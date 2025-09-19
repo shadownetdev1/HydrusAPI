@@ -48,7 +48,10 @@
   },
 
   "files": [
-    "./types/types.d.ts"
+    "./types/types.d.ts",
+    "./index.js",
+    "./tests/index.test.mjs",
+    "./scripts/update_changelog.mjs",
   ],
 
   "exclude": [
