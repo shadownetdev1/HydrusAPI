@@ -25,7 +25,6 @@
     "CHANGELOG.MD",
     "index.js",
     "license.txt",
-    "tsconfig.json",
     "README.MD"
   ],
   "license": "SEE LICENSE IN license.txt",

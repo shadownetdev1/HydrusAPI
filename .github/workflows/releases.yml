@@ -94,7 +94,7 @@ jobs:
       - run: cp -f types/types.d.ts hydrusapi.types.${{ github.ref_name }}.d.ts
       # zip release files
       # The files in this zip should mirror the files property in `package.json`
-      - run: zip hydrusapi.${{ github.ref_name }}.zip types CHANGELOG.MD index.js liscense.txt tsconfig.json README.MD
+      - run: zip hydrusapi.${{ github.ref_name }}.zip types CHANGELOG.MD index.js liscense.txt README.MD
       - name: Release
         uses: softprops/action-gh-release@v2
         if: github.ref_type == 'tag'
