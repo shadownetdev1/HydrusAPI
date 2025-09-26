@@ -7,6 +7,13 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.640.13](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.640.13) - 2025-8-26
+
+_Updated to Hydrus Network version 640 and API version 81_
+
+_Some optional arguments have been added to the `get_potential_pairs` endpoint. No other endpoints were changed_
+
+
 ## [80.639.12](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.639.12) - 2025-8-19
 
 _Fix GitHub actions (It only took four attempts...)_
