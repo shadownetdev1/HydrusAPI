@@ -147,6 +147,15 @@ declare namespace HydrusAPI {
 
     type PIXEL_DUPLICATES_VALUE = ValueOf<PIXEL_DUPLICATES>
 
+    interface DUP_PAIR_SORT_TYPE {
+        FILESIZE_OF_LARGER_FILE: 0
+        SIMILARITY: 1
+        FILESIZE_OF_SMALLER_FILE: 2
+        RANDOM: 4
+    }
+
+    type DUP_PAIR_SORT_TYPE_VALUE = ValueOf<DUP_PAIR_SORT_TYPE>
+
     /**
      * *   1 - File was successfully imported
      * *   2 - File already in database
@@ -1307,6 +1316,44 @@ declare namespace HydrusAPI {
          * Defaults to whatever is set in Hydrus' settings
          */
         max_num_pairs?: number
+        /**
+         * Optional; When `group_mode=true`,
+         * the pairs will all be related to each other,
+         * just like setting 'group mode' in the client.
+         * `max_num_pairs` is ignored in this
+         * mode--you get the whole group.
+         * 
+         * !! In some fun situations, this can be a group of size 2,700!
+         * 
+         * Defaults to false
+         */
+        group_mode?: boolean
+        /**
+         * Optional; Defaults to `0`
+         * 
+         *  `duplicate_pair_sort_type` and `duplicate_pair_sort_asc`
+         * control the order of the pairs given.
+         * This is still somewhat experimental,
+         * and I may add new ones or rework the "similarity"
+         * one because it doesn't work too well,
+         * but they are currently
+         * (with True/False 'asc' values after):
+         * 
+         * * 0 - (Default) "filesize of larger file"
+         * (smallest first/largest first)
+         * * 1 - "similarity (distance/filesize ratio)"
+         * (most similar first/least similar first)
+         * * 2 - "filesize of smaller file"
+         * (smallest first/largest first)
+         * * 4 - "random" (N/A)
+         */
+        duplicate_pair_sort_type?: DUP_PAIR_SORT_TYPE_VALUE
+        /**
+         * Optional; Sort direction;
+         * See `duplicate_pair_sort_type` for more details;
+         * Defaults to false
+         */
+        duplicate_pair_sort_asc?: boolean
     }
 
     interface get_potential_pairs_response extends api_version_response {
@@ -1894,6 +1941,10 @@ declare namespace HydrusAPI {
                 export_filename_character_limit: number,
                 potential_duplicates_search_work_time_ms: number,
                 potential_duplicates_search_rest_percentage: number,
+                duplicates_auto_resolution_work_time_ms_active: number,
+                duplicates_auto_resolution_work_time_ms_idle: number,
+                duplicates_auto_resolution_rest_percentage_active: number,
+                duplicates_auto_resolution_rest_percentage_idle: number,
             },
             noneable_integers: {
                 forced_search_limit: number| null,
@@ -1918,7 +1969,8 @@ declare namespace HydrusAPI {
                 num_to_show_in_ac_dropdown_children_tab: number| null,
                 number_of_unselected_medias_to_present_tags_for: number| null,
                 export_path_character_limit: number| null,
-                export_dirname_character_limit: number| null
+                export_dirname_character_limit: number| null,
+                duplicate_filter_auto_commit_batch_size: number | null,
             },
             keys: {
                 default_tag_service_tab: string,

@@ -915,7 +915,7 @@ describe('HydrusAPI', () => {
 
         // TODO: test: get_potentials_count (relations exist)
 
-        // TODO: test: get_potential_pairs (relations exist)
+        // TODO: test: get_potential_pairs (relations exist, test normal and group mode)
 
         // TODO: test: get_random_potentials (relations exist)
     })
@@ -1118,7 +1118,7 @@ describe('HydrusAPI', () => {
             // and then diff it
             const diff = detailedDiff(prep(old_schema), prep(options))
             if (
-                api.HYDRUS_TARGET_VERSION === 639
+                api.HYDRUS_TARGET_VERSION === 640
             ) {
                 // schema changed and we have corrected the type defs
                 return;

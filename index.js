@@ -31,9 +31,9 @@ module.exports = class API{
     address
 
     /** What API version do we support */
-    VERSION = 80
+    VERSION = 81
     /** What version of Hydrus are we testing against */
-    HYDRUS_TARGET_VERSION = 639
+    HYDRUS_TARGET_VERSION = 640
 
     /**
      * These are the permissions that the client can have
