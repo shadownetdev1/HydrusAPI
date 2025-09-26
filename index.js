@@ -1,5 +1,9 @@
 
 /**
+ * @import HydrusAPI from './types/types.d.ts'
+ */
+
+/**
  * Takes an options object and convert it to
  * an URLSearchParams instance
  * making sure that all lists and objects are
@@ -27,9 +31,9 @@ module.exports = class API{
     address
 
     /** What API version do we support */
-    VERSION = 80
+    VERSION = 81
     /** What version of Hydrus are we testing against */
-    HYDRUS_TARGET_VERSION = 639
+    HYDRUS_TARGET_VERSION = 640
 
     /**
      * These are the permissions that the client can have

@@ -1,4 +1,8 @@
 
+/**
+ * @import HydrusAPI from './../types/types.d.ts'
+ */
+
 const ACCESS_KEY = '6b23b9bda9745013066fb1a09652eca47de08af4da361f1affc6658939fb6567'
 // WARNING: Do not connect to a copy of Hydrus that you use for other purposes.
 // WARNING: Some of these tests are destructive and will cause data loss.
@@ -911,7 +915,7 @@ describe('HydrusAPI', () => {
 
         // TODO: test: get_potentials_count (relations exist)
 
-        // TODO: test: get_potential_pairs (relations exist)
+        // TODO: test: get_potential_pairs (relations exist, test normal and group mode)
 
         // TODO: test: get_random_potentials (relations exist)
     })
@@ -1114,7 +1118,7 @@ describe('HydrusAPI', () => {
             // and then diff it
             const diff = detailedDiff(prep(old_schema), prep(options))
             if (
-                api.HYDRUS_TARGET_VERSION === 639
+                api.HYDRUS_TARGET_VERSION === 640
             ) {
                 // schema changed and we have corrected the type defs
                 return;

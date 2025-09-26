@@ -1,4 +1,3 @@
-import type HydrusAPI from "./types.d.ts";
 export = API;
 declare class API {
     /**
@@ -1362,3 +1361,4 @@ declare class API {
         get_services_of_name: (name: string) => Promise<HydrusAPI.ServiceObjectWithKey[]>;
     };
 }
+import type HydrusAPI from './types.d.ts';
