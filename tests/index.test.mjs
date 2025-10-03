@@ -1118,7 +1118,8 @@ describe('HydrusAPI', () => {
             // and then diff it
             const diff = detailedDiff(prep(old_schema), prep(options))
             if (
-                api.HYDRUS_TARGET_VERSION === 640
+                api.HYDRUS_TARGET_VERSION === 640 ||
+                api.HYDRUS_TARGET_VERSION === 641
             ) {
                 // schema changed and we have corrected the type defs
                 return;
