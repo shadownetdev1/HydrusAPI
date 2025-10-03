@@ -1789,7 +1789,8 @@ declare namespace HydrusAPI {
                 override_bandwidth_on_file_urls_from_post_urls: boolean,
                 remove_leading_url_double_slashes: boolean,
                 always_apply_ntfs_export_filename_rules: boolean,
-                replace_percent_twenty_with_space_in_gug_input: boolean
+                replace_percent_twenty_with_space_in_gug_input: boolean,
+                do_not_do_chmod_mode: boolean,
             },
             strings: {
                 app_display_name: string,
