@@ -1791,6 +1791,7 @@ declare namespace HydrusAPI {
                 always_apply_ntfs_export_filename_rules: boolean,
                 replace_percent_twenty_with_space_in_gug_input: boolean,
                 do_not_do_chmod_mode: boolean,
+                use_legacy_mpv_mediator: boolean,
             },
             strings: {
                 app_display_name: string,
