@@ -7,6 +7,11 @@ This changelog follows the standards defined by [Common Changelog](https://commo
 
 <!-- insert_point -->
 
+## [80.643.13](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.643.13) - 2025-9-17
+
+_Bumped Hydrus Client target version to 643_
+
+
 ## [80.642.13](https://github.com/shadownetdev1/HydrusAPI/releases/tag/80.642.13) - 2025-9-12
 
 _Bumped Hydrus Client target version to 642_
