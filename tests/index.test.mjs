@@ -1120,7 +1120,8 @@ describe('HydrusAPI', () => {
             if (
                 api.HYDRUS_TARGET_VERSION === 640 ||
                 api.HYDRUS_TARGET_VERSION === 641 ||
-                api.HYDRUS_TARGET_VERSION === 642
+                api.HYDRUS_TARGET_VERSION === 642 ||
+                api.HYDRUS_TARGET_VERSION === 643
             ) {
                 // schema changed and we have corrected the type defs
                 return;

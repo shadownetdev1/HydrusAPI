@@ -1792,6 +1792,8 @@ declare namespace HydrusAPI {
                 replace_percent_twenty_with_space_in_gug_input: boolean,
                 do_not_do_chmod_mode: boolean,
                 use_legacy_mpv_mediator: boolean,
+                potential_duplicate_pairs_search_context_panel_stops_to_estimate: boolean,
+                manage_tags_show_deleted_mappings: boolean,
             },
             strings: {
                 app_display_name: string,
