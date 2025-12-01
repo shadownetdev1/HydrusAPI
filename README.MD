@@ -1,6 +1,8 @@
 
 # HydrusAPI
 
+## This project has been archived. I have stopped using Hydrus in my day to day life and cannot justify the time required to upkeep this project. Feel free to fork this and make your own changes.
+
 [![NPM](https://nodei.co/npm/hydrusapi.svg?data=d,s)](https://www.npmjs.com/package/hydrusapi)
 
 [![Hydrus Network API Version: 81 (Partial support)](https://img.shields.io/badge/Hydrus%20Network%20API%20Version-81%20(Partial%20support)-blue)](https://github.com/hydrusnetwork/hydrus/blob/c3cb88c9e71616678b4c398d54ea2b4d3dd7b0f3/docs/developer_api.md)
